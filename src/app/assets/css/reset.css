@@ -1,0 +1,177 @@
+/*
+YUI 3.8.0 (build 5744)
+Copyright 2012 Yahoo! Inc. All rights reserved.
+Licensed under the BSD License.
+http://yuilibrary.com/license/
+*/
+/*
+	TODO will need to remove settings on HTML since we can't namespace it.
+	TODO with the prefix, should I group by selector or property for weight savings?
+*/
+body, input, select, button, pre{color:#666; font:12px/1.5 Tahoma, Arial, sans-serif; } 
+body{-webkit-user-select: none; cursor: default; }
+
+/*
+	TODO remove settings on BODY since we can't namespace it.
+*/
+/*
+	TODO test putting a class on HEAD.
+		- Fails on FF. 
+*/
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, textarea, p, blockquote, th, td {margin:0; padding:0; }
+ table {border-collapse:collapse; border-spacing:0; }
+  fieldset, img {border:0; } /*
+	TODO think about hanlding inheritence differently, maybe letting IE6 fail a bit...
+*/
+address, caption, cite, code, dfn, em, th, var {font-style:normal; font-weight:normal; }
+ol, ul {list-style:none; }
+caption, th {text-align:left; } h1,
+h2, h3, h4, h5, h6 {font-size:100%; font-weight:normal; }
+ q:before, q:after {content:''; }
+  abbr, acronym {border:0; font-variant:normal; }
+  /* to preserve line-height and selector appearance */
+sup {vertical-align:text-top; } 
+sub {vertical-align:text-bottom; } input,
+textarea, select {font-family:inherit; font-size:inherit; font-weight:inherit; } 
+/*to enable resizing for IE*/
+input, textarea, select {*font-size:100%; } 
+/*because legend doesn't inherit in IE */
+legend {color:#333; } a{color: #333}
+/*滚动条样式*/
+::-webkit-scrollbar-track-piece{
+	border-radius:0;/*滚动条的圆角宽度*/
+}
+::-webkit-scrollbar{
+	width:5px;/*滚动条的宽度*/
+	height:5px;/*滚动条的高度*/
+	border-radius: 5px;
+}
+::-webkit-scrollbar:hover{
+	background-color: rgb(204, 204, 204);
+}
+::-webkit-scrollbar-thumb{
+	background-color:rgba(87, 92, 96, 0.6);
+	border-radius:5px;
+	min-height: 60px;
+}
+::-webkit-scrollbar-thumb:hover{
+	background-color:rgba(87, 92, 96, 0.9);
+}
+
+:-webkit-any(button, input[type='button'], input[type='submit']):not(.custom_button):not(.link_button),
+select,
+input[type='checkbox'],
+input[type='radio']{
+	-webkit-appearance: none;
+	-webkit-user-select: none;
+	background-image: -webkit-linear-gradient(#EDEDED, #EDEDED 38%, #DEDEDE);
+	border: 1px solid rgba(0, 0, 0, 0.25);
+	border-radius: 2px;
+	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08), inset 0 1px 2px rgba(255, 255, 255, 0.75);
+	color: #444;
+	font: inherit;
+	margin: 0 1px 0 0;
+	text-shadow: 0 1px 0 #F0F0F0;
+}
+
+:enabled:focus:-webkit-any(select, input[type='checkbox'], input[type='radio']){
+	-webkit-transition: border-color 200ms;
+	border-color: #4D90FE;
+	outline: none;
+}
+
+select {
+	-webkit-appearance: none;
+	-webkit-padding-end: 20px;
+	-webkit-padding-start: 6px;
+	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAAICAYAAAAbQcSUAAAAaUlEQVQoz2P4//8/A7UwdkEGhiggTsODo4g2LBEImJmZvwE1/UfHIHGQPNGGAbHCggULFrKxsf1ENgjEB4mD5EnxJoaByAZB5Yk3DNlAPj6+L8gGkWUYzMC3b982IRtEtmFQjaxYxDAwAGi4TwMYKNLfAAAAAElFTkSuQmCC'),
+	 -webkit-linear-gradient(#EDEDED, #EDEDED 38%, #DEDEDE);
+	background-position: right center;
+	background-repeat: no-repeat;
+	min-height: 2em;
+	min-width: 4em;
+	max-width: 220px;
+	padding-bottom: 1px;
+}
+
+input[type='radio'] {
+	border-radius: 100%;
+	bottom: 3px;
+	height: 15px;
+	position: relative;
+	vertical-align: middle;
+	width: 15px;
+}
+
+input[type='radio']:checked::before {
+	background-color: #666;
+	border-radius: 100%;
+	bottom: 3px;
+	content: '';
+	display: block;
+	left: 3px;
+	position: absolute;
+	right: 3px;
+	top: 3px;
+}
+
+input[type='checkbox'] {
+	bottom: 2px;
+	height: 13px;
+	position: relative;
+	vertical-align: middle;
+	width: 13px;
+}
+input[type='checkbox']:checked::before {
+	-webkit-user-select: none;
+	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAALCAYAAACprHcmAAAAcklEQVQY02NgwA/YoJgoEA/Es4DYgJBCJSBeD8SboRinBiYg7kZS2IosyQ/Eakh8LySFq4FYHFlxGRBvBOJYqMRqJMU+yApNkSRAeC0Sux3dfSCTetE0wKyXxOWhMKhTYIr9CAUXyJMzgLgBagBBgDPGAI2LGdNt0T1AAAAAAElFTkSuQmCC');
+	background-size: 100% 100%;
+	content: '';
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+.hide {
+	display: none;
+}
+
+:-webkit-any( input[type='button'], input[type='submit']),
+select{
+	min-height:0;
+	height: 22px;
+	line-height: 16px;
+	position: relative;
+	top:-2px;
+	cursor: pointer;
+}
+:-webkit-any(button):not(.custom_button):not(.link_button){
+	min-height:0;
+	height: 22px;
+	line-height: 16px;
+	position: relative;
+	top:-1px;
+	cursor: pointer;
+}
+select.folder_select{width:220px;}
+input.folder_input{width:400px;}
+.clearfix:after{content:'\0020';clear:both;display: block;height:0px;overflow: hidden;}
+.ml5{margin-left: 5px;}
+.ml10{margin-left: 10px;}
+.ml15{margin-left: 15px;}
+.ml20{margin-left: 20px;}
+.mr5{margin-right: 5px;}
+.mr10{margin-right: 10px;}
+.mr15{margin-right: 15px;}
+.mr20{margin-right: 20px;}
+.mt5{margin-top: 5px;}
+.mt10{margin-top: 10px;}
+.mt15{margin-top: 15px;}
+.mt20{margin-top: 20px;}
+.mb5{margin-bottom: 5px;}
+.mb10{margin-bottom: 10px;}
+.mb15{margin-bottom: 15px;}
+.mb20{margin-bottom: 20px;}
+
+/*按钮*/
+.btn_strong{background-color: #3bb3e0;padding:0 20px;position: relative;font-size: 12px;text-decoration: none;color: #fff;border: solid 1px #186f8f;background-image: -webkit-gradient( linear, left bottom, left top, color-stop(0, rgb(44,160,202)), color-stop(1, rgb(62,184,229)) );box-shadow: inset 0px 1px 0px #7fd2f1, 0px 1px 0px #fff;border-radius: 5px;line-height: 30px;cursor: pointer;letter-spacing: 5px;}

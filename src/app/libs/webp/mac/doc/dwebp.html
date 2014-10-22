@@ -1,0 +1,243 @@
+<!-- Creator     : groff version 1.19.2 -->
+<!-- CreationDate: Thu Sep 22 17:00:23 2011 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p     { margin-top: 0; margin-bottom: 0; }
+       pre   { margin-top: 0; margin-bottom: 0; }
+       table { margin-top: 0; margin-bottom: 0; }
+</style>
+<title>DWEBP</title>
+
+</head>
+<body>
+
+<h1 align=center>DWEBP</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#OPTIONS">OPTIONS</a><br>
+<a href="#Examples:">Examples:</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+
+<hr>
+
+
+<a name="NAME"></a>
+<h2>NAME</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">dwebp &minus;
+decompress a WebP file to an image file</p>
+
+<a name="SYNOPSIS"></a>
+<h2>SYNOPSIS</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>dwebp</b>
+[<i>options</i>] <i>input_file.webp</i></p>
+
+<a name="DESCRIPTION"></a>
+<h2>DESCRIPTION</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">This manual
+page documents the <b>dwebp</b> command.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>dwebp</b>
+decompresses WebP files into PNG, PPM or PGM images.</p>
+
+<a name="OPTIONS"></a>
+<h2>OPTIONS</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">The basic
+options are:</p>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="3%">
+
+
+
+<p style="margin-top: 1em" valign="top"><b>&minus;h</b></p> </td>
+<td width="8%"></td>
+<td width="30%">
+
+
+<p style="margin-top: 1em" valign="top">Print usage
+summary.</p> </td>
+<td width="48%">
+</td>
+</table>
+
+<p style="margin-left:11%;"><b>&minus;version</b></p>
+
+<p style="margin-left:22%;">Print the version number (as
+major.minor.revision) and exit.</p>
+
+<p style="margin-left:11%;"><b>&minus;o string</b></p>
+
+<p style="margin-left:22%;">Specify the name of the output
+file (as PNG format by default).</p>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+
+<p style="margin-top: 1em" valign="top"><b>&minus;ppm</b></p> </td>
+<td width="5%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em" valign="top">Change the output
+format to PPM.</p></td>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+
+<p style="margin-top: 1em" valign="top"><b>&minus;pgm</b></p> </td>
+<td width="5%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em" valign="top">Change the output
+format to PGM. The output consist of luma/chroma samples
+instead of RGB, using the ICM4 layout. This option is mainly
+for verification and debugging purpose.</p></td>
+</table>
+
+<p style="margin-left:11%;"><b>&minus;nofancy</b></p>
+
+<p style="margin-left:22%;">Don&rsquo;t use the fancy
+upscaler for YUV420. This may lead to jaggy edges
+(especially the red ones), but should be faster.</p>
+
+<p style="margin-left:11%;"><b>&minus;nofilter</b></p>
+
+<p style="margin-left:22%;">Don&rsquo;t use the in-loop
+filtering process even if it is required by the bitstream.
+This may produce visible blocks on the non-compliant output,
+but will make the decoding faster.</p>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="4%">
+
+
+
+<p style="margin-top: 1em" valign="top"><b>&minus;mt</b></p> </td>
+<td width="7%"></td>
+<td width="70%">
+
+
+<p style="margin-top: 1em" valign="top">Use multi-threading
+for decoding, if possible.</p></td>
+<td width="8%">
+</td>
+</table>
+
+<p style="margin-left:11%;"><b>&minus;crop x_position
+y_position width height</b></p>
+
+<p style="margin-left:22%;">Crop the decoded picture to a
+rectangle with top-left corner at coordinates
+(<b>x_position</b>, <b>y_position</b>) and size <b>width</b>
+x <b>height</b>. This cropping area must be fully contained
+within the source rectangle. The top-left corner will be
+snapped to even coordinates if needed. This option is meant
+to reduce the memory needed for cropping large images. Note:
+the cropping is applied <i>before</i> any scaling.</p>
+
+<p style="margin-left:11%;"><b>&minus;scale width
+height</b></p>
+
+<p style="margin-left:22%;">Rescale the decoded picture to
+dimension <b>width</b> x <b>height</b>. This option is
+mostly intended to reducing the memory needed to decode
+large images, when only a small version is needed
+(thumbnail, preview, etc.). Note: scaling is applied
+<i>after</i> cropping.</p>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+
+<p style="margin-top: 1em" valign="top"><b>&minus;v</b></p> </td>
+<td width="2%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em" valign="top">Print extra
+information (decoding time in particular).</p></td>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+
+<p style="margin-top: 1em" valign="top"><b>&minus;noasm</b></p> </td>
+<td width="2%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em" valign="top">Disable all
+assembly optimizations.</p></td>
+</table>
+
+<a name="Examples:"></a>
+<h2>Examples:</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">dwebp
+picture.webp -o output.png <br>
+dwebp picture.webp -ppm -o output.ppm</p>
+
+<a name="SEE ALSO"></a>
+<h2>SEE ALSO</h2>
+
+
+
+<p style="margin-top: 1em" valign="top"><b>cwebp</b>(1).</p>
+
+<p style="margin-left:11%;">Please refer to
+http://code.google.com/speed/webp/ for additional
+information.</p>
+
+<a name="AUTHOR"></a>
+<h2>AUTHOR</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>dwebp</b>
+was written by the WebP team. <br>
+The latest source tree is available at
+http://www.webmproject.org/code</p>
+
+<p style="margin-left:11%; margin-top: 1em">This manual
+page was written by Pascal Massimino
+&lt;pascal.massimino@gmail.com&gt;, for the Debian project
+(and may be used by others).</p>
+<hr>
+</body>
+</html>

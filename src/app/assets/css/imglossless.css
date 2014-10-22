@@ -1,0 +1,28 @@
+#imglossless .box_preview ul{padding-left:0px;}
+#imglossless .box_preview  li{float:left;margin:8px;position: relative;color:#aaa;width:135px;border:2px solid #eee;-webkit-animation:zoom .3s;}
+#imglossless .box_preview  li.checked{color:#eee;border:2px solid #888;}
+#imglossless .box_preview  li.checked:hover{color:#eee;border:2px solid #888;}
+#imglossless .box_preview  li:hover{color:#333;border:2px solid #ccc;}
+#imglossless .box_preview  li.checked .info{background: #888;}
+#imglossless .box_preview  li.checked:hover .info{background: #888;}
+#imglossless .box_preview  li:hover .info{background: #ccc;}
+
+
+#imglossless .box_preview  li .thumb{width:135px;height:135px;display: table-cell;text-align: center;vertical-align: middle;z-index: 2;position: relative;cursor:pointer;font-size:0px;}
+#imglossless .box_preview  li .thumb img{max-width:100%;max-height:100%;}
+#imglossless .box_preview  li .info{width:100%;height:24px;background: #ddd;line-height: 24px;box-sizing:border-box;-webkit-box-sizing:border-box;padding-left:5px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;}
+#imglossless .box_preview  li .info input[type="text"]{width: 74px;overflow: hidden;background: transparent;border:1px solid transparent;padding:0 3px;line-height: 20px;height:20px;color:#333;}
+#imglossless .box_preview  li .info i{cursor: pointer;opacity: .7;float:right;line-height: 24px;margin-right:5px;}
+#imglossless .box_preview  li .info i:hover{opacity: 1}
+#imglossless .box_preview  li .info input[type="text"]:focus{background: #fff;border:1px solid #aaa;outline: none;}
+#imglossless .box_preview  li.checked .info input[type="text"]{color:#eee;}
+#imglossless .box_preview  li.checked input[type="text"]{color:#eee;}
+#imglossless .box_preview  li.checked:hover input[type="text"]{color:#eee;}
+#imglossless .box_preview  li:hover input[type="text"]{color:#333;}
+#imglossless .box_preview  li.checked input[type="text"]:focus{color:#888;}
+
+
+@-webkit-keyframes zoom {
+    0%{-webkit-transform:scale(0);}
+    100%{-webkit-transform:scale(1);}
+}

@@ -1,0 +1,371 @@
+<!-- Creator     : groff version 1.19.2 -->
+<!-- CreationDate: Thu Sep 22 17:00:23 2011 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p     { margin-top: 0; margin-bottom: 0; }
+       pre   { margin-top: 0; margin-bottom: 0; }
+       table { margin-top: 0; margin-bottom: 0; }
+</style>
+<title>CWEBP</title>
+
+</head>
+<body>
+
+<h1 align=center>CWEBP</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#OPTIONS">OPTIONS</a><br>
+<a href="#ADDITIONAL OPTIONS">ADDITIONAL OPTIONS</a><br>
+<a href="#Examples:">Examples:</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+
+<hr>
+
+
+<a name="NAME"></a>
+<h2>NAME</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">cwebp &minus;
+compress an image file to a WebP file</p>
+
+<a name="SYNOPSIS"></a>
+<h2>SYNOPSIS</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>cwebp</b>
+[<i>options</i>] <i>input_file -o output_file.webp</i></p>
+
+<a name="DESCRIPTION"></a>
+<h2>DESCRIPTION</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">This manual
+page documents the <b>cwebp</b> command.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>cwebp</b>
+compresses an image using the WebP format. Input format can
+be either PNG, JPEG, or raw Y&rsquo;CbCr samples. When using
+PNG, the transparency information (alpha channel) is
+currently discarded.</p>
+
+<a name="OPTIONS"></a>
+<h2>OPTIONS</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">The basic
+options are: <b><br>
+&minus;o string</b></p>
+
+<p style="margin-left:22%;">Specify the name of the output
+WebP file. If omitted, <b>cwebp</b> will perform compression
+but only report statistics.</p>
+
+<p style="margin-left:11%;"><b>&minus;h,
+&minus;help</b></p>
+
+<p style="margin-left:22%;">A short usage summary.</p>
+
+<p style="margin-left:11%;"><b>&minus;H,
+&minus;longhelp</b></p>
+
+<p style="margin-left:22%;">A summary of all the possible
+options.</p>
+
+<p style="margin-left:11%;"><b>&minus;version</b></p>
+
+<p style="margin-left:22%;">Print the version number (as
+major.minor.revision) and exit.</p>
+
+<p style="margin-left:11%;"><b>&minus;q float</b></p>
+
+<p style="margin-left:22%;">Specify the compression factor
+between 0 and 100. A small factor produces a smaller file
+with lower quality. Best quality is achieved using a value
+of 100. The default is 75.</p>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+<p style="margin-top: 1em" valign="top"><b>&minus;f
+int</b></p> </td>
+<td width="2%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em" valign="top">Specify the
+strength of the deblocking filter, between 0 (no filtering)
+and 100 (maximum filtering). A value of 0 will turn off any
+filtering. Higher value will increase the strength of the
+filtering process applied after decoding the picture. The
+higher the smoother the picture will appear. Typical values
+are usually in the range of 20 to 50.</p></td>
+</table>
+
+<p style="margin-left:11%;"><b>&minus;preset string</b></p>
+
+<p style="margin-left:22%;">Specify a set of pre-defined
+parameters to suit a particular type of source material.
+Possible values are: <b>default</b>, <b>photo</b>,
+<b>picture</b>, <b>drawing</b>, <b>icon</b>, <b>text</b>.
+Since <b>&minus;preset</b> overwrites the other
+parameters&rsquo; values (except the <b>&minus;q</b> one),
+this option should preferably appear first in the order of
+the arguments.</p>
+
+<p style="margin-left:11%;"><b>&minus;sns int</b></p>
+
+<p style="margin-left:22%;">Specify the amplitude of the
+spatial noise shaping. Spatial noise shaping (or <b>sns</b>
+for short) refers to a general collection of built-in
+algorithms used to decide which area of the picture should
+use relatively less bits, and where else to better transfer
+these bits. The possible range goes from 0 (algorithm is
+off) to 100 (the maximal effect). The default value is
+80.</p>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+<p style="margin-top: 1em" valign="top"><b>&minus;m
+int</b></p> </td>
+<td width="2%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em" valign="top">Specify the
+compression method to use. This parameter controls the
+tradeoff between encoding speed and the compressed file size
+and quality. Possible values range from 0 to 6. Default
+value is 4. When higher values are used, the encoder will
+spend more time inspecting additional encoding possibilities
+and decide on the quality gain. Lower value can result is
+faster processing time at the expense of larger filesize and
+lower compression quality.</p></td>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+
+<p style="margin-top: 1em" valign="top"><b>&minus;af</b></p> </td>
+<td width="2%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em" valign="top">Turns auto-filter
+on. This algorithm will spend additional time optimizing the
+filtering strength to reach a well-balanced quality.</p></td>
+</table>
+
+<a name="ADDITIONAL OPTIONS"></a>
+<h2>ADDITIONAL OPTIONS</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">More advanced
+options are: <b><br>
+&minus;sharpness int</b></p>
+
+<p style="margin-left:22%;">Specify the sharpness of the
+filtering (if used). Range is 0 (sharpest) to 7 (least
+sharp). Default is 0.</p>
+
+<p style="margin-left:11%;"><b>&minus;strong</b></p>
+
+<p style="margin-left:22%;">Use a stronger filtering than
+the default one (if filtering is being used thanks to the
+<b>&minus;f</b> option). Strong filtering is off by
+default.</p>
+
+<p style="margin-left:11%;"><b>&minus;segments int</b></p>
+
+<p style="margin-left:22%;">Change the number of partitions
+to use during the segmentation of the sns algorithm.
+Segments should be in range 1 to 4. Default value is 4.</p>
+
+<p style="margin-left:11%;"><b>&minus;partition_limit
+int</b></p>
+
+<p style="margin-left:22%;">Degrade quality by limiting the
+number of bits used by some macroblocks. Range is 0 (no
+degradation, the default) to 100 (full degradation). Useful
+values are usually around 30-70 for moderately large images.
+In the VP8 format, the so-called control partition has a
+limit of 512k and is used to store the following
+information: whether the macroblock is skipped, which
+segment it belongs to, whether it is coded as intra 4x4 or
+intra 16x16 mode, and finally the prediction modes to use
+for each of the sub-blocks. For a very large image, 512k
+only leaves room to few bits per 16x16 macroblock. The
+absolute minimum is 4 bits per macroblock. Skip, segment,
+and mode information can use up almost all these 4 bits
+(although the case is unlikely), which is problematic for
+very large images. The partition_limit factor controls how
+frequently the most bit-costly mode (intra 4x4) will be
+used. This is useful in case the 512k limit is reached and
+the following message is displayed: <i>Error code: 6
+(PARTITION0_OVERFLOW: Partition #0 is too big to fit
+512k)</i>. If using <b>-partition_limit</b> is not enough to
+meet the 512k constraint, one should use less segments in
+order to save more header bits per macroblock. See the
+<b>-segments</b> option.</p>
+
+<p style="margin-left:11%;"><b>&minus;size int</b></p>
+
+<p style="margin-left:22%;">Specify a target size (in
+bytes) to try and reach for the compressed output.
+Compressor will make several pass of partial encoding in
+order to get as close as possible to this target.</p>
+
+<p style="margin-left:11%;"><b>&minus;psnr float</b></p>
+
+<p style="margin-left:22%;">Specify a target PSNR (in dB)
+to try and reach for the compressed output. Compressor will
+make several pass of partial encoding in order to get as
+close as possible to this target.</p>
+
+<p style="margin-left:11%;"><b>&minus;pass int</b></p>
+
+<p style="margin-left:22%;">Set a maximum number of pass to
+use during the dichotomy used by options <b>&minus;size</b>
+or <b>&minus;psnr</b>. Maximum value is 10.</p>
+
+<p style="margin-left:11%;"><b>&minus;crop x_position
+y_position width height</b></p>
+
+<p style="margin-left:22%;">Crop the source to a rectangle
+with top-left corner at coordinates (<b>x_position</b>,
+<b>y_position</b>) and size <b>width</b> x <b>height</b>.
+This cropping area must be fully contained within the source
+rectangle.</p>
+
+<p style="margin-left:11%;"><b>&minus;s width
+height</b></p>
+
+<p style="margin-left:22%;">Specify that the input file
+actually consists of raw Y&rsquo;CbCr samples following the
+ITU-R BT.601 recommendation, in 4:2:0 linear format. The
+luma plane has size <b>width</b> x <b>height</b>.</p>
+
+<p style="margin-left:11%;"><b>&minus;map int</b></p>
+
+<p style="margin-left:22%;">Output additional ASCII-map of
+encoding information. Possible map values range from 1 to 6.
+This is only meant to help debugging.</p>
+
+<p style="margin-left:11%;"><b>&minus;pre int</b></p>
+
+<p style="margin-left:22%;">Specify a pre-processing
+filter. This option is a placeholder and has currently no
+effect.</p>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+
+<p style="margin-top: 1em" valign="top"><b>&minus;noasm</b></p> </td>
+<td width="2%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em" valign="top">Disable all
+assembly optimizations.</p></td>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+
+<p style="margin-top: 1em" valign="top"><b>&minus;v</b></p> </td>
+<td width="2%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em" valign="top">Print extra
+information (encoding time in particular).</p></td>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+
+<p style="margin-top: 1em" valign="top"><b>&minus;quiet</b></p> </td>
+<td width="2%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em" valign="top">Do not print
+anything.</p> </td>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+
+<p style="margin-top: 1em" valign="top"><b>&minus;short</b></p> </td>
+<td width="2%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em" valign="top">Only print brief
+information (output file size and PSNR) for testing
+purpose.</p> </td>
+</table>
+
+<a name="Examples:"></a>
+<h2>Examples:</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">cwebp -q 70
+picture.png -o picture.webp <br>
+cwebp -sns 70 -f 50 -strong -af -size 60000 picture.png -o
+picture.webp</p>
+
+<a name="SEE ALSO"></a>
+<h2>SEE ALSO</h2>
+
+
+
+<p style="margin-top: 1em" valign="top"><b>dwebp</b>(1).</p>
+
+<p style="margin-left:11%;">Please refer to
+http://code.google.com/speed/webp/ for additional
+information.</p>
+
+<a name="AUTHOR"></a>
+<h2>AUTHOR</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>cwebp</b>
+was written by the WebP team. <br>
+The latest source tree is available at
+http://www.webmproject.org/code</p>
+
+<p style="margin-left:11%; margin-top: 1em">This manual
+page was written by Pascal Massimino
+&lt;pascal.massimino@gmail.com&gt;, for the Debian project
+(and may be used by others).</p>
+<hr>
+</body>
+</html>

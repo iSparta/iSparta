@@ -1,0 +1,179 @@
+CWEBP(1)                                                              CWEBP(1)
+
+
+
+NAME
+       cwebp  compress an image file to a WebP file
+
+SYNOPSIS
+       cwebp [options] input_file o output_file.webp
+
+DESCRIPTION
+       This manual page documents the cwebp command.
+
+       cwebp  compresses  an image using the WebP format.  Input format can be
+       either PNG, JPEG, or raw YCbCr samples.  When using  PNG,  the  trans
+       parency information (alpha channel) is currently discarded.
+
+OPTIONS
+       The basic options are:
+
+      o string
+              Specify the name of the output WebP file. If omitted, cwebp will
+              perform compression but only report statistics.
+
+      h,help
+              A short usage summary.
+
+      H,longhelp
+              A summary of all the possible options.
+
+      version
+              Print the version number (as major.minor.revision) and exit.
+
+      q float
+              Specify the compression factor between 0 and 100. A small factor
+              produces  a  smaller  file  with  lower quality. Best quality is
+              achieved using a value of 100. The default is 75.
+
+      f int Specify the strength of the deblocking  filter,  between  0  (no
+              filtering)  and  100 (maximum filtering). A value of 0 will turn
+              off any filtering.  Higher value will increase the  strength  of
+              the  filtering  process  applied after decoding the picture. The
+              higher the smoother the picture will appear. Typical values  are
+              usually in the range of 20 to 50.
+
+      preset string
+              Specify  a  set  of  predefined parameters to suit a particular
+              type of source material. Possible values are:   default,  photo,
+              picture, drawing, icon, text. Sincepreset overwrites the other
+              parameters values (except  the q  one),  this  option  should
+              preferably appear first in the order of the arguments.
+
+      sns int
+              Specify  the  amplitude  of  the  spatial noise shaping. Spatial
+              noise shaping (or sns for short) refers to a general  collection
+              of  builtin algorithms used to decide which area of the picture
+              should use relatively less bits, and where else to better trans
+              fer  these  bits.  The  possible range goes from 0 (algorithm is
+              off) to 100 (the maximal effect). The default value is 80.
+
+      m int Specify the compression method to use. This  parameter  controls
+              the tradeoff between encoding speed and the compressed file size
+              and quality.  Possible values range from 0 to 6.  Default  value
+              is  4.  When higher values are used, the encoder will spend more
+              time inspecting additional encoding possibilities and decide  on
+              the  quality  gain.  Lower value can result is faster processing
+              time at the expense of larger  filesize  and  lower  compression
+              quality.
+
+      af    Turns  autofilter on. This algorithm will spend additional time
+              optimizing the filtering strength to reach a wellbalanced qual
+              ity.
+
+
+ADDITIONAL OPTIONS
+       More advanced options are:
+
+      sharpness int
+              Specify  the  sharpness  of the filtering (if used).  Range is 0
+              (sharpest) to 7 (least sharp). Default is 0.
+
+      strong
+              Use a stronger filtering than the default one (if  filtering  is
+              being  used thanks to thef option). Strong filtering is off by
+              default.
+
+      segments int
+              Change the number of partitions to use during  the  segmentation
+              of  the  sns  algorithm.  Segments  should  be  in range 1 to 4.
+              Default value is 4.
+
+      partition_limit int
+              Degrade quality by limiting the number of bits used by some mac
+              roblocks.  Range is 0 (no degradation, the default) to 100 (full
+              degradation).  Useful values are usually around 3070 for moder
+              ately  large  images.   In the VP8 format, the socalled control
+              partition has a limit of 512k and is used to store the following
+              information: whether the macroblock is skipped, which segment it
+              belongs to, whether it is coded as  intra  4x4  or  intra  16x16
+              mode,  and  finally  the prediction modes to use for each of the
+              subblocks.  For a very large image, 512k only  leaves  room  to
+              few  bits  per 16x16 macroblock.  The absolute minimum is 4 bits
+              per macroblock. Skip, segment, and mode information can  use  up
+              almost  all  these 4 bits (although the case is unlikely), which
+              is problematic for very large images. The partition_limit factor
+              controls  how  frequently  the  most bitcostly mode (intra 4x4)
+              will be used. This is useful in case the 512k limit  is  reached
+              and  the  following  message is displayed: Error code: 6 (PARTI_
+              TION0_OVERFLOW: Partition #0 is too big to fit 512k).  If  using
+             partition_limit  is not enough to meet the 512k constraint, one
+              should use less segments in order to save more header  bits  per
+              macroblock.  See thesegments option.
+
+      size int
+              Specify  a  target size (in bytes) to try and reach for the com
+              pressed output.  Compressor will make several  pass  of  partial
+              encoding in order to get as close as possible to this target.
+
+      psnr float
+              Specify  a  target  PSNR  (in  dB) to try and reach for the com
+              pressed output.  Compressor will make several  pass  of  partial
+              encoding in order to get as close as possible to this target.
+
+      pass int
+              Set a maximum number of pass to use during the dichotomy used by
+              optionssize orpsnr. Maximum value is 10.
+
+      crop x_position y_position width height
+              Crop the source to a rectangle with topleft corner  at  coordi
+              nates  (x_position,  y_position)  and size width x height.  This
+              cropping area must be fully contained within the source  rectan
+              gle.
+
+      s width height
+              Specify that the input file actually consists of raw YCbCr sam
+              ples following the ITUR BT.601 recommendation, in 4:2:0  linear
+              format.  The luma plane has size width x height.
+
+      map int
+              Output  additional  ASCIImap  of encoding information. Possible
+              map values range from 1 to 6. This is only meant to help  debug
+              ging.
+
+      pre int
+              Specify  a  preprocessing  filter. This option is a placeholder
+              and has currently no effect.
+
+      noasm Disable all assembly optimizations.
+
+      v     Print extra information (encoding time in particular).
+
+      quiet Do not print anything.
+
+      short Only print brief information (output file  size  and  PSNR)  for
+              testing purpose.
+
+
+Examples:
+       cwebp q 70 picture.png o picture.webp
+       cwebp sns 70 f 50 strong af size 60000 picture.png o picture.webp
+
+
+
+
+SEE ALSO
+       dwebp(1).
+       Please  refer  to  http://code.google.com/speed/webp/  for   additional
+       information.
+
+AUTHOR
+       cwebp was written by the WebP team.
+       The latest source tree is available at http://www.webmproject.org/code
+
+       This   manual   page  was  written  by  Pascal  Massimino  <pascal.mas
+       simino@gmail.com>, for the Debian project (and may be used by  others).
+
+
+
+                              September 19, 2011                      CWEBP(1)

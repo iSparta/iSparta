@@ -1,0 +1,85 @@
+DWEBP(1)                                                              DWEBP(1)
+
+
+
+NAME
+       dwebp  decompress a WebP file to an image file
+
+SYNOPSIS
+       dwebp [options] input_file.webp
+
+DESCRIPTION
+       This manual page documents the dwebp command.
+
+       dwebp decompresses WebP files into PNG, PPM or PGM images.
+
+OPTIONS
+       The basic options are:
+
+      h     Print usage summary.
+
+      version
+              Print the version number (as major.minor.revision) and exit.
+
+      o string
+              Specify  the name of the output file (as PNG format by default).
+
+      ppm   Change the output format to PPM.
+
+      pgm   Change  the  output  format  to  PGM.  The  output  consist   of
+              luma/chroma  samples instead of RGB, using the ICM4 layout. This
+              option is mainly for verification and debugging purpose.
+
+      nofancy
+              Dont use the fancy upscaler for YUV420. This may lead to  jaggy
+              edges (especially the red ones), but should be faster.
+
+      nofilter
+              Dont  use  the inloop filtering process even if it is required
+              by the bitstream. This may produce visible blocks  on  the  non
+              compliant output, but will make the decoding faster.
+
+      mt    Use multithreading for decoding, if possible.
+
+      crop x_position y_position width height
+              Crop  the decoded picture to a rectangle with topleft corner at
+              coordinates (x_position, y_position) and size  width  x  height.
+              This  cropping  area  must  be fully contained within the source
+              rectangle.  The topleft corner will be snapped to even  coordi
+              nates  if  needed.   This  option  is meant to reduce the memory
+              needed for cropping large images.  Note: the cropping is applied
+              before any scaling.
+
+      scale width height
+              Rescale  the  decoded  picture to dimension width x height. This
+              option is mostly intended  to  reducing  the  memory  needed  to
+              decode large images, when only a small version is needed (thumb
+              nail, preview, etc.).  Note: scaling is applied after  cropping.
+
+      v     Print extra information (decoding time in particular).
+
+      noasm Disable all assembly optimizations.
+
+
+Examples:
+       dwebp picture.webp o output.png
+       dwebp picture.webp ppm o output.ppm
+
+
+
+
+SEE ALSO
+       cwebp(1).
+       Please   refer  to  http://code.google.com/speed/webp/  for  additional
+       information.
+
+AUTHOR
+       dwebp was written by the WebP team.
+       The latest source tree is available at http://www.webmproject.org/code
+
+       This  manual  page  was  written  by  Pascal   Massimino   <pascal.mas
+       simino@gmail.com>,  for the Debian project (and may be used by others).
+
+
+
+                              September 19, 2011                      DWEBP(1)
