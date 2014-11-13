@@ -1,24 +1,3 @@
 ## iSparta
 
-Webp、apng转换工具
-
-完整路径：
-
-```
-|-src
-|  |-package.json
-|  |-icudt.dll
-|  |-nw.pak
-|  |-nw.exe
-|  |-app
-|     |-main.html
-|     |-iSparta.png
-|     |-libs
-|     |  |-apng(libs)
-|     |  |-webp(libs)
-|     |-assets
-|        |-font
-|        |-css
-|        |-js
-|
-```
+iSparta 是一款 APNG 和 Webp 转换工具。在 package.json 文档中使用 `npm install` 命令安装依赖模块即可。.
