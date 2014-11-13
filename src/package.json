@@ -1,22 +1,27 @@
 {
-	"name": "iSparta",
-	"main": "app/main.html",
-	"description": "A tool to handle PNG/APNG/WebP",
-	"keywords": ["WebP", "APNG"],
-	"dependencies": {
-		"fs-extra": ">=0.12.0"
-	},
-	"window": {
-		"icon": "iSparta.png",
-		"toolbar": false,
-		"width": 800,
-		"height": 600,
-		"resizable": false,
-		"position": "center",
-		"frame": false
-	},
-	"repository": [{
-		"type": "git",
-		"url": "https://github.com/iSparta/iSparta.git"
-	}]
+  "name": "iSparta",
+  "main": "app/main.html",
+  "description": "A tool to handle PNG/APNG/WebP",
+  "keywords": [
+    "WebP",
+    "APNG"
+  ],
+  "dependencies": {
+    "fs-extra": "^0.12.0"
+  },
+  "window": {
+    "icon": "iSparta.png",
+    "toolbar": false,
+    "width": 800,
+    "height": 600,
+    "resizable": false,
+    "position": "center",
+    "frame": false
+  },
+  "repository": [
+    {
+      "type": "git",
+      "url": "https://github.com/iSparta/iSparta.git"
+    }
+  ]
 }
