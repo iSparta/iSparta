@@ -255,7 +255,7 @@
 				}
 				// console.log(pngquantcomd)
 				if(type.toLowerCase()=="png"){
-					
+					console.log(pngquantcomd)
 					exec(pngquantcomd, {timeout: 1000000}, function(e){
 						
 						var afterPath="";
