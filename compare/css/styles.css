@@ -1,0 +1,55 @@
+body {
+   
+    margin: 0 auto;
+    width: 1004px;
+    font-family: "microsoft yahei";
+    
+}
+.clearfix:after{
+    content:"\0020";
+    height:0px;
+    display: block;
+    clear:both;
+    overflow: hidden;
+}
+canvas
+{
+    border: #ccc 1px solid;
+    
+}
+strong{color:#f00;}
+.container{
+    position: relative;height:220px;
+}
+.container canvas{
+    position: absolute;
+    top:0px;left:0px;opacity: .5
+}
+hr{margin:20px 0; border: #555 1px solid;}
+h1{background: #aaa;}
+.tips{color:#444;font-size: 14px;margin-left:30px;}
+.imgcont{}
+.imgcont .img{float:left;text-align: center;font-size: 14px;line-height: 18px;margin-right:20px;width:200px;margin-bottom:10px;}
+.imgcont img{width:200px;height:200px;}
+.imgcont .img p{padding:0px 10px;background: #eee;margin:0px;}
+
+.color{position: fixed;top:50px;right:0px;padding:10px;background: #aaa;}
+.color div{cursor:pointer;}
+
+.blank{background: #000;}
+.white{background: #fff;}
+.transparent{background: url(../image/transparent.png);}
+.red{background: #a00;}
+.green{background: #0a0;}
+.blue{background: #00a;}
+
+.color .blank{width: 50px;height:50px;margin-bottom: 10px;}
+.color .white{width: 50px;height:50px;margin-bottom: 10px;}
+.color .transparent{width: 50px;height:50px;margin-bottom: 10px;}
+.color .red{width: 50px;height:50px;margin-bottom: 10px;}
+.color .green{width: 50px;height:50px;margin-bottom: 10px;}
+.color .blue{width: 50px;height:50px;margin-bottom: 10px;}
+
+.show{position: fixed;bottom:0px;right:0px;padding:10px;background: #aaa;}
+.show:after{content:"";display: block;height:0px;overflow: hidden;clear:both;}
+.show .item{height:20px;margin-bottom: 0px;float:left;padding-right: 10px;}
