@@ -1,4 +1,4 @@
-(function ($) {
+;(function ($) {
 
     var fs = require('fs'),
         path = require('path'),
@@ -104,6 +104,7 @@
             this.c_dirSize = 0;
 
             var webp = window.iSparta.webp,
+                ui = window.iSparta.ui,
                 sysInfo,
                 dConfig = ' -m 6 ',
                 savePath = this.options.savePath[this.options.savePathIndex],
@@ -122,7 +123,6 @@
             this.cwebp = process.cwd() + sysInfo;
             this.param = dConfig + this.options.config + ' -q ' + this.options.ratio + ' ';
             this.currentPath = this.options.currentPath[this.options.currentPathIndex];
-
             this.dirName = this.currentPath.substring(this.currentPath.lastIndexOf(path.sep)+1) + '-webp' + config + this.options.ratio;
 
             if (savePath == 'parent') {
@@ -147,7 +147,7 @@
             }
 
             // directory
-            if(webp.isDir) {
+            if (webp.isDir) {
                 fs.readdir(dir, function(err, files) {
                     if (err) {
                         ui.showTips("读取文件夹出错！");
@@ -157,11 +157,10 @@
                         var newFilesArr = [];
 
                         for (var item in files) {
-                            if (files[item].indexOf('.jpg') != -1 || files[item].indexOf('.png') != -1) {
+                            if (files[item].indexOf('.jpg') != -1 || files[item].indexOf('.png') != -1 || files[item].indexOf('.JPG') != -1) {
                                 newFilesArr.push(files[item]);
                             }
                         }
-
                         webp.files = newFilesArr;
                         if (newFilesArr.length > 0) {
                             webp.control(0);
@@ -171,23 +170,17 @@
             } 
             // files
             else {
-
                 var newFileList = {},
                     index = 0;
 
                 for (var i in webp.fileList) {
-
-                    if (webp.fileList[i]['path'] !== undefined && (webp.fileList[i]['path'].indexOf('.jpg') !== -1 || webp.fileList[i]['path'].indexOf('.png') !== -1)) {
-
+                    if (webp.fileList[i]['path'] !== undefined && (webp.fileList[i]['path'].indexOf('.jpg') !== -1 || webp.fileList[i]['path'].indexOf('.png') !== -1 || webp.fileList[i].indexOf('.JPG') != -1)) {
                         newFileList[index] = webp.fileList[i];
                         index++;
-
                     }
                 }
                 newFileList['length'] = index;
-
                 webp.files = newFileList;
-
                 if (newFileList.length > 0) {
                    webp.control(0);
                 }
@@ -205,7 +198,6 @@
                 var progress = (i+1)/this.files.length;
                 ui.showProgress(progress, "正在处理第"+(i+1)+"张(共"+this.files.length+"张)图片",function(){});
                 webp._exec(i);
-
             }
             else {
                 var Allinfo = [];
@@ -228,33 +220,21 @@
                 webp = window.iSparta.webp;
 
             if (webp.isDir) {
+                console.log('"'+this.cwebp+'" '+this.param+'"'+this.currentPath+path.sep+this.files[i]+'"'+ ' -o ' + '"' + this.finalSavePath + this.files[i].substring(0, this.files[i].lastIndexOf('.')) + '.webp"');
 
-                /*****************************/
-                console.log('"'+this.cwebp+'" '+this.param+'"'+this.currentPath+path.sep+this.files[i]+'"'+ ' -o ' + '"' +
-                        this.finalSavePath + this.files[i].substring(0, this.files[i].lastIndexOf('.')) + '.webp"');
-
-                exec('"'+this.cwebp+'" '+this.param+'"'+this.currentPath+path.sep+this.files[i]+'"'+ ' -o ' + '"' +
-                    this.finalSavePath + this.files[i].substring(0, this.files[i].lastIndexOf('.')) + '.webp"', {timeout: 5000}, function() {
-
-                    console.log(webp.finalSavePath + webp.files[i].substring(0, webp.files[i].lastIndexOf('.')) + '.webp')
-                        webp.c_dirSize += fs.statSync(
-                                webp.finalSavePath + webp.files[i].substring(0, webp.files[i].lastIndexOf('.')) + '.webp').size;
-                        webp.control(i+1);
+                exec('"'+this.cwebp+'" '+this.param+'"'+this.currentPath+path.sep+this.files[i]+'"'+ ' -o ' + '"' + this.finalSavePath + this.files[i].substring(0, this.files[i].lastIndexOf('.')) + '.webp"', {timeout: 5000}, function() {
+                    console.log(webp.finalSavePath + webp.files[i].substring(0, webp.files[i].lastIndexOf('.')) + '.webp');
+                    webp.c_dirSize += fs.statSync(webp.finalSavePath + webp.files[i].substring(0, webp.files[i].lastIndexOf('.')) + '.webp').size;
+                    webp.control(i+1);
                 });
                 
             } else {
+                console.log('"'+this.cwebp+'" '+this.param+'"'+this.currentPath+path.sep+this.files[i].name+'"'+ ' -o ' + '"' + this.finalSavePath + this.files[i].name.substring(0, this.files[i].name.lastIndexOf('.')) + '.webp"');
 
-                /*****************************/
-                console.log('"'+this.cwebp+'" '+this.param+'"'+this.currentPath+path.sep+this.files[i].name+'"'+ ' -o ' + '"' +
-                        this.finalSavePath + this.files[i].name.substring(0, this.files[i].name.lastIndexOf('.')) + '.webp"');
-
-                exec('"'+this.cwebp+'" '+this.param+'"'+this.currentPath+path.sep+this.files[i].name+'"'+ ' -o ' + '"' +
-                    this.finalSavePath + this.files[i].name.substring(0, this.files[i].name.lastIndexOf('.')) + '.webp"', {timeout: 5000}, function() {
-                        webp.c_dirSize += fs.statSync(
-                                webp.finalSavePath + webp.files[i].name.substring(0, webp.files[i].name.lastIndexOf('.')) + '.webp').size;
-                        webp.control(i+1);
-                    });
-                
+                exec('"'+this.cwebp+'" '+this.param+'"'+this.currentPath+path.sep+this.files[i].name+'"'+ ' -o ' + '"' + this.finalSavePath + this.files[i].name.substring(0, this.files[i].name.lastIndexOf('.')) + '.webp"', {timeout: 5000}, function() {
+                    webp.c_dirSize += fs.statSync(webp.finalSavePath + webp.files[i].name.substring(0, webp.files[i].name.lastIndexOf('.')) + '.webp').size;
+                    webp.control(i+1);
+                });
             }
         }
     }
@@ -268,7 +248,6 @@
     var ui = {
 
         init: function() {
-
             this.topbar();
             this.preview();
             this.status();
@@ -304,7 +283,7 @@
 
             $btnCov.click(function() {
                 if($boxPreview.is(':empty')) {
-                    window.iSparta.ui.showTips('该文件夹无 JPG 或 PNG 格式的图片'); // 调用公用的提示类
+                    window.iSparta.ui.showTips('该文件夹无 JPG 或 PNG 格式的图片');
                 }else {
                     webp.convert(webp.dirName);        
                 }
@@ -313,7 +292,6 @@
             $btnOpenSavePath.click(function() {
                 gui.Shell.showItemInFolder($savePath.val());
             })
-
         },
 
         preview: function() {
@@ -360,9 +338,6 @@
 
                 // 目录
                 if (fileList.length === 1 && fileList[0].path.lastIndexOf('.') === -1 ) {
-
-                    console.log('dir');
-
                     webp.isDir = true;
                     var pathstr = fileList[0].path;
                     var opt = new Option(pathstr, pathstr);
@@ -378,9 +353,6 @@
 
                 // 拖曳文件
                 else {
-
-                    console.log('file');
-
                     webp.isDir = false;
                     webp.fileList = fileList;
 
@@ -393,9 +365,7 @@
 
                     $boxPreview.empty();
                     ui.fillImgList(fileList);
-
                 }
-
                 webp.dirName = pathstr + path.sep;
                 return false;
             }
@@ -439,7 +409,6 @@
         },
 
         fillImgDirList: function(path) {
-
             var webp = window.iSparta.webp,
                 manager = fileManager;
 
@@ -464,7 +433,6 @@
                 manager.readPics(fileList[i].path);
             }
         }
-
     }
 
 
@@ -581,18 +549,16 @@
     var fileManager = {
 
         readPics: function(files) {
-            if(files.indexOf('.jpg') != -1 || files.indexOf('.png') != -1){
+            if(files.indexOf('.jpg') != -1 || files.indexOf('.png') != -1 || files.indexOf('.JPG') != -1){
                 $boxPreview.append('<div class="thumbnail"><img src="'+files+'"></div>');
             }
         },
 
         getOriginDirSize: function(path) {
-
             var webp = window.iSparta.webp;
-
             webp.o_dirSize = 0;
 
-            if(path.indexOf('.jpg') != -1 || path.indexOf('.png') != -1){
+            if(path.indexOf('.jpg') != -1 || path.indexOf('.png') != -1 || path.indexOf('.JPG') != -1){
                 fs.stat(path, function(err, stats) {
                     webp.o_dirSize += stats.size;
                 })
@@ -604,7 +570,6 @@
             var hash = {}
      
             console.log('before:'+arr.length);
-
             for (var i=0; i<arr.length; i++) {
                 var key = arr[i];
                 if (hash[key] !== 1) {
@@ -637,9 +602,7 @@
                 return unique(arr);
             }
         }
-
     }
-
 
 
 })(jQuery);

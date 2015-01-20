@@ -6,11 +6,16 @@
 	float: left;
 	margin: 8px;
 	border: 2px solid #888;
+	position: relative;
 }
 
 .thumbnail img {
-	width: 135px;
-	min-height: 135px;
+	max-width: 135px;
+	max-height: 135px;
+	position: absolute;
+	top: 0; bottom: 0;
+	left: 0; right: 0;
+	margin: auto;
 }
 
 select.folder_select {
