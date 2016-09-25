@@ -17,12 +17,10 @@
 			this.checkVersion();
 			var openedNum=this.localData.get("openedNum");
 			process.on('uncaughtException', function (err) {
-				console.log('Caught exception: ' + err);
 				window.iSparta.ui.hideLoading();
 				window.iSparta.ui.hideProgress();
-	        	window.iSparta.ui.showTips("程序发生错误，请重试！");
+	        	window.iSparta.ui.showTips("程序发生错误：" + err);
 			});
-			
 			if(!openedNum){
 				this.localData.remove("apng");
 				this.localData.remove("webp");
@@ -212,7 +210,6 @@
 					window.iSparta.ui.showLoading();
 					closeCallback();
 					window.iSparta.ui.hideProgress();
-					
 				}
 			});
 		},
@@ -221,25 +218,24 @@
 			$(".pop_progress").removeClass("active");
 		},
 
-		showTips:function(txt,type,yesCallback,closeCallback){
+		showTips:function(txt, type, yesCallback, closeCallback){
 			if(!txt){
 				txt="出错了，请重试！";
 			}
 			$(".pop_tips .txt").html(txt);
 			
 			if(type==2) {
-				// console.log($(".pop_tips  button[data-trigger='yes']"))
-				$(".pop_tips  button[data-trigger='yes']").show();
-				$(".pop_tips  button[data-trigger='yes']").on("click",function(){
+				$(".pop_tips button[data-trigger='yes']").show();
+				$(".pop_tips button[data-trigger='yes']").on("click",function(){
 					if(yesCallback){
 						yesCallback();
 					}
 					$(".pop_tips").removeClass("active");
 				});
 			}else{
-				$(".pop_tips  button[data-trigger='yes']").hide();
+				$(".pop_tips button[data-trigger='yes']").hide();
 			}
-			$(".pop_tips  button[data-trigger='close']").one("click",function(){
+			$(".pop_tips button[data-trigger='close']").one("click",function(){
 				if(closeCallback){
 					closeCallback();
 				}
@@ -253,7 +249,6 @@
 	};
 
 	window.iSparta.localData = {
-
 		storage: window.localStorage,
 		remove:function(key){
 			this.storage.removeItem(key);

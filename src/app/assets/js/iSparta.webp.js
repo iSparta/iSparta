@@ -25,8 +25,8 @@
         $btnOpenPath = $("#webp_btn_openPath"),
         $refresh = $("#webp_currentPath_refresh"),
 
+        // data
         localData = window.iSparta.localData;
-        // dataHelper = webp.dataHelper;
 
 
     window.iSparta.webp = {
@@ -50,6 +50,7 @@
         o_dirSize: 0,           // 初始文件夹大小
         c_dirSize: 0,           // 压缩后文件夹大小
         isDir: true,            // 是否目录
+        isStop: false,          // 是否中止转换
 
 
         init: function() {
@@ -80,7 +81,6 @@
                 if (i == options.savePathIndex) {
                     $(opt).attr("selected", "selected");
                 }
-
                 $savePath[0].options.add(opt);
             }
 
@@ -101,6 +101,7 @@
 
         convert: function(dir) {
 
+            console.log(this.isStop)
             this.c_dirSize = 0;
 
             var webp = window.iSparta.webp,
@@ -123,7 +124,7 @@
             this.cwebp = process.cwd() + sysInfo;
             this.param = dConfig + this.options.config + ' -q ' + this.options.ratio + ' ';
             this.currentPath = this.options.currentPath[this.options.currentPathIndex];
-            this.dirName = this.currentPath.substring(this.currentPath.lastIndexOf(path.sep)+1) + '-webp' + config + this.options.ratio;
+            // this.dirName = this.currentPath.substring(this.currentPath.lastIndexOf(path.sep)+1) + '-webp' + config + this.options.ratio;
 
             if (savePath == 'parent') {
                 this.finalSavePath = this.currentPath.substring(0, this.currentPath.lastIndexOf(path.sep)) + path.sep;
@@ -135,7 +136,6 @@
                 this.finalSavePath = savePath + path.sep;
             }
 
-            /**********************/
             console.log('finalSavePath::'+ this.finalSavePath);
 
             try {
@@ -189,14 +189,16 @@
 
 
         control: function(i) {
-
             var ui = window.iSparta.ui,
-                webp = window.iSparta.webp;
+                webp = window.iSparta.webp,
+                self = this;
 
-            if (i < this.files.length) {
-
+            if (i < this.files.length && !this.isStop) {
                 var progress = (i+1)/this.files.length;
-                ui.showProgress(progress, "正在处理第"+(i+1)+"张(共"+this.files.length+"张)图片",function(){});
+                ui.showProgress(progress, "正在处理第"+(i+1)+"张(共"+this.files.length+"张)图片", function(){
+                    self.isStop = true;
+                    ui.hideLoading();
+                });
                 webp._exec(i);
             }
             else {
@@ -205,41 +207,40 @@
                 info.beforesize = this.o_dirSize;
                 info.aftersize = this.c_dirSize;
                 Allinfo.push(info);
-                window.iSparta.postData(Allinfo, "webp");
-                
-                console.log('getOriginDirSize:'+this.o_dirSize);
-                console.log('getCompressedDirSize:'+this.c_dirSize);
+                // window.iSparta.postData(Allinfo, "webp");
+                // console.log('getOriginDirSize:'+this.o_dirSize);
+                // console.log('getCompressedDirSize:'+this.c_dirSize);
 
                 ui.hideProgress();
             }
         },
 
-        _exec: function(i) {
 
+        _exec: function(i) {
             var ui = window.iSparta.ui,
                 webp = window.iSparta.webp;
 
             if (webp.isDir) {
                 console.log('"'+this.cwebp+'" '+this.param+'"'+this.currentPath+path.sep+this.files[i]+'"'+ ' -o ' + '"' + this.finalSavePath + this.files[i].substring(0, this.files[i].lastIndexOf('.')) + '.webp"');
 
-                exec('"'+this.cwebp+'" '+this.param+'"'+this.currentPath+path.sep+this.files[i]+'"'+ ' -o ' + '"' + this.finalSavePath + this.files[i].substring(0, this.files[i].lastIndexOf('.')) + '.webp"', {timeout: 5000}, function() {
-                    console.log(webp.finalSavePath + webp.files[i].substring(0, webp.files[i].lastIndexOf('.')) + '.webp');
+                exec('"'+this.cwebp+'" '+this.param+'"'+this.currentPath+path.sep+this.files[i]+'"'+ ' -o ' + '"' + this.finalSavePath + this.files[i].substring(0, this.files[i].lastIndexOf('.')) + '.webp"', {timeout: 1000000}, function() {
                     webp.c_dirSize += fs.statSync(webp.finalSavePath + webp.files[i].substring(0, webp.files[i].lastIndexOf('.')) + '.webp').size;
-                    webp.control(i+1);
+                    if (!this.isStop) {
+                        webp.control(i+1);    
+                    }
                 });
-                
             } else {
                 console.log('"'+this.cwebp+'" '+this.param+'"'+this.currentPath+path.sep+this.files[i].name+'"'+ ' -o ' + '"' + this.finalSavePath + this.files[i].name.substring(0, this.files[i].name.lastIndexOf('.')) + '.webp"');
 
-                exec('"'+this.cwebp+'" '+this.param+'"'+this.currentPath+path.sep+this.files[i].name+'"'+ ' -o ' + '"' + this.finalSavePath + this.files[i].name.substring(0, this.files[i].name.lastIndexOf('.')) + '.webp"', {timeout: 5000}, function() {
+                exec('"'+this.cwebp+'" '+this.param+'"'+this.currentPath+path.sep+this.files[i].name+'"'+ ' -o ' + '"' + this.finalSavePath + this.files[i].name.substring(0, this.files[i].name.lastIndexOf('.')) + '.webp"', {timeout: 1000000}, function() {
                     webp.c_dirSize += fs.statSync(webp.finalSavePath + webp.files[i].name.substring(0, webp.files[i].name.lastIndexOf('.')) + '.webp').size;
-                    webp.control(i+1);
+                    if (!this.isStop) {
+                        webp.control(i+1);    
+                    }
                 });
             }
         }
     }
-
-
 
 
     /*
@@ -255,7 +256,8 @@
 
         topbar: function() {
 
-            var webp = window.iSparta.webp;
+            var webp = window.iSparta.webp,
+                self = this;
 
             $config.on('change', function() {
                 dataHelper.changeConfig($(this).val());
@@ -282,6 +284,8 @@
             })
 
             $btnCov.click(function() {
+                window.iSparta.webp.isStop = false;
+
                 if($boxPreview.is(':empty')) {
                     window.iSparta.ui.showTips('该文件夹无 JPG 或 PNG 格式的图片');
                 }else {
@@ -334,8 +338,6 @@
                 $dragArea.removeClass("hover");
 
                 var fileList = e.dataTransfer.files; //获取文件对象
-                console.log(fileList)
-
                 // 目录
                 if (fileList.length === 1 && fileList[0].path.lastIndexOf('.') === -1 ) {
                     webp.isDir = true;
@@ -405,8 +407,8 @@
             $btnOpenPath.click(function() {
                 gui.Shell.showItemInFolder($currentPath.val());
             });
-
         },
+
 
         fillImgDirList: function(path) {
             var webp = window.iSparta.webp,
@@ -547,7 +549,6 @@
      * 文件管理
      */ 
     var fileManager = {
-
         readPics: function(files) {
             if(files.indexOf('.jpg') != -1 || files.indexOf('.png') != -1 || files.indexOf('.JPG') != -1){
                 $boxPreview.append('<div class="thumbnail"><img src="'+files+'"></div>');
