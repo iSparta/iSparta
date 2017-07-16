@@ -172,9 +172,12 @@
 				window.iSparta.webp.init();
 				break;
 				case 3:
-				window.iSparta.imglossless.init();
+				window.iSparta.apng2webp.init();
 				break;
 				case 4:
+				window.iSparta.imglossless.init();
+				break;
+				case 5:
 				window.iSparta.pngloss.init();
 				break;
 			}			

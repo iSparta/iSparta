@@ -106,22 +106,11 @@
 
             var webp = window.iSparta.webp,
                 ui = window.iSparta.ui,
-                sysInfo,
                 dConfig = ' -m 6 ',
                 savePath = this.options.savePath[this.options.savePathIndex],
                 config = this.options.config === '' ? '-lossy' : '-lossless';
 
-            if (window.iSparta.getOsInfo() == 'win32') {
-                sysInfo = path.sep+'app'+path.sep+ 'libs'+path.sep+'webp'+path.sep+'libwebp-0.3.1-windows-x32'+path.sep+'cwebp.exe';
-            }
-            else if (window.iSparta.getOsInfo() == 'win64') {
-                sysInfo = path.sep+'app'+path.sep+'libs'+path.sep+'webp'+path.sep+'libwebp-0.3.1-windows-x64'+path.sep+'cwebp.exe';
-            }
-            else {
-                sysInfo = path.sep+'app'+path.sep+ 'libs'+path.sep+'webp'+path.sep+'mac'+path.sep+'cwebp';        // for other os
-            }
-
-            this.cwebp = process.cwd() + sysInfo;
+            this.cwebp = process.cwd() + '/app/libs/webp/'+iSparta.getOsInfo()+'/cwebp';
             this.param = dConfig + this.options.config + ' -q ' + this.options.ratio + ' ';
             this.currentPath = this.options.currentPath[this.options.currentPathIndex];
             // this.dirName = this.currentPath.substring(this.currentPath.lastIndexOf(path.sep)+1) + '-webp' + config + this.options.ratio;
