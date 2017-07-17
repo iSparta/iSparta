@@ -346,21 +346,33 @@
 	            return false;
 	        }
 	        window.iSparta.ui.showLoading();
-	        window.iSparta.imglossless.fileList=window.iSparta.fileManager.walk(fileList,"png","-lossless");
-	        if(!window.iSparta.imglossless.fileList){
-
+	        var pngLists = window.iSparta.fileManager.walk(fileList,"png","-lossless");
+	        var jpegLists = window.iSparta.fileManager.walk(fileList,"jpg","-lossless");
+	        var gifLists = window.iSparta.fileManager.walk(fileList,"gif","-lossless");
+	        if (!pngLists || !jpegLists || !gifLists) {
 	        	window.iSparta.ui.hideLoading();
 	        	window.iSparta.ui.showTips("目录读取失败！请确认文件目录是否存在！<br/>并且不能选择盘符！");
 	        	
 	        	return false;
-
 	        };
+	        var totalLists = [];
+	        if (pngLists && pngLists.length !== 0) {
+	        	Array.prototype.push.apply(totalLists, pngLists);
+	        }
+	        if (jpegLists && jpegLists.length !== 0) {
+	        	Array.prototype.push.apply(totalLists, jpegLists);
+	        }
+	        if (gifLists && gifLists.length !== 0) {
+	        	Array.prototype.push.apply(totalLists, gifLists);
+	        }
+	        window.iSparta.imglossless.fileList = totalLists;
 	       	window.iSparta.ui.hideLoading();
+	       	
 	        var datas={};
 	        datas.all=window.iSparta.imglossless.fileList;
 	       
 	        if(datas.all.length==0){
-	        	window.iSparta.ui.showTips("请选择PNG图片！");
+	        	window.iSparta.ui.showTips("请选择PNG、JPEG或者GIF图片！");
 	        	return false;
 	        }else{
 	        	var doTtmpl = doT.template(tmplFileList);

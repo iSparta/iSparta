@@ -89,7 +89,6 @@
 
                 if (i == options.currentPathIndex) {
                     $(opt).attr("selected", "selected");
-                    $boxPreview.empty();
                     ui.fillImgDirList(options.currentPath[i] + path.sep);
                     this.dirName = options.currentPath[i] + path.sep;
                 }
@@ -138,10 +137,7 @@
             // directory
             if (webp.isDir) {
                 fs.readdir(dir, function(err, files) {
-                    if (err) {
-                        ui.showTips("读取文件夹出错！");
-                        $boxPreview.append('<div class="empty"><span class="drag_area">+</span></div>')
-                    }
+                    if (err) throw err;
                     else {
                         var newFilesArr = [];
 
@@ -196,9 +192,6 @@
                 info.beforesize = this.o_dirSize;
                 info.aftersize = this.c_dirSize;
                 Allinfo.push(info);
-                // window.iSparta.postData(Allinfo, "webp");
-                // console.log('getOriginDirSize:'+this.o_dirSize);
-                // console.log('getCompressedDirSize:'+this.c_dirSize);
 
                 ui.hideProgress();
             }
@@ -276,7 +269,7 @@
                 window.iSparta.webp.isStop = false;
 
                 if($boxPreview.is(':empty')) {
-                    window.iSparta.ui.showTips('该文件夹无 JPG 或 PNG 格式的图片');
+                    window.iSparta.ui.showTips('未选择任何图片！');
                 }else {
                     webp.convert(webp.dirName);        
                 }
@@ -304,7 +297,6 @@
                 $currentPath[0].insertBefore(opt, $currentPath[0].options[0]);
                 dataHelper.changeCurrentPath(val);
 
-                $boxPreview.empty();
                 ui.fillImgDirList(val + path.sep);
                 webp.dirName = val + path.sep;
 
@@ -337,7 +329,6 @@
                     $currentPath[0].insertBefore(opt, $currentPath[0].options[0]);
                     dataHelper.changeCurrentPath(pathstr);
 
-                    $boxPreview.empty();
                     ui.fillImgDirList(pathstr + path.sep);
                     
                 }
@@ -354,7 +345,6 @@
                     $currentPath[0].insertBefore(opt, $currentPath[0].options[0]);
                     dataHelper.changeCurrentPath(pathstr);
 
-                    $boxPreview.empty();
                     ui.fillImgList(fileList);
                 }
                 webp.dirName = pathstr + path.sep;
@@ -372,7 +362,6 @@
                 var options = webp.options;
                 dataHelper.changeCurrentPath($(this).val());
 
-                $boxPreview.empty();
                 ui.fillImgDirList($(this).val() + path.sep);
                 webp.dirName = $(this).val() + path.sep;
 
@@ -386,7 +375,6 @@
             $refresh.on("click",function(){
                 webp.isDir = true;
                 var pathstr = $currentPath.val();
-                $boxPreview.empty();
                 ui.fillImgDirList(pathstr + path.sep);
                 webp.dirName = pathstr + path.sep;
                 
@@ -398,30 +386,46 @@
             });
         },
 
+        boxPreviewAppend: function(html) {
+            if(!$boxPreview.is(':empty')) {
+                $boxPreview.empty();
+            }
+            $boxPreview.append(html);
+        },
 
         fillImgDirList: function(path) {
+            if (!path) {
+                return;
+            }
             var webp = window.iSparta.webp,
                 manager = fileManager;
 
             fs.readdir(path, function(err, files) {
                 if (err) {
-                    window.iSparta.ui.showTips("读取文件夹出错！");
-                    $boxPreview.empty().append('<div class="empty"><span class="drag_area">+</span></div>')
+                    window.iSparta.window.iSparta.ui.showTips("目录读取失败！请确认文件目录是否存在！<br/>并且不能选择盘符！");
                 }else {
                     for (var i = 0; i < files.length; ++i) {
-                        manager.getOriginDirSize(path + files[i]);
-                        manager.readPics(path + files[i]);
+                        manager.readPicsAndGetSize(path + files[i]);
+                    }
+                    if (webp.o_dirSize === 0) {
+                        window.iSparta.ui.showTips("请选择PNG或者JPEG图片！");
                     }
                 }
             });
         },
 
         fillImgList: function(fileList) {
-            var manager = fileManager;
+            if (!fileList) {
+                return;
+            }
+            var webp = window.iSparta.webp,
+                manager = fileManager;
 
             for(var i=0; i<fileList.length; i++){
-                manager.getOriginDirSize(fileList[i].path);
-                manager.readPics(fileList[i].path);
+                manager.readPicsAndGetSize(fileList[i].path);
+            }
+            if (webp.o_dirSize === 0) {
+                window.iSparta.ui.showTips("请选择PNG或者JPEG图片！");
             }
         }
     }
@@ -538,20 +542,16 @@
      * 文件管理
      */ 
     var fileManager = {
-        readPics: function(files) {
-            if(files.indexOf('.jpg') != -1 || files.indexOf('.png') != -1 || files.indexOf('.JPG') != -1){
-                $boxPreview.append('<div class="thumbnail"><img src="'+files+'"></div>');
-            }
-        },
-
-        getOriginDirSize: function(path) {
+        readPicsAndGetSize: function(path) {
             var webp = window.iSparta.webp;
             webp.o_dirSize = 0;
 
             if(path.indexOf('.jpg') != -1 || path.indexOf('.png') != -1 || path.indexOf('.JPG') != -1){
-                fs.stat(path, function(err, stats) {
+                var stats = fs.statSync(path);
+                if (stats) {
+                    ui.boxPreviewAppend('<div class="thumbnail"><img src="'+path+'"></div>');
                     webp.o_dirSize += stats.size;
-                })
+                }
             }
         },
 

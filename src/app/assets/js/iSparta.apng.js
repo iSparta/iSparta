@@ -16,7 +16,6 @@
 		$hPath=$("#apng_path_hidden"),
 		$btnCov=$("#apng_btn_cov"),
 		$lastDelay=$("#apng_last_delay"),
-		$btnClear=$("#apng_clear"),
 		$dragArea=$("#pngToApng .drag_area"),
 		$boxPreview=$("#pngToApng .box_preview"),
 		
@@ -742,7 +741,7 @@
 	        datas.all=window.iSparta.apng.fileList;
 	       
 	        if(datas.all.length==0){
-	        	window.iSparta.ui.showTips("文件名需序列化！");
+	        	window.iSparta.ui.showTips("请选择PNG图片，保持文件名序列化且图片大小相同！");
 	        	return false;
 	        }else{
 	        	
@@ -753,55 +752,6 @@
 	        }
 	        
 		},
-		clear:function(fileList){
-			if(fileList.length == 0){
-	            return false;
-	        }
-	        window.iSparta.ui.showLoading();
-
-	        if(!window.iSparta.apng.fileManager.walk(fileList,function(){})){
-	        	window.iSparta.ui.hideLoading();
-	        	window.iSparta.ui.showTips("目录读取失败！请确认文件目录是否存在！<br/>并且不能选择盘符！");
-	        	return false;
-
-	        };
-	       	window.iSparta.ui.hideLoading();
-
-	        var datas={};
-	        var fileList=window.iSparta.apng.fileList;
-	        
-	        var delIndex=[];
-
-	        for(var i=0;i<fileList.length;i++){
-	        	
-	        	for(var j=0;j<fileList[i].files.length;j++){
-	        		
-					if(fileList[i].files[j].url.length<2){
-						var temp=[i,j]
-		        		delIndex.push(temp);
-		        	}
-	        	}
-	        	
-	        }
-	        for(var i=0;i<delIndex.length;i++){
-	        	
-	        	fileList[delIndex[i][0]].files.splice(delIndex[i][1]-i,1);
-	        }
-	        window.iSparta.apng.fileList=fileList;
-	        datas.all=window.iSparta.apng.fileList;
-	       
-	        if(datas.all.length==0){
-	        	window.iSparta.ui.showTips("文件名需序列化！");
-	        	return false;
-	        }else{
-	        	
-	        	var doTtmpl = doT.template(tmplFileList);
-	        	var html=doTtmpl(datas);
-	        	$boxPreview.html(html);
-	        	return true;
-	        }
-	        
-		},		
 		items:function(){
 			var timer=null;
 			var ui=this;
@@ -882,11 +832,6 @@
 			});
 			$btnCurrentPath.on("click",function(){
 				$hPath.click();
-			});
-			$btnClear.on("click",function(){
-				window.iSparta.apng.options=window.iSparta.apng.defalueOptions;
-				window.iSparta.localData.remove("apng");
-				ui.clear(fileList);
 			});
 			$refresh.on("click",function(){
 				var path=$currentPath.val();
