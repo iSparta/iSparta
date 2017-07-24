@@ -4,22 +4,26 @@
 	var win = gui.Window.get();
 	var os = require('os');
 	var fs = require('fs');
+	var i18n = require('i18n');
+	var doT = require('dot');
 	var version = "1.1";
 	
 	window.iSparta = {
 		sep:"/",
 		init: function() {
-			var ui = window.iSparta.ui;
 			if(this.getOsInfo().indexOf("win")!=-1){
 				this.sep="\\";
-			}			
-			ui.init();
+			}
+
+			window.iSparta.locale.init();
+			window.iSparta.ui.init();
+
 			this.checkVersion();
 			var openedNum=this.localData.get("openedNum");
 			process.on('uncaughtException', function (err) {
 				window.iSparta.ui.hideLoading();
 				window.iSparta.ui.hideProgress();
-	        	window.iSparta.ui.showTips("程序发生错误：" + err);
+	        	window.iSparta.ui.showTips(i18n.__("Program error occurred:") + err);
 			});
 			if(!openedNum){
 				this.localData.remove("apng");
@@ -64,34 +68,105 @@
 		},
 
 		postData: function(data, type) {
-			var hostname = os.hostname();
-			var osInfo = this.getOsInfo();
-			var timestamp = Date.parse(new Date());
+			// var hostname = os.hostname();
+			// var osInfo = this.getOsInfo();
+			// var timestamp = Date.parse(new Date());
 
-			for (var i=0; i<data.length; i++) {
-				data[i].hostname = hostname;
-				data[i].osInfo = osInfo;
-				data[i].timestamp = timestamp;
-				if (!data[i].num) {
-					data[i].num = 1;
-				}
-				data[i].version = version;
-				data[i].type = type;
-				$.post("http://zhijie.me/iSparta/data.php", data[i], function(result){});
-			}
+			// for (var i=0; i<data.length; i++) {
+			// 	data[i].hostname = hostname;
+			// 	data[i].osInfo = osInfo;
+			// 	data[i].timestamp = timestamp;
+			// 	if (!data[i].num) {
+			// 		data[i].num = 1;
+			// 	}
+			// 	data[i].version = version;
+			// 	data[i].type = type;
+			// 	$.post("http://zhijie.me/iSparta/data.php", data[i], function(result){});
+			// }
 		},
 				
 		checkVersion: function() {
-			var ui = this.ui;
-			$.get("http://zhijie.me/iSparta/data.php", {versioncheck:version}, function(result) {
-				if(result=="new"){
+			// var ui = this.ui;
+			// $.get("http://zhijie.me/iSparta/data.php", {versioncheck:version}, function(result) {
+			// 	if(result=="new"){
 					
-				}else{
-					ui.showTips("有版本更新！前往下载！", 2, function(){
-						gui.Shell.openExternal(result);
-					});
-				}
-			});			
+			// 	}else{
+			// 		ui.showTips(i18n.__("New version avaliable! Go to download"), 2, function(){
+			// 			gui.Shell.openExternal(result);
+			// 		});
+			// 	}
+			// });			
+		}
+	};
+
+		window.iSparta.locale = {
+		init: function() {
+			i18n.configure({
+				locales: ['en', 'zh-cn', 'zh-tw'],
+				directory: process.cwd() + '/app/locales',
+				defaultLocale: 'en',
+				fallbacks: {
+					'en-us': 'en',
+					'en-uk': 'en',
+					'zh_cn': 'zh-cn',
+					'zh-hans': 'zh-cn',
+					'zh-hans-cn': 'zh-cn',
+					'zh_tw': 'zh-tw',
+					'zh_hant': 'zh-tw',
+					'zh-hant-tw': 'zh-tw',
+				},
+				updateFiles: false
+			});
+			var currentLocale = this.getLocale();
+			if (!currentLocale) {
+				currentLocale = this.checkLocale();
+			}
+			this.setLocale(currentLocale);
+
+			var i18nTemplateSettings = {
+				evaluate:    /\[\[([\s\S]+?(\]?)+)\]\]/g,
+				interpolate: /\[\[=([\s\S]+?)\]\]/g,
+				encode:      /\[\[!([\s\S]+?)\]\]/g,
+				use:         /\[\[#([\s\S]+?)\]\]/g,
+				useParams:   /(^|[^\w$])def(?:\.|\[[\'\"])([\w$\.]+)(?:[\'\"]\])?\s*\:\s*([\w$\.]+|\"[^\"]+\"|\'[^\']+\'|\[[^\]]+\])/g,
+				define:      /\[\[##\s*([\w\.$]+)\s*(\:|=)([\s\S]+?)#\]\]/g,
+				defineParams:/^\s*([\w$]+):([\s\S]+)/,
+				conditional: /\[\[\?(\?)?\s*([\s\S]*?)\s*\]\]/g,
+				iterate:     /\[\[~\s*(?:\]\]|([\s\S]+?)\s*\:\s*([\w$]+)\s*(?:\:\s*([\w$]+))?\s*\]\])/g,
+				varname:	"i18n",
+				strip:		false,
+				append:		false,
+				selfcontained: false,
+				doNotSkipEncoded: false
+			};
+
+			var body = $(document.body).html();
+			var bodyTmpl = doT.template(body, i18nTemplateSettings);
+			var bodyHtml = bodyTmpl(i18n);
+			$(document.body).html(bodyHtml);
+		},
+		getLocale: function() {
+			return window.iSparta.localData.get('locale');
+		},
+		setLocale: function(locale) {
+			if (!locale) return;
+			i18n.setLocale(locale);
+			window.iSparta.localData.set('locale', i18n.getLocale());
+		},
+		checkLocale: function() {
+			var language = window.navigator.language;
+			var locale;
+			if (language) {
+				locale = language.toLowerCase();
+			} else {
+				locale = process.env.LANG.split('.')[0].toLowerCase();
+			}
+			return locale;
+		},
+		changeLocale: function(locale) {
+			if (!locale) return;
+			this.setLocale(locale);
+			win.reload();
 		}
 	};
 
@@ -191,7 +266,7 @@
 
 		showLoading: function(txt) {
 			if(!txt){
-				txt="正在处理，请稍后...";
+				txt=i18n.__("Processing, please wait...");
 			}
 			$(".pop_loading .txt").html(txt);
 			$(".pop_loading").addClass("active");
@@ -203,7 +278,7 @@
 
 		showProgress: function(progress, txt, closeCallback){
 			if(!txt){
-				txt="正在处理，请稍后...";
+				txt=i18n.__("Processing, please wait...");
 			}
 			$(".pop_progress .load-bar-inner").css({width:progress*100+"%"})
 			$(".pop_progress .txt").html(txt);
@@ -223,7 +298,7 @@
 
 		showTips:function(txt, type, yesCallback, closeCallback){
 			if(!txt){
-				txt="出错了，请重试！";
+				txt=i18n.__("Error occurred, Please try again!");
 			}
 			$(".pop_tips .txt").html(txt);
 			
@@ -273,9 +348,6 @@
 				this.remove(key);
 				return {};
 			}
-			
-			
-			
 			return val;
 		},
 
@@ -292,7 +364,7 @@
 	    nowDepth:0,
 	    Files:{},
 	    walk:function(fileList,ext,except,maxdepth,callback){
-	        // 一次只拉一个文件夹
+	        // only pick one folder each time
 	       	ext=ext?ext:"png";
 	       	maxDepth=maxdepth?maxDepth:3;
 	       	var Files=this.Files;

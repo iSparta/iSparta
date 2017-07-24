@@ -4,6 +4,7 @@
         path = require('path'),
         gui = require('nw.gui'),
         exec = require('child_process').exec,
+        i18n = require('i18n');
 
         // topbar
         $config = $("#webp_select_config"),
@@ -19,6 +20,7 @@
         $dragArea = $("#pngToWebp .drag_area"),
 
         // status
+        $currentLanguage=$("#webp_select_language"),
         $currentPath = $("#webp_select_currentPath"),
         $btnCurrentPath = $("#webp_btn_currentPath"),
         $hPath = $("#webp_path_hidden"),
@@ -66,13 +68,14 @@
             options = this.options;
             $config.val(options.config);
             $ratio.val(options.ratio);
-
+            $currentLanguage.val(window.iSparta.locale.getLocale());
+            
             for (var i=0; i<length; i++) {
                 if (options.savePath[i] == "parent") {
-                    opt = new Option("上级目录", options.savePath[i]);
+                    opt = new Option(i18n.__("Parent directory"), options.savePath[i]);
                 }
                 else if (options.savePath[i] =="self") {
-                    opt = new Option("同级目录", options.savePath[i]);
+                    opt = new Option(i18n.__("Same level directory"), options.savePath[i]);
                 }
                 else {
                     opt = new Option(options.savePath[i], options.savePath[i]);
@@ -180,7 +183,7 @@
 
             if (i < this.files.length && !this.isStop) {
                 var progress = (i+1)/this.files.length;
-                ui.showProgress(progress, "正在处理第"+(i+1)+"张(共"+this.files.length+"张)图片", function(){
+                ui.showProgress(progress, i18n.__("Processing images: (%s/%s)", i+1, this.files.length), function(){
                     self.isStop = true;
                     ui.hideLoading();
                 });
@@ -267,9 +270,8 @@
 
             $btnCov.click(function() {
                 window.iSparta.webp.isStop = false;
-
-                if($boxPreview.is(':empty')) {
-                    window.iSparta.ui.showTips('未选择任何图片！');
+                if($boxPreview.is(':empty') || $boxPreview.find('div').hasClass('empty')) {
+                    window.iSparta.ui.showTips(i18n.__("No image selected"));
                 }else {
                     webp.convert(webp.dirName);        
                 }
@@ -384,6 +386,11 @@
             $btnOpenPath.click(function() {
                 gui.Shell.showItemInFolder($currentPath.val());
             });
+
+            $currentLanguage.on('change', function() {
+                var locale=$(this).val();
+                window.iSparta.locale.changeLocale(locale);
+            });
         },
 
         boxPreviewAppend: function(html) {
@@ -402,13 +409,13 @@
 
             fs.readdir(path, function(err, files) {
                 if (err) {
-                    window.iSparta.window.iSparta.ui.showTips("目录读取失败！请确认文件目录是否存在！<br/>并且不能选择盘符！");
+                    window.iSparta.window.iSparta.ui.showTips(i18n.__("Directory load failed! Please check whether the directory exists, disk letter is not allowd"));
                 }else {
                     for (var i = 0; i < files.length; ++i) {
                         manager.readPicsAndGetSize(path + files[i]);
                     }
                     if (webp.o_dirSize === 0) {
-                        window.iSparta.ui.showTips("请选择PNG或者JPEG图片！");
+                        window.iSparta.ui.showTips(i18n.__("Please select PNG or JPEG images"));
                     }
                 }
             });
@@ -425,7 +432,7 @@
                 manager.readPicsAndGetSize(fileList[i].path);
             }
             if (webp.o_dirSize === 0) {
-                window.iSparta.ui.showTips("请选择PNG或者JPEG图片！");
+                window.iSparta.ui.showTips(i18n.__("Please select PNG or JPEG images"));
             }
         }
     }

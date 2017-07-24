@@ -2,12 +2,15 @@
 	var exec = require('child_process').exec,
 		os = require('os'),
 		fs = require('fs-extra'),
-		gui = require('nw.gui');
+		gui = require('nw.gui'),
+		doT = require('dot'),
+		i18n = require('i18n');
 	var $loop=$("#apng_select_loop"),
 		$rate=$("#apng_select_rate"),
 		$quality=$("#apng_select_quality"),
 		$savePath=$("#apng_select_savePath"),
 
+		$currentLanguage=$("#apng_select_language"),
 		$currentPath=$("#apng_select_currentPath"),
 		$btnCurrentPath=$("#apng_btn_currentPath"),
 		$refresh=$("#apng_currentPath_refresh"),
@@ -15,7 +18,6 @@
 		$hSavePath=$("#apng_savePath_hidden"),
 		$hPath=$("#apng_path_hidden"),
 		$btnCov=$("#apng_btn_cov"),
-		$lastDelay=$("#apng_last_delay"),
 		$dragArea=$("#pngToApng .drag_area"),
 		$boxPreview=$("#pngToApng .box_preview"),
 		
@@ -53,15 +55,14 @@
 			
 			$loop.val(options.loop);
 			$rate.val(options.rate);
-			$lastDelay.val(options.lastDelay);
 			$quality.val(options.quality);
-
+			$currentLanguage.val(window.iSparta.locale.getLocale());
 
 			for(var i=0;i<options.savePath.length;i++){
 				if(options.savePath[i]=="parent"){
-					var opt=new Option("上级目录",options.savePath[i]);
+					var opt=new Option(i18n.__("Parent directory"),options.savePath[i]);
 				}else if(options.savePath[i]=="self"){
-					var opt=new Option("同级目录",options.savePath[i]);
+					var opt=new Option(i18n.__("Same level directory"),options.savePath[i]);
 				}else{
 					var opt=new Option(options.savePath[i],options.savePath[i]);
 				}
@@ -77,22 +78,19 @@
 					$(opt).attr("selected","selected");
 					var fileList=[{path:options.currentPath[i]}];
 					var otherFiles=[];
-					if(options.currentPath[i].indexOf("转换列表")==0){
+					if(options.currentPath[i].indexOf("convert_list")==0){
 
 						fileList=[];
 						for(var j=0;j<options.otherFiles.length;j++){
-							if(options.currentPath[i]=="转换列表"+options.otherFiles[j].id){
+							if(options.currentPath[i]=="convert_list"+options.otherFiles[j].id){
 								for(var k=0;k<options.otherFiles[j].path.length;k++){
 									fileList.push({path:options.otherFiles[j].path[k]});
 								}
 							}
 						}
 					}
-		
-					if(!this.ui.fillImglist(fileList)){
 
-						//window.iSparta.ui.showTips("目录读取失败！请确认文件目录是否存在");
-					}
+					this.ui.fillImglist(fileList);
 				}
 				$currentPath[0].options.add(opt);
 		        
@@ -102,7 +100,7 @@
 		switch:function(id){
 
 			if(!this.fileList[0]){
-				window.iSparta.ui.showTips("未选择任何图片！");
+				window.iSparta.ui.showTips(i18n.__("No image selected"));
 				return;
 			}
 			var files=this.fileList[0].files;
@@ -114,7 +112,7 @@
 	            }
 			}
 			if(this.nums==0){
-				window.iSparta.ui.showTips("未选择任何图片！");
+				window.iSparta.ui.showTips(i18n.__("No image selected"));
 			}else{
 				
 				if(!id){
@@ -133,7 +131,7 @@
 				if(id<files.length&&this.isClose==false){
 					var progress=(this.index+1)/this.nums;
 		
-					window.iSparta.ui.showProgress(progress,"正在处理第"+(this.index+1)+"张(共"+this.nums+"张)图片",function(){
+					window.iSparta.ui.showProgress(progress,i18n.__("Processing images: (%s/%s)", this.index+1, this.nums),function(){
 						window.iSparta.apng.isClose=true;
 					});
 					this.index++;
@@ -675,8 +673,8 @@
 		        //var opt=new Option(fileList[0].path,fileList[0].path);
 		        var v=ui.fillImglist(otherFiles);
 		        if(v){
-			        var fileList="转换列表"+mixIndex;
-			        var opt=new Option("转换列表"+mixIndex,"转换列表"+mixIndex);
+			        var fileList="convert_list"+mixIndex;
+			        var opt=new Option("convert_list"+mixIndex,"convert_list"+mixIndex);
 			        $(opt).attr("selected","selected");
 					$currentPath[0].insertBefore(opt,$currentPath[0].options[0]);
 		        	ui.dataHelper.changeCurrentPath(fileList,otherFiles);
@@ -711,7 +709,7 @@
 
 	        if(!window.iSparta.apng.fileManager.walk(fileList,function(){})){
 	        	window.iSparta.ui.hideLoading();
-	        	window.iSparta.ui.showTips("目录读取失败！请确认文件目录是否存在！<br/>并且不能选择盘符！");
+	        	window.iSparta.ui.showTips(i18n.__("Directory load failed! Please check whether the directory exists, disk letter is not allowd"));
 	        	return false;
 
 	        };
@@ -741,7 +739,7 @@
 	        datas.all=window.iSparta.apng.fileList;
 	       
 	        if(datas.all.length==0){
-	        	window.iSparta.ui.showTips("请选择PNG图片，保持文件名序列化且图片大小相同！");
+	        	window.iSparta.ui.showTips(i18n.__("Please select PNG images, keep the filename serialized and image size equal"));
 	        	return false;
 	        }else{
 	        	
@@ -812,11 +810,11 @@
 				var options=window.iSparta.apng.options;
 				var path=$(this).val();
 
-				if(path.indexOf("转换列表")==0){
+				if(path.indexOf("convert_list")==0){
 					var fileList=[];
 					for(var j=0;j<options.otherFiles.length;j++){
 
-						if(path=="转换列表"+options.otherFiles[j].id){
+						if(path=="convert_list"+options.otherFiles[j].id){
 							for(var k=0;k<options.otherFiles[j].path.length;k++){
 								fileList.push({path:options.otherFiles[j].path[k]});
 							}
@@ -836,11 +834,11 @@
 			$refresh.on("click",function(){
 				var path=$currentPath.val();
 				var options=window.iSparta.apng.options;
-				if(path.indexOf("转换列表")==0){
+				if(path.indexOf("convert_list")==0){
 					var fileList=[];
 					for(var j=0;j<options.otherFiles.length;j++){
 
-						if(path=="转换列表"+options.otherFiles[j].id){
+						if(path=="convert_list"+options.otherFiles[j].id){
 							for(var k=0;k<options.otherFiles[j].path.length;k++){
 								fileList.push({path:options.otherFiles[j].path[k]});
 							}
@@ -852,7 +850,10 @@
 				ui.fillImglist(fileList);		
 				return false;
 			});
-
+			$currentLanguage.on('change', function() {
+				var locale=$(this).val();
+				window.iSparta.locale.changeLocale(locale);
+			});
 		}
 	};
 	// 数据控制
@@ -901,7 +902,7 @@
 			var apng=window.iSparta.apng;
 			var theCurrentPath=apng.options.currentPath;
 			
-			if(currentPath.indexOf("转换列表")==0){
+			if(currentPath.indexOf("convert_list")==0){
 				for(var i=0;i<theCurrentPath.length;i++){
 					if(currentPath==theCurrentPath[i]){
 						break;
