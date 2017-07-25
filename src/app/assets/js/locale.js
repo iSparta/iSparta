@@ -1,14 +1,15 @@
 (function ($) {
-	var gui = require('nw.gui');
-	var win = gui.Window.get();
-	var i18n = require('i18n');
-	var dot = require('dot');
+	var gui = require('nw.gui'),
+		win = gui.Window.get(),
+		i18n = require('i18n'),
+		doT = require('dot'),
+		path = require('path');
 
 	window.locale = {
 		init: function() {
 			i18n.configure({
 				locales: ['en', 'zh-cn', 'zh-tw'],
-				directory: process.cwd() + '/app/locales',
+				directory: path.join(process.cwd(), '/app/locales'),
 				defaultLocale: 'en',
 				fallbacks: {
 					'en-us': 'en',
@@ -45,8 +46,12 @@
 				doNotSkipEncoded: false
 			};
 
-			var dots = dot.process({path: process.cwd() + '/app/views' ,templateSettings: i18nTemplateSettings});
-			var bodyTmpl = dots.index;
+			var viewPath = path.join(process.cwd(), '/app/views');
+			var doTs = doT.process({
+				path: viewPath,
+				templateSettings: i18nTemplateSettings
+			});
+			var bodyTmpl = doTs.index;
 			var bodyHtml = bodyTmpl(i18n);
 			$(document.body).html(bodyHtml);
 		},
