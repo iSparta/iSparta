@@ -25,5 +25,6 @@
       "type": "git",
       "url": "https://github.com/iSparta/iSparta.git"
     }
-  ]
+  ],
+  "license": "MIT"
 }

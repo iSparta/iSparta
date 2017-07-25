@@ -6,7 +6,7 @@
 		i18n = require('i18n'),
 		doT = require('dot');
 
-	var version = "1.2";
+	var version = "2.0";
 	
 	window.iSparta = {
 		sep:"/",
