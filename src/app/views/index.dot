@@ -18,7 +18,7 @@
 			</ul>
 			<div class="tab_content">
 				<!-- APNG convert -->
-				<div id="pngToApng" class="cont active">
+				<div id="apng" class="cont active">
 					<div class="box_setting clearfix">
 						<div class="option_container">
 							<div class="option">
@@ -140,7 +140,7 @@
 
 
 				<!-- WebP convert -->
-				<div id="pngToWebp" class="cont">
+				<div id="webp" class="cont">
 					<div class="box_setting clearfix">
 						<div class="option_container">
 							<div class="option">
@@ -189,6 +189,23 @@
 						<div class="empty">
 							<span class="drag_area">+</span>
 						</div>
+						<script id="webp_tmpl_filelist" type="text/template">
+						{{ for (var i = 0; i < it.all.length; i++) { }}
+							<ul class="clearfix imglist">
+								{{ for (var j = 0; j < it.all[i].files.length; j++) { }}
+								<li data-pid="{{=i}}" data-id="{{=j}}" class="checked">
+									<div class="thumb">
+										<img src="{{=it.all[i].files[j].url[0]}}" alt="">
+									</div>
+									<div class="info clearfix">
+										<input type="text" value="{{=it.all[i].files[j].name}}"/>
+										<i class="icon-folder-open" data-href="{{=it.all[i].files[j].url[0]}}" data-pid={{=i}} ></i>
+									</div>
+								</li>
+								{{ } }}
+							</ul>
+						{{ } }}
+						</script> 
 					</div>
 					<div class="box_status clearfix">
 						<div class="option">

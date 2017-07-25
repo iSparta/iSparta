@@ -22,6 +22,7 @@
 		
 		$itemOpenPos=$("#apng2webp .imglist .icon-folder-open"),
 		tmplFileList = $('#apng2webp_tmpl_filelist').html();
+		tmplBoxPreview = $boxPreview.html();
 	
 	window.iSparta.apng2webp ={
 		options:{
@@ -73,10 +74,10 @@
 					$(opt).attr("selected","selected");
 					var fileList=[{path:options.currentPath[i]}];
 					var otherFiles=[];
-					if(options.currentPath[i].indexOf("convert_list")==0){
+					if(options.currentPath[i].indexOf(i18n.__("Convert list"))==0){
 						fileList=[];
 						for(var j=0;j<options.otherFiles.length;j++){
-							if(options.currentPath[i]=="convert_list"+options.otherFiles[j].id){
+							if(options.currentPath[i]==i18n.__("Convert list")+options.otherFiles[j].id){
 								for(var k=0;k<options.otherFiles[j].path.length;k++){
 									fileList.push({path:options.otherFiles[j].path[k]});
 								}
@@ -314,14 +315,13 @@
 			});
 			$loop.on('change', function() {
 				ui.dataHelper.changeLoop($(this).val());
-			})
+			});
 			$config.on('change', function() {
 				ui.dataHelper.changeConfig($(this).val());
-			})
-
+			});
 			$ratio.on('change', function() {
 				ui.dataHelper.changeRatio($(this).val());
-			})
+			});
 			$btnSavePath.on("click",function(){
 				$hSavePath.click();
 			});
@@ -362,8 +362,8 @@
 				//var opt=new Option(fileList[0].path,fileList[0].path);
 				var v=ui.fillImglist(otherFiles);
 				if(v){
-					var fileList="convert_list"+mixIndex;
-					var opt=new Option("convert_list"+mixIndex,"convert_list"+mixIndex);
+					var fileList=i18n.__("Convert list")+mixIndex;
+					var opt=new Option(i18n.__("Convert list")+mixIndex,i18n.__("Convert list")+mixIndex);
 					$(opt).attr("selected","selected");
 					$currentPath[0].insertBefore(opt,$currentPath[0].options[0]);
 					ui.dataHelper.changeCurrentPath(fileList,otherFiles);
@@ -411,14 +411,14 @@
 		   
 			if(datas.all.length==0){
 				window.iSparta.ui.showTips(i18n.__("Please select APNG images"));
-				return false;
+				$boxPreview.html(tmplBoxPreview);
 			}else{
 				var doTtmpl = doT.template(tmplFileList);
 				var html=doTtmpl(datas);
 				$boxPreview.html(html);
-				return true;
 			}
-			
+
+			return true;
 		},
 		items:function(){
 			var timer=null;
@@ -479,11 +479,11 @@
 				var options=window.iSparta.apng2webp.options;
 				var path=$(this).val();
 
-				if(path.indexOf("convert_list")==0){
+				if(path.indexOf(i18n.__("Convert list"))==0){
 					var fileList=[];
 					for(var j=0;j<options.otherFiles.length;j++){
 
-						if(path=="convert_list"+options.otherFiles[j].id){
+						if(path==i18n.__("Convert list")+options.otherFiles[j].id){
 							for(var k=0;k<options.otherFiles[j].path.length;k++){
 								fileList.push({path:options.otherFiles[j].path[k]});
 							}
@@ -504,11 +504,11 @@
 			$refresh.on("click",function(){
 				var path=$currentPath.val();
 				var options=window.iSparta.apng2webp.options;
-				if(path.indexOf("convert_list")==0){
+				if(path.indexOf(i18n.__("Convert list"))==0){
 					var fileList=[];
 					for(var j=0;j<options.otherFiles.length;j++){
 
-						if(path=="convert_list"+options.otherFiles[j].id){
+						if(path==i18n.__("Convert list")+options.otherFiles[j].id){
 							for(var k=0;k<options.otherFiles[j].path.length;k++){
 								fileList.push({path:options.otherFiles[j].path[k]});
 							}
@@ -573,7 +573,7 @@
 		changeCurrentPath:function(currentPath,theOtherFiles){
 			var apng2webp=window.iSparta.apng2webp;
 			var theCurrentPath=apng2webp.options.currentPath;
-			if(currentPath.indexOf("convert_list")==0){
+			if(currentPath.indexOf(i18n.__("Convert list"))==0){
 
 				for(var i=0;i<theCurrentPath.length;i++){
 					if(currentPath==theCurrentPath[i]){

@@ -1,11 +1,12 @@
 (function ($) {
-	var gui = require('nw.gui');
-	var win = gui.Window.get();
-	var os = require('os');
-	var fs = require('fs');
-	var i18n = require('i18n');
-	var doT = require('dot');
-	var version = "1.1";
+	var gui = require('nw.gui'),
+		win = gui.Window.get(),
+		os = require('os'),
+		fs = require('fs'),
+		i18n = require('i18n'),
+		doT = require('dot');
+
+	var version = "1.2";
 	
 	window.iSparta = {
 		sep:"/",
