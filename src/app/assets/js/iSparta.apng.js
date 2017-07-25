@@ -739,7 +739,7 @@
 	        window.iSparta.apng.fileList=fileList;
 	        datas.all=window.iSparta.apng.fileList;
 	       
-	        if(datas.all.length<=1){
+	        if(datas.all.length==0){
 	        	window.iSparta.ui.showTips(i18n.__("Please select multiple PNG images, keep the filename serialized and image size equal"));
 				$boxPreview.html(tmplBoxPreview);
 	        }else{

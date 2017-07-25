@@ -1,5 +1,7 @@
 ## iSparta
 
+[English version](https://github.com/dreampiggy/iSparta/blob/master/README-en.md)
+
 iSparta 是一款 APNG 和 Webp 转换工具。
 
 # 截图
@@ -14,14 +16,14 @@ iSparta现在支持macOS和Windows系统，可以在[Release](https://github.com
 
 iSparta现在支持以下语言：
 
-+ English
++ 英语
 + 简体中文
-+ 繁體中文
++ 繁体中文
 
 # 功能
 
 + PNG转换APNG  
-  将多张PNG合并成一个APNG动图，可以设置间隔时间、循环次数等参数。要求PNG在同一目录下，并且保持文件名标准化(1.png, 2.png...)
+  将多张PNG合并成一个APNG动图，可以设置帧频率、循环次数等参数。要求PNG在同一目录下，并且保持文件名标准化(1.png, 2.png...)
 + PNG、JPEG转换WebP  
   将PNG、JPEG转换为WebP格式，可以设置无损，压缩比等参数。
 + APNG转换Animated WebP  
@@ -63,13 +65,14 @@ macOS上，将`build`放入应用包中，改名为`app.nw`，然后整体打包
 
 ```bash
 mv build nwjs.app/Contents/Resources/app.nw
+zip -r iSparta-mac.zip nwjs.app
 ```
 
 Windows上，将`build`放入到可执行文件`nwjs.exe`的同级目录下，改名为`package.nw`，然后整体打包
 
 在`icon`目录下有应用的图标，可以按需替换
 
-# 开源项目
+# 致谢
 
 + [apngasm](http://apngasm.sourceforge.net/)
 + [apng2webp](https://github.com/Benny-/apng2webp)
