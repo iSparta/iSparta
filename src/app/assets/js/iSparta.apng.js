@@ -56,7 +56,7 @@
 			$loop.val(options.loop);
 			$rate.val(options.rate);
 			$quality.val(options.quality);
-			$currentLanguage.val(window.iSparta.locale.getLocale());
+			$currentLanguage.val(window.locale.getLocale());
 
 			for(var i=0;i<options.savePath.length;i++){
 				if(options.savePath[i]=="parent"){
@@ -852,7 +852,7 @@
 			});
 			$currentLanguage.on('change', function() {
 				var locale=$(this).val();
-				window.iSparta.locale.changeLocale(locale);
+				window.locale.changeLocale(locale);
 			});
 		}
 	};

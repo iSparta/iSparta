@@ -49,7 +49,7 @@
 			$loop.val(options.loop);
 			$config.val(options.config);
 			$ratio.val(options.ratio);
-			$currentLanguage.val(window.iSparta.locale.getLocale());
+			$currentLanguage.val(window.locale.getLocale());
 			
 			for(var i=0;i<options.savePath.length;i++){
 				if(options.savePath[i]=="parent"){
@@ -522,7 +522,7 @@
 			});
 			$currentLanguage.on('change', function() {
 				var locale=$(this).val();
-				window.iSparta.locale.changeLocale(locale);
+				window.locale.changeLocale(locale);
 			});
 		}
 	};
