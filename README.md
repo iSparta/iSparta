@@ -1,16 +1,16 @@
 ## iSparta
 
-[English version](https://github.com/dreampiggy/iSparta/blob/master/README-en.md)
+[English version](https://github.com/iSparta/iSparta/blob/master/README-en.md)
 
 iSparta 是一款 APNG 和 Webp 转换工具。
 
 # 截图
 
-![](https://raw.githubusercontent.com/dreampiggy/iSparta/master/screenshot/screenshot-zh-cn.png)
+![](https://raw.githubusercontent.com/iSparta/iSparta/master/screenshot/screenshot-zh-cn.png)
 
 # 下载
 
-iSparta现在支持macOS和Windows系统，可以在[Release](https://github.com/dreampiggy/iSparta/releases)页面进行下载。
+iSparta现在支持macOS和Windows系统，可以在[官网](http://isparta.github.io/)下载最新版本，或者到[Release](https://github.com/iSparta/iSparta/releases)页面下载历史版本。
 
 # 语言
 
