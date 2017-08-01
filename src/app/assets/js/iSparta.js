@@ -1,25 +1,28 @@
 (function ($) {
+	var gui = require('nw.gui'),
+		win = gui.Window.get(),
+		os = require('os'),
+		fs = require('fs'),
+		i18n = require('i18n'),
+		doT = require('dot');
 
-	var gui = require('nw.gui');
-	var win = gui.Window.get();
-	var os = require('os');
-	var fs = require('fs');
-	var version = "1.1";
+	var version = "2.0";
 	
 	window.iSparta = {
 		sep:"/",
 		init: function() {
-			var ui = window.iSparta.ui;
 			if(this.getOsInfo().indexOf("win")!=-1){
 				this.sep="\\";
-			}			
-			ui.init();
+			}
+
+			window.iSparta.ui.init();
+
 			this.checkVersion();
 			var openedNum=this.localData.get("openedNum");
 			process.on('uncaughtException', function (err) {
 				window.iSparta.ui.hideLoading();
 				window.iSparta.ui.hideProgress();
-	        	window.iSparta.ui.showTips("程序发生错误：" + err);
+	        	window.iSparta.ui.showTips(i18n.__("Program error occurred:") + err);
 			});
 			if(!openedNum){
 				this.localData.remove("apng");
@@ -64,34 +67,34 @@
 		},
 
 		postData: function(data, type) {
-			var hostname = os.hostname();
-			var osInfo = this.getOsInfo();
-			var timestamp = Date.parse(new Date());
+			// var hostname = os.hostname();
+			// var osInfo = this.getOsInfo();
+			// var timestamp = Date.parse(new Date());
 
-			for (var i=0; i<data.length; i++) {
-				data[i].hostname = hostname;
-				data[i].osInfo = osInfo;
-				data[i].timestamp = timestamp;
-				if (!data[i].num) {
-					data[i].num = 1;
-				}
-				data[i].version = version;
-				data[i].type = type;
-				$.post("http://zhijie.me/iSparta/data.php", data[i], function(result){});
-			}
+			// for (var i=0; i<data.length; i++) {
+			// 	data[i].hostname = hostname;
+			// 	data[i].osInfo = osInfo;
+			// 	data[i].timestamp = timestamp;
+			// 	if (!data[i].num) {
+			// 		data[i].num = 1;
+			// 	}
+			// 	data[i].version = version;
+			// 	data[i].type = type;
+			// 	$.post("http://zhijie.me/iSparta/data.php", data[i], function(result){});
+			// }
 		},
 				
 		checkVersion: function() {
-			var ui = this.ui;
-			$.get("http://zhijie.me/iSparta/data.php", {versioncheck:version}, function(result) {
-				if(result=="new"){
+			// var ui = this.ui;
+			// $.get("http://zhijie.me/iSparta/data.php", {versioncheck:version}, function(result) {
+			// 	if(result=="new"){
 					
-				}else{
-					ui.showTips("有版本更新！前往下载！", 2, function(){
-						gui.Shell.openExternal(result);
-					});
-				}
-			});			
+			// 	}else{
+			// 		ui.showTips(i18n.__("New version avaliable! Go to download"), 2, function(){
+			// 			gui.Shell.openExternal(result);
+			// 		});
+			// 	}
+			// });			
 		}
 	};
 
@@ -172,9 +175,12 @@
 				window.iSparta.webp.init();
 				break;
 				case 3:
-				window.iSparta.imglossless.init();
+				window.iSparta.apng2webp.init();
 				break;
 				case 4:
+				window.iSparta.imglossless.init();
+				break;
+				case 5:
 				window.iSparta.pngloss.init();
 				break;
 			}			
@@ -188,7 +194,7 @@
 
 		showLoading: function(txt) {
 			if(!txt){
-				txt="正在处理，请稍后...";
+				txt=i18n.__("Processing, please wait...");
 			}
 			$(".pop_loading .txt").html(txt);
 			$(".pop_loading").addClass("active");
@@ -200,7 +206,7 @@
 
 		showProgress: function(progress, txt, closeCallback){
 			if(!txt){
-				txt="正在处理，请稍后...";
+				txt=i18n.__("Processing, please wait...");
 			}
 			$(".pop_progress .load-bar-inner").css({width:progress*100+"%"})
 			$(".pop_progress .txt").html(txt);
@@ -220,7 +226,7 @@
 
 		showTips:function(txt, type, yesCallback, closeCallback){
 			if(!txt){
-				txt="出错了，请重试！";
+				txt=i18n.__("Error occurred, Please try again!");
 			}
 			$(".pop_tips .txt").html(txt);
 			
@@ -270,9 +276,6 @@
 				this.remove(key);
 				return {};
 			}
-			
-			
-			
 			return val;
 		},
 
@@ -289,7 +292,7 @@
 	    nowDepth:0,
 	    Files:{},
 	    walk:function(fileList,ext,except,maxdepth,callback){
-	        // 一次只拉一个文件夹
+	        // only pick one folder each time
 	       	ext=ext?ext:"png";
 	       	maxDepth=maxdepth?maxDepth:3;
 	       	var Files=this.Files;

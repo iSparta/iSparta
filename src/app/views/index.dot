@@ -1,0 +1,544 @@
+<div id="wrapper">
+	<div id="topbar">
+		<h1><img src="iSparta.png"/><strong>iSparta</strong> -- [[=i18n.__("APNG and WebP converter")]]</h1>
+		<ul class="nav">
+			<li><span class="minimize">&minus;</span></li>
+			<li><span class="close">&times;</span></li>
+		</ul>
+	</div>
+
+	<div id="content">
+		<div class="func_tab">
+			<ul class="tab_trigger">
+				<li class="active">[[=i18n.__("PNG to APNG")]]</li>
+				<li>[[=i18n.__("Images to WebP")]]</li>
+				<li>[[=i18n.__("APNG to Animated WebP")]]</li>
+				<li>[[=i18n.__("Images lossless")]]</li>
+				<li>[[=i18n.__("PNG lossy")]]</li>
+			</ul>
+			<div class="tab_content">
+				<!-- APNG convert -->
+				<div id="apng" class="cont active">
+					<div class="box_setting clearfix">
+						<div class="option_container">
+							<div class="option">
+								<label>[[=i18n.__("Loop count")]]</label>
+								<select id="apng_select_loop">
+									<option value="0">[[=i18n.__("forever")]]</option>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+									<option value="6">6</option>
+									<option value="7">7</option>
+									<option value="8">8</option>
+									<option value="9">9</option>
+									<option value="10">10</option>
+								</select>
+							</div>
+							<div class="option">
+								<label>[[=i18n.__("Frame rate")]]</label>
+								<select id="apng_select_rate">
+									<option value="0.01">0.01</option>
+									<option value="0.02">0.02</option>
+									<option value="0.03">0.03</option>
+									<option value="0.04">0.04</option>
+									<option value="0.05">0.05</option>
+									<option value="0.06">0.06</option>
+									<option value="0.07">0.07</option>
+									<option value="0.08">0.08</option>
+									<option value="0.09">0.09</option>
+									<option value="0.1">0.1</option>
+									<option value="0.12">0.12</option>
+									<option value="0.15">0.15</option>
+									<option value="0.18">0.18</option>
+									<option value="0.2">0.2</option>
+									<option value="0.25">0.25</option>
+									<option value="0.3">0.3</option>
+									<option value="0.5">0.5</option>
+									<option value="1">1</option>
+								</select>
+								[[=i18n.__("s/frame")]]
+							</div>
+							<div class="option">
+								<label>[[=i18n.__("Compression ratio")]]</label>
+								<select id="apng_select_quality">
+									<option value="-1">[[=i18n.__("No compression")]]</option>
+									<option value="100">100%</option>
+									<option value="95">95%</option>
+									<option value="90">90%</option>
+									<option value="85">85%</option>
+									<option value="80">80%</option>
+									<option value="75">75%</option>
+									<option value="70">70%</option>
+									<option value="65">65%</option>
+									<option value="60">60%</option>
+									<option value="55">55%</option>
+									<option value="50">50%</option>
+									<option value="45">45%</option>
+									<option value="40">40%</option>
+									<option value="35">35%</option>
+									<option value="30">30%</option>
+									<option value="25">25%</option>
+									<option value="20">20%</option>
+									<option value="15">15%</option>
+									<option value="10">10%</option>
+								</select>
+							</div>           
+							<div class="option">
+									<label>[[=i18n.__("Output directory")]]</label>
+									<select class="folder_select" id="apng_select_savePath"></select>
+									<button id="apng_btn_savePath">[[=i18n.__("Choose directory")]]</button>
+									<input class="hide" type="file" id="apng_savePath_hidden" nwdirectory/>
+							</div>
+						</div>
+						<div class="func">
+							<button class="custom_button btn_strong" id="apng_btn_cov">[[=i18n.__("Start convert")]]</button>
+						</div>
+					</div>
+					<div class="box_preview">
+						<div class="empty">
+							<span class="drag_area">+</span>
+						</div>
+						<script id="apng_tmpl_filelist" type="text/template">
+						{{ for (var i = 0; i < it.all.length; i++) { }}
+							<ul class="clearfix imglist">
+								{{ for (var j = 0; j < it.all[i].files.length; j++) { }}
+								<li data-pid="{{=i}}" data-id="{{=j}}" class="checked">
+									<div class="thumb">
+										<img src="{{=it.all[i].files[j].url[0]}}" alt="">
+									</div>
+									<div class="info clearfix">
+										<input type="text" value="{{=it.all[i].files[j].name}}"/>
+										<i class="icon-folder-open" data-href="{{=it.all[i].files[j].url[0]}}" data-pid={{=i}} ></i>
+									</div>
+								</li>
+								{{ } }}
+							</ul>
+						{{ } }}
+						</script> 
+					</div>
+					<div class="box_status clearfix">
+						<div class="option">
+							<label>[[=i18n.__("Current directory")]]</label>
+							<select class="folder_select" id="apng_select_currentPath"></select>
+							<input class="hide" type="file" id="apng_path_hidden" nwdirectory/>
+							<button id="apng_btn_currentPath">[[=i18n.__("Choose directory")]]</button>
+							<button id="apng_currentPath_refresh">[[=i18n.__("Refresh")]]</button>
+						</div>
+						<div class="option language">
+							<label>[[=i18n.__("Language")]]</label>
+							<select id="apng_select_language">
+								<option value="en">English</option>
+								<option value="zh-cn">简体中文</option>
+								<option value="zh-tw">繁體中文</option>
+							</select>
+						</div>
+					</div>
+				</div>
+
+
+				<!-- WebP convert -->
+				<div id="webp" class="cont">
+					<div class="box_setting clearfix">
+						<div class="option_container">
+							<div class="option">
+								<label>[[=i18n.__("Compression config")]]</label>
+								<select id="webp_select_config">
+									<option value="">[[=i18n.__("lossy")]]</option>
+									<option value="-lossless">[[=i18n.__("lossless")]]</option>
+								</select>
+							</div>
+							<div class="option">
+								<label>[[=i18n.__("Compression ratio")]]</label>
+								<select id="webp_select_ratio">
+									<option value="100">100%</option>
+									<option value="95">95%</option>
+									<option value="90">90%</option>
+									<option value="85">85%</option>
+									<option value="80">80%</option>
+									<option value="75">75%</option>
+									<option value="70">70%</option>
+									<option value="65">65%</option>
+									<option value="60">60%</option>
+									<option value="55">55%</option>
+									<option value="50">50%</option>
+									<option value="45">45%</option>
+									<option value="40">40%</option>
+									<option value="35">35%</option>
+									<option value="30">30%</option>
+									<option value="25">25%</option>
+									<option value="20">20%</option>
+									<option value="15">15%</option>
+									<option value="10">10%</option>
+								</select>
+							</div>
+							<div class="option">
+									<label>[[=i18n.__("Output directory")]]</label>
+									<select class="folder_select" id="webp_select_savePath"></select>
+									<button id="webp_btn_savePath">[[=i18n.__("Choose directory")]]</button>
+									<input class="hide" type="file" id="webp_savePath_hidden" nwdirectory/>
+							</div>
+						</div>
+						<div class="func">
+							<button class="custom_button btn_strong" id="webp_btn_cov">[[=i18n.__("Start convert")]]</button>
+						</div>
+					</div>
+					<div class="box_preview">
+						<div class="empty">
+							<span class="drag_area">+</span>
+						</div>
+						<script id="webp_tmpl_filelist" type="text/template">
+						{{ for (var i = 0; i < it.all.length; i++) { }}
+							<ul class="clearfix imglist">
+								{{ for (var j = 0; j < it.all[i].files.length; j++) { }}
+								<li data-pid="{{=i}}" data-id="{{=j}}" class="checked">
+									<div class="thumb">
+										<img src="{{=it.all[i].files[j].url[0]}}" alt="">
+									</div>
+									<div class="info clearfix">
+										<input type="text" value="{{=it.all[i].files[j].name}}"/>
+										<i class="icon-folder-open" data-href="{{=it.all[i].files[j].url[0]}}" data-pid={{=i}} ></i>
+									</div>
+								</li>
+								{{ } }}
+							</ul>
+						{{ } }}
+						</script> 
+					</div>
+					<div class="box_status clearfix">
+						<div class="option">
+							<label>[[=i18n.__("Current directory")]]</label>
+							<select class="folder_select" id="webp_select_currentPath"></select>
+							<input class="hide" type="file" id="webp_path_hidden" nwdirectory/>
+							<button id="webp_btn_currentPath">[[=i18n.__("Choose directory")]]</button>
+							<button id="webp_currentPath_refresh">[[=i18n.__("Refresh")]]</button>
+						</div>
+						<div class="option language">
+							<label>[[=i18n.__("Language")]]</label>
+							<select id="webp_select_language">
+								<option value="en">English</option>
+								<option value="zh-cn">简体中文</option>
+								<option value="zh-tw">繁體中文</option>
+							</select>
+						</div>
+					</div>
+				</div>
+
+
+				<!-- APNG convert Animated WebP -->
+				<div id="apng2webp" class="cont">
+					<div class="box_setting clearfix">
+						<div class="option_container">
+							<div class="option">
+								<label>[[=i18n.__("Loop count")]]</label>
+								<select id="apng2webp_select_loop">
+									<option value="0">[[=i18n.__("forever")]]</option>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+									<option value="6">6</option>
+									<option value="7">7</option>
+									<option value="8">8</option>
+									<option value="9">9</option>
+									<option value="10">10</option>
+								</select>
+							</div>
+							<div class="option">
+								<label>[[=i18n.__("Compression config")]]</label>
+								<select id="apng2webp_select_config">
+									<option value="">[[=i18n.__("lossy")]]</option>
+									<option value="-lossless">[[=i18n.__("lossless")]]</option>
+								</select>
+							</div>
+							<div class="option">
+								<label>[[=i18n.__("Compression ratio")]]</label>
+								<select id="apng2webp_select_ratio">
+									<option value="100">100%</option>
+									<option value="95">95%</option>
+									<option value="90">90%</option>
+									<option value="85">85%</option>
+									<option value="80">80%</option>
+									<option value="75">75%</option>
+									<option value="70">70%</option>
+									<option value="65">65%</option>
+									<option value="60">60%</option>
+									<option value="55">55%</option>
+									<option value="50">50%</option>
+									<option value="45">45%</option>
+									<option value="40">40%</option>
+									<option value="35">35%</option>
+									<option value="30">30%</option>
+									<option value="25">25%</option>
+									<option value="20">20%</option>
+									<option value="15">15%</option>
+									<option value="10">10%</option>
+								</select>
+							</div>
+							<div class="option">
+									<label>[[=i18n.__("Output directory")]]</label>
+									<select class="folder_select" id="apng2webp_select_savePath"></select>
+									<button id="apng2webp_btn_savePath">[[=i18n.__("Choose directory")]]</button>
+									<input class="hide" type="file" id="apng2webp_savePath_hidden" nwdirectory/>
+							</div>
+						</div>
+						<div class="func">
+							<button class="custom_button btn_strong" id="apng2webp_btn_cov">[[=i18n.__("Start convert")]]</button>
+						</div>
+					</div>
+					<div class="box_preview">
+						<div class="empty">
+							<span class="drag_area">+</span>
+						</div>
+						<script id="apng2webp_tmpl_filelist" type="text/template">
+						{{ for (var i = 0; i < it.all.length; i++) { }}
+							<ul class="clearfix imglist">
+								{{ for (var j = 0; j < it.all[i].files.length; j++) { }}
+								<li data-pid="{{=i}}" data-id="{{=j}}" class="checked">
+									<div class="thumb">
+										<img src="{{=it.all[i].files[j].url[0]}}" alt="">
+									</div>
+									<div class="info clearfix">
+										<input type="text" value="{{=it.all[i].files[j].name}}"/>
+										<i class="icon-folder-open" data-href="{{=it.all[i].files[j].url[0]}}" data-pid={{=i}} ></i>
+									</div>
+								</li>
+								{{ } }}
+							</ul>
+						{{ } }}
+						</script> 
+					</div>
+					<div class="box_status clearfix">
+						<div class="option">
+							<label>[[=i18n.__("Current directory")]]</label>
+							<select class="folder_select" id="apng2webp_select_currentPath"></select>
+							<input class="hide" type="file" id="apng2webp_path_hidden" nwdirectory/>
+							<button id="apng2webp_btn_currentPath">[[=i18n.__("Choose directory")]]</button>
+							<button id="apng2webp_currentPath_refresh">[[=i18n.__("Refresh")]]</button>
+						</div>
+						<div class="option language">
+							<label>[[=i18n.__("Language")]]</label>
+							<select id="apng2webp_select_language">
+								<option value="en">English</option>
+								<option value="zh-cn">简体中文</option>
+								<option value="zh-tw">繁體中文</option>
+							</select>
+						</div>
+					</div>
+				</div>
+
+
+				<!-- image lossless compress -->
+				<div id="imglossless" class="cont">
+					<div class="box_setting clearfix">
+						<div class="option_container">
+							<div class="option">
+								<label>[[=i18n.__("Filename suffix")]]</label>
+								<select id="imglossless_select_ext">
+									<option value="">[[=i18n.__("No suffix(override original file)")]]</option>
+									<option value="-lossless">-lossless</option>
+								</select>
+							</div>
+							<div class="option">
+									<label>[[=i18n.__("Output directory")]]</label>
+									<select class="folder_select" id="imglossless_select_savePath"></select>
+									<button id="imglossless_btn_savePath">[[=i18n.__("Choose directory")]]</button>
+									<input class="hide" type="file" id="imglossless_savePath_hidden" nwdirectory/>
+							</div>
+						</div>
+						<div class="func">
+							<button class="custom_button btn_strong" id="imglossless_btn_cov">[[=i18n.__("Start convert")]]</button>
+						</div>
+					</div>
+					<div class="box_preview">
+						<div class="empty">
+							<span class="drag_area">+</span>
+						</div>
+						<script id="imglossless_tmpl_filelist" type="text/template">
+						{{ for (var i = 0; i < it.all.length; i++) { }}
+							<ul class="clearfix imglist">
+								{{ for (var j = 0; j < it.all[i].files.length; j++) { }}
+								<li data-pid="{{=i}}" data-id="{{=j}}" class="checked">
+									<div class="thumb">
+										<img src="{{=it.all[i].files[j].url[0]}}" alt="">
+									</div>
+									<div class="info clearfix">
+										{{=it.all[i].files[j].name2}}
+										<i class="icon-folder-open" data-href="{{=it.all[i].files[j].url[0]}}" data-pid={{=i}} ></i>
+									</div>
+								</li>
+								{{ } }}
+							</ul>
+						{{ } }}
+						</script> 
+					</div>
+					<div class="box_status clearfix">
+						<div class="option">
+							<label>[[=i18n.__("Current directory")]]</label>
+							<select class="folder_select" id="imglossless_select_currentPath"></select>
+							<input class="hide" type="file" id="imglossless_path_hidden" nwdirectory/>
+							<button id="imglossless_btn_currentPath">[[=i18n.__("Choose directory")]]</button>
+							<button id="imglossless_currentPath_refresh">[[=i18n.__("Refresh")]]</button>
+						</div>
+						<div class="option language">
+							<label>[[=i18n.__("Language")]]</label>
+							<select id="imglossless_select_language">
+								<option value="en">English</option>
+								<option value="zh-cn">简体中文</option>
+								<option value="zh-tw">繁體中文</option>
+							</select>
+						</div>
+					</div>
+				</div>
+
+
+				<!-- PNG lossy compress -->
+				<div id="pngloss" class="cont ">
+					<div class="box_setting clearfix">
+						<div class="option_container">
+							<div class="option">
+								<label>[[=i18n.__("Filename suffix")]]</label>
+								<select id="pngloss_select_ext">
+									<option value="">[[=i18n.__("No suffix")]]</option>
+									<option value="-loss">-loss</option>
+								</select>
+							</div>
+							<div class="option">
+								<label>[[=i18n.__("Quality")]]</label>
+								<select id="pngloss_select_quality">
+									<option value="" selected="selected">[[=i18n.__("ignore")]]</option>
+									<option value="100">100%</option>
+									<option value="95">95%</option>
+									<option value="90">90%</option>
+									<option value="85">85%</option>
+									<option value="80">80%</option>
+									<option value="75">75%</option>
+									<option value="70">70%</option>
+									<option value="65">65%</option>
+									<option value="60">60%</option>
+									<option value="55">55%</option>
+									<option value="50">50%</option>
+									<option value="45">45%</option>
+									<option value="40">40%</option>
+									<option value="35">35%</option>
+									<option value="30">30%</option>
+									<option value="25">25%</option>
+									<option value="20">20%</option>
+									<option value="15">15%</option>
+								</select>
+							</div>
+							<div class="option">
+								<label>[[=i18n.__("Color depth")]]</label>
+								<select id="pngloss_select_colors">
+									<option value="">[[=i18n.__("ignore")]]</option>
+									<option value="256" selected="selected">256</option>
+									<option value="192">192</option>
+									<option value="128">128</option>
+									<option value="64">64</option>
+									<option value="16">16</option>
+									<option value="8">8</option>
+									<option value="4">4</option>
+									<option value="2">2</option>
+								</select>
+							</div>
+							<div class="option">
+								<label><input type="checkbox" id="pngloss_check_iedebug"/>[[=i18n.__("Support IE6")]]</label>
+							</div>
+							<div class="option">
+								<label>[[=i18n.__("Output directory")]]</label>
+								<select class="folder_select" id="pngloss_select_savePath"></select>
+								<button id="pngloss_btn_savePath">[[=i18n.__("Choose directory")]]</button>
+								<input class="hide" type="file" id="pngloss_savePath_hidden" nwdirectory/>
+							</div>
+						</div>
+						<div class="func">
+							<button class="custom_button btn_strong" id="pngloss_btn_cov">[[=i18n.__("Start convert")]]</button>
+						</div>
+					</div>
+					<div class="box_preview">
+						<div class="empty">
+							<span class="drag_area">+</span>
+						</div>
+						<script id="pngloss_tmpl_filelist" type="text/template">
+						  {{ for (var i = 0; i < it.all.length; i++) { }}
+							<ul class="clearfix imglist">
+								{{ for (var j = 0; j < it.all[i].files.length; j++) { }}
+								<li data-pid="{{=i}}" data-id="{{=j}}" class="checked">
+									<div class="thumb">
+										<img src="{{=it.all[i].files[j].url[0]}}" alt="">
+									</div>
+									<div class="info clearfix">
+										{{=it.all[i].files[j].name2}}
+										<i class="icon-folder-open" data-href="{{=it.all[i].files[j].url[0]}}" data-pid={{=i}} ></i>
+									</div>
+								</li>
+								{{ } }}
+							</ul>
+						  {{ } }}
+						</script> 
+					</div>
+					<div class="box_status clearfix">
+						<div class="option">
+							<label>[[=i18n.__("Current directory")]]</label>
+							<select class="folder_select" id="pngloss_select_currentPath"></select>
+							<input class="hide" type="file" id="pngloss_path_hidden" nwdirectory/>
+							<button id="pngloss_btn_currentPath">[[=i18n.__("Choose directory")]]</button>
+							<button id="pngloss_currentPath_refresh">[[=i18n.__("Refresh")]]</button>
+						</div>
+						<div class="option language">
+							<label>[[=i18n.__("Language")]]</label>
+							<select id="pngloss_select_language">
+								<option value="en">English</option>
+								<option value="zh-cn">简体中文</option>
+								<option value="zh-tw">繁體中文</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="pop pop_loading">
+		<div class="pop_wrapper">
+			<div class="loading_cont">
+				<div class="icon_loading">
+					<i class="icon-spinner icon"></i>
+				</div>
+				<p class="txt">[[=i18n.__("Processing, please wait...")]]</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="pop pop_progress">
+		<div class="pop_wrapper">
+			<div class="load-bar">
+				<div class="load-bar-inner" style="width:0%"></div>
+			</div>
+			<div class="txt">[[=i18n.__("Processing, please wait...")]]</div>
+			<div class="func"><button data-trigger="close">[[=i18n.__("Cancel")]]</button></div>
+		</div>
+	</div>
+
+	<div class="pop pop_tips">
+		<div class="pop_wrapper">
+			<div class="tips_cont">
+				<div class="txt">[[=i18n.__("Error occurred, Please try again!")]]</div>
+				<div class="func">
+					<button data-trigger="yes">[[=i18n.__("OK")]]</button>
+					<button data-trigger="close">[[=i18n.__("Cancel")]]</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="assets/js/index.js"></script>
+<script src="assets/js/iSparta.js"></script>
+<script src="assets/js/iSparta.apng.js"></script>
+<script src="assets/js/iSparta.webp.js"></script>
+<script src="assets/js/iSparta.apng2webp.js"></script>
+<script src="assets/js/iSparta.imglossless.js"></script>
+<script src="assets/js/iSparta.pngloss.js"></script>

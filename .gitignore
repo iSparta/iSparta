@@ -22,3 +22,4 @@ build
 .cache
 _site/
 isparta.github.io/
+src/nwjs

@@ -6,8 +6,7 @@
 #pngloss .box_preview  li.checked .info{background: #888;}
 #pngloss .box_preview  li.checked:hover .info{background: #888;}
 #pngloss .box_preview  li:hover .info{background: #ccc;}
-#pngloss select#pngloss_select_savePath{width: 60px;}
-#pngloss select#pngloss_select_quality{width: 60px;}
+#pngloss select#pngloss_select_savePath{width: 80px;}
 
 
 #pngloss .box_preview  li .thumb{width:135px;height:135px;display: table-cell;text-align: center;vertical-align: middle;z-index: 2;position: relative;cursor:pointer;font-size:0px;}

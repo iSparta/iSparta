@@ -2,10 +2,13 @@
 	var exec = require('child_process').exec,
 		os = require('os'),
 		fs = require('fs-extra'),
-		gui = require('nw.gui');
+		gui = require('nw.gui'),
+		doT = require('dot'),
+		i18n = require('i18n');
 	var $savePath=$("#imglossless_select_savePath"),
 		$currentPath=$("#imglossless_select_currentPath"),
 		$ext=$("#imglossless_select_ext"),
+		$currentLanguage=$("#imglossless_select_language"),
 		$btnCurrentPath=$("#imglossless_btn_currentPath"),
 		$refresh=$("#imglossless_currentPath_refresh"),
 		$btnSavePath=$("#imglossless_btn_savePath"),
@@ -17,6 +20,7 @@
 		
 		$itemOpenPos=$("#imglossless .imglist .icon-folder-open"),
 		tmplFileList = $('#imglossless_tmpl_filelist').html();
+		tmplBoxPreview = $boxPreview.html();
 	
 	window.iSparta.imglossless ={
 		options:{
@@ -39,11 +43,13 @@
 			$.extend(this.options,options);
 			
 			options=this.options;
+			$currentLanguage.val(window.locale.getLocale());
+			
 			for(var i=0;i<options.savePath.length;i++){
 				if(options.savePath[i]=="parent"){
-					var opt=new Option("上级目录",options.savePath[i]);
+					var opt=new Option(i18n.__("Parent directory"),options.savePath[i]);
 				}else if(options.savePath[i]=="self"){
-					var opt=new Option("同级目录",options.savePath[i]);
+					var opt=new Option(i18n.__("Same level directory"),options.savePath[i]);
 				}else{
 					var opt=new Option(options.savePath[i],options.savePath[i]);
 				}
@@ -71,21 +77,18 @@
 					$(opt).attr("selected","selected");
 					var fileList=[{path:options.currentPath[i]}];
 					var otherFiles=[];
-					if(options.currentPath[i].indexOf("压缩列表")==0){
+					if(options.currentPath[i].indexOf(i18n.__("Convert list"))==0){
 						fileList=[];
 						for(var j=0;j<options.otherFiles.length;j++){
-							if(options.currentPath[i]=="压缩列表"+options.otherFiles[j].id){
+							if(options.currentPath[i]==i18n.__("Convert list")+options.otherFiles[j].id){
 								for(var k=0;k<options.otherFiles[j].path.length;k++){
 									fileList.push({path:options.otherFiles[j].path[k]});
 								}
 							}
 						}
 					}
-		
-					if(!this.ui.fillImglist(fileList)){
 
-						//window.iSparta.ui.showTips("目录读取失败！请确认文件目录是否存在");
-					}
+					this.ui.fillImglist(fileList);
 				}
 				$currentPath[0].options.add(opt);
 		        
@@ -94,7 +97,7 @@
 		},
 		switch:function(id){
 			if(!this.fileList[0]){
-				window.iSparta.ui.showTips("未选择任何图片！");
+				window.iSparta.ui.showTips(i18n.__("No image selected"));
 				return;
 			}
 			var files=this.fileList[0].files;
@@ -106,7 +109,7 @@
 	            }
 			}
 			if(this.nums==0){
-				window.iSparta.ui.showTips("未选择任何图片！");
+				window.iSparta.ui.showTips(i18n.__("No image selected"));
 			}else{
 				if(!id){
 					id=0;
@@ -119,7 +122,7 @@
 				}
 				if(id<files.length&&this.isClose==false){
 					var progress=(this.index+1)/this.nums;
-					window.iSparta.ui.showProgress(progress,"正在处理第"+(this.index+1)+"张(共"+this.nums+"张)图片",function(){
+					window.iSparta.ui.showProgress(progress,i18n.__("Processing images: (%s/%s)", this.index+1, this.nums),function(){
 						window.iSparta.imglossless.isClose=true;
 					});
 					this.index++;
@@ -312,8 +315,8 @@
 		        //var opt=new Option(fileList[0].path,fileList[0].path);
 		        var v=ui.fillImglist(otherFiles);
 		        if(v){
-			        var fileList="压缩列表"+mixIndex;
-			        var opt=new Option("压缩列表"+mixIndex,"压缩列表"+mixIndex);
+			        var fileList=i18n.__("Convert list")+mixIndex;
+			        var opt=new Option(i18n.__("Convert list")+mixIndex,i18n.__("Convert list")+mixIndex);
 			        $(opt).attr("selected","selected");
 					$currentPath[0].insertBefore(opt,$currentPath[0].options[0]);
 		        	ui.dataHelper.changeCurrentPath(fileList,otherFiles);
@@ -346,29 +349,41 @@
 	            return false;
 	        }
 	        window.iSparta.ui.showLoading();
-	        window.iSparta.imglossless.fileList=window.iSparta.fileManager.walk(fileList,"png","-lossless");
-	        if(!window.iSparta.imglossless.fileList){
-
+	        var pngLists = window.iSparta.fileManager.walk(fileList,"png","-lossless");
+	        var jpegLists = window.iSparta.fileManager.walk(fileList,"jpg","-lossless");
+	        var gifLists = window.iSparta.fileManager.walk(fileList,"gif","-lossless");
+	        if (!pngLists || !jpegLists || !gifLists) {
 	        	window.iSparta.ui.hideLoading();
-	        	window.iSparta.ui.showTips("目录读取失败！请确认文件目录是否存在！<br/>并且不能选择盘符！");
+	        	window.iSparta.ui.showTips(i18n.__("Directory load failed! Please check whether the directory exists, disk letter is not allowd"));
 	        	
 	        	return false;
-
 	        };
+	        var totalLists = [];
+	        if (pngLists && pngLists.length !== 0) {
+	        	Array.prototype.push.apply(totalLists, pngLists);
+	        }
+	        if (jpegLists && jpegLists.length !== 0) {
+	        	Array.prototype.push.apply(totalLists, jpegLists);
+	        }
+	        if (gifLists && gifLists.length !== 0) {
+	        	Array.prototype.push.apply(totalLists, gifLists);
+	        }
+	        window.iSparta.imglossless.fileList = totalLists;
 	       	window.iSparta.ui.hideLoading();
+	       	
 	        var datas={};
 	        datas.all=window.iSparta.imglossless.fileList;
 	       
 	        if(datas.all.length==0){
-	        	window.iSparta.ui.showTips("请选择PNG图片！");
-	        	return false;
+	        	window.iSparta.ui.showTips(i18n.__("Please select PNG, JPEG or GIF images"));
+	        	$boxPreview.html(tmplBoxPreview);
 	        }else{
 	        	var doTtmpl = doT.template(tmplFileList);
 	        	var html=doTtmpl(datas);
 	        	$boxPreview.html(html);
-	        	return true;
 	        }
-	        
+
+	        return true;
 		},
 		items:function(){
 			var timer=null;
@@ -429,11 +444,11 @@
 				var options=window.iSparta.imglossless.options;
 				var path=$(this).val();
 
-				if(path.indexOf("压缩列表")==0){
+				if(path.indexOf(i18n.__("Convert list"))==0){
 					var fileList=[];
 					for(var j=0;j<options.otherFiles.length;j++){
 
-						if(path=="压缩列表"+options.otherFiles[j].id){
+						if(path==i18n.__("Convert list")+options.otherFiles[j].id){
 							for(var k=0;k<options.otherFiles[j].path.length;k++){
 								fileList.push({path:options.otherFiles[j].path[k]});
 							}
@@ -454,11 +469,11 @@
 			$refresh.on("click",function(){
 				var path=$currentPath.val();
 				var options=window.iSparta.imglossless.options;
-				if(path.indexOf("压缩列表")==0){
+				if(path.indexOf(i18n.__("Convert list"))==0){
 					var fileList=[];
 					for(var j=0;j<options.otherFiles.length;j++){
 
-						if(path=="压缩列表"+options.otherFiles[j].id){
+						if(path==i18n.__("Convert list")+options.otherFiles[j].id){
 							for(var k=0;k<options.otherFiles[j].path.length;k++){
 								fileList.push({path:options.otherFiles[j].path[k]});
 							}
@@ -470,7 +485,10 @@
 				ui.fillImglist(fileList);		
 				return false;
 			});
-
+			$currentLanguage.on('change', function() {
+				var locale=$(this).val();
+				window.locale.changeLocale(locale);
+			});
 		}
 	};
 	// 数据控制
@@ -522,7 +540,7 @@
 		changeCurrentPath:function(currentPath,theOtherFiles){
 			var imglossless=window.iSparta.imglossless;
 			var theCurrentPath=imglossless.options.currentPath;
-			if(currentPath.indexOf("压缩列表")==0){
+			if(currentPath.indexOf(i18n.__("Convert list"))==0){
 
 				for(var i=0;i<theCurrentPath.length;i++){
 					if(currentPath==theCurrentPath[i]){

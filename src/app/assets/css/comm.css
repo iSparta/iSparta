@@ -20,23 +20,25 @@ body {overflow: hidden;}
 .func_tab .tab_trigger li:hover{background-color: #f8f8f8;}
 .func_tab .tab_trigger li.active{border-bottom: 1px solid #eee;background-color: #eee; }
 .func_tab .tab_content{width:100%;height:510px;border: 1px solid #999;position: relative;}
-.func_tab .tab_content .cont{width:100%;height:100%;position: absolute;opacity: 0;z-index: 1;-webkit-transition:all .5s;background: #fff;}
+.func_tab .tab_content .cont{display:flex;flex-direction:column;justify-content:space-between;width:100%;height:100%;position: absolute;opacity: 0;z-index: 1;-webkit-transition:all .5s;background: #fff;}
 .func_tab .tab_content .cont.active{z-index: 9;opacity: 1;}
 
 /*参数设定*/
-.box_setting{background: #eee;padding:0 10px;line-height: 40px;position: relative;z-index: 9;}
+.box_setting{display:flex; background: #eee;padding:0 10px;line-height: 40px;z-index: 9;}
+.box_setting .option_container{flex:1;}
 .box_setting .option{float:left;margin-right:15px;}
-.box_setting .func{float:right;}
-
-/*状态栏*/
-.box_status{background: #eee;padding:0 10px;line-height: 32px;position: absolute;width: 100%;bottom:0px;-webkit-box-sizing:border-box;z-index: 9;}
-.box_status .option{float:left;margin-right:15px;}
-.box_status .func{float:right;}
+.box_setting .func{flex:none;display:flex;align-items:center;}
 
 /*预览区*/
 .empty .drag_area {display: block; width: 200px; height: 200px; font-size: 200px; border: 5px dashed #ccc; line-height: 180px; text-align: center; color: #ccc; margin: auto; cursor: pointer; margin-top: 70px; }
 .empty .drag_area:hover,.empty .drag_area.hover {color: #555; border: 5px dashed #555; }
-.box_preview{position: absolute;width:100%;height:100%;top:0px;left:0px;border-top:40px solid transparent;-webkit-box-sizing:border-box;border-bottom:30px solid transparent;overflow: auto;}
+.box_preview{flex:1;width:100%;height:100%;top:0px;left:0px;-webkit-box-sizing:border-box;border-bottom:30px solid transparent;overflow: auto;}
+
+/*状态栏*/
+.box_status{background: #eee;padding:0 10px;line-height: 32px;position: absolute;width: 100%;bottom:0px;-webkit-box-sizing:border-box;z-index: 9;}
+.box_status .option{float:left;margin-right:15px;}
+.box_status .language{float: right;}
+.box_status .func{float:right;}
 
 
 .pop{position: absolute;top:0px;left:0px;width: 100%;height:100%;background: rgba(0,0,0,.5);display:-webkit-box;-webkit-box-orient: horizontal; -webkit-box-pack: center; -webkit-box-align: center; z-index: 9999;box-shadow: 0px 0px 20px rgba(0,0,0,.5);opacity:0;-webkit-transition:all .5s;pointer-events:none;}

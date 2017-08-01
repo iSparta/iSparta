@@ -1,3 +1,3 @@
 $(document).ready(function(){
-	window.iSparta.init();
+	window.locale.init();
 });
