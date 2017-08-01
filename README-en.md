@@ -71,6 +71,10 @@ on Windows上, move the `build` directory into the same level as `nwjs.exe` and 
 
 The application icon is under `icon` directory, you can use them as needed.
 
+
+# Contributor
+* [DreamPiggy](https://github.com/dreampiggy)
+
 # Thanks
 
 + [apngasm](http://apngasm.sourceforge.net/)
