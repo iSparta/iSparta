@@ -72,6 +72,9 @@ Windows上，将`build`放入到可执行文件`nwjs.exe`的同级目录下，�
 
 在`icon`目录下有应用的图标，可以按需替换
 
+# 贡献者
+* [DreamPiggy](https://github.com/dreampiggy)
+
 # 致谢
 
 + [apngasm](http://apngasm.sourceforge.net/)
