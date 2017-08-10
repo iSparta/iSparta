@@ -7,11 +7,11 @@ iSparta is a tool for converting APNG and WebP images.
 
 # Screenshot
 
-![](https://raw.githubusercontent.com/dreampiggy/iSparta/master/screenshot/screenshot-en.png)
+![](https://raw.githubusercontent.com/iSparta/iSparta/master/screenshot/screenshot-en.png)
 
 # Download
 
-iSparta now supports macOS and Windows, you can download it at [Release](https://github.com/dreampiggy/iSparta/releases) page.
+iSparta now supports macOS and Windows, you can download the latest version at [Official Site](http://isparta.github.io/) or previous releases at [Release](https://github.com/iSparta/iSparta/releases) page.
 
 # Language
 
@@ -73,6 +73,10 @@ zip -r iSparta-mac.zip nwjs.app
 on Windows上, move the `build` directory into the same level as `nwjs.exe` and rename it to `package.nw`. Then package the entire folder.
 
 The application icon is under `icon` directory, you can use them as needed.
+
+
+# Contributor
+* [DreamPiggy](https://github.com/dreampiggy)
 
 # Thanks
 

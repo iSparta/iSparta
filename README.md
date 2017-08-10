@@ -3,17 +3,17 @@
 [![macOS Build](https://img.shields.io/travis/iSparta/iSparta.svg)](https://travis-ci.org/iSparta/iSparta)
 [![Windows Build](https://img.shields.io/appveyor/ci/lizhuoli/iSparta.svg)](https://ci.appveyor.com/project/lizhuoli/iSparta)
 
-[English version](https://github.com/dreampiggy/iSparta/blob/master/README-en.md)
+[English version](https://github.com/iSparta/iSparta/blob/master/README-en.md)
 
 iSparta 是一款 APNG 和 Webp 转换工具。
 
 # 截图
 
-![](https://raw.githubusercontent.com/dreampiggy/iSparta/master/screenshot/screenshot-zh-cn.png)
+![](https://raw.githubusercontent.com/iSparta/iSparta/master/screenshot/screenshot-zh-cn.png)
 
 # 下载
 
-iSparta现在支持macOS和Windows系统，可以在[Release](https://github.com/dreampiggy/iSparta/releases)页面进行下载。
+iSparta现在支持macOS和Windows系统，可以在[官网](http://isparta.github.io/)下载最新版本，或者到[Release](https://github.com/iSparta/iSparta/releases)页面下载历史版本。
 
 # 语言
 
@@ -74,6 +74,9 @@ zip -r iSparta-mac.zip nwjs.app
 Windows上，将`build`放入到可执行文件`nwjs.exe`的同级目录下，改名为`package.nw`，然后整体打包
 
 在`icon`目录下有应用的图标，可以按需替换
+
+# 贡献者
+* [DreamPiggy](https://github.com/dreampiggy)
 
 # 致谢
 
