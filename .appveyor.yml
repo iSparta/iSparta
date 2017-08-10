@@ -17,10 +17,10 @@ after_test:
   - mkdir build
   - if "%APPVEYOR_REPO_TAG%" == "true" (7z a -tzip -mx=9 iSparta-win32.zip script\build\iSparta\win32)
   - if "%APPVEYOR_REPO_TAG%" == "true" (7z a -tzip -mx=9 iSparta-win64.zip script\build\iSparta\win64)
-  - if "%APPVEYOR_REPO_TAG%" == "true" mv iSparta-win32.zip build/
-  - if "%APPVEYOR_REPO_TAG%" == "true" mv iSparta-win64.zip build/
+  - if "%APPVEYOR_REPO_TAG%" == "true" mv iSparta-win32.zip build\
+  - if "%APPVEYOR_REPO_TAG%" == "true" mv iSparta-win64.zip build\
 artifacts:
-  - path: 'build/*.zip'
+  - path: 'build\*.zip'
     name: iSparta-windows
 deploy:
   description: ''
@@ -30,3 +30,5 @@ deploy:
   artifact: iSparta-windows
   on:
     appveyor_repo_tag: true
+cache:
+  - script\cache -> .appveyor.yml
