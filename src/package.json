@@ -1,5 +1,6 @@
 {
   "name": "iSparta",
+  "version": "2.0.1",
   "main": "app/main.html",
   "description": "A tool to handle PNG/APNG/WebP",
   "keywords": [

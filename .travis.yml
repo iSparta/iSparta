@@ -1,0 +1,33 @@
+matrix:
+  include:
+  - os: osx
+    language: node_js
+    node_js: node
+    env:
+    - BUILD_PLATFORM=osx64
+install:
+- cd script
+- npm install
+- npm run build $BUILD_PLATFORM
+script:
+- npm test
+before_deploy:
+- cd $TRAVIS_BUILD_DIR
+- mkdir build
+- zip -r -9 iSparta-mac.zip script/build/iSparta/$BUILD_PLATFORM/iSparta.app
+- mv iSparta-mac.zip $TRAVIS_BUILD_DIR/build/
+deploy:
+  provider: releases
+  api_key:
+    secure: GxcAm6BJdOJRlke8Kn5ENCSSa+zOlGZ8Jo8vr0LQxngVCTBrjsFVIu8flOiZW580oopiIKRAlshplFU1jjp1z4PoHNOrNFy/6qsza9UsQ/4hrNPJUP8fZMuXqfeJ0qm9A0Pz17NI2ou66HCzqQvaMpwdeMaxmFS9iiQzV0QSazM=
+  file_glob: true
+  file: $TRAVIS_BUILD_DIR/build/*.zip
+  skip_cleanup: true
+  on:
+    tags: true
+    repo: iSparta/iSparta
+cache:
+  directories:
+  - script/cache
+notifications:
+  email: false

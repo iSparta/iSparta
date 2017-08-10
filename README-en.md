@@ -1,5 +1,8 @@
 ## iSparta
 
+[![macOS Build](https://img.shields.io/travis/iSparta/iSparta.svg)](https://travis-ci.org/iSparta/iSparta)
+[![Windows Build](https://img.shields.io/appveyor/ci/lizhuoli/iSparta.svg)](https://ci.appveyor.com/project/lizhuoli/iSparta)
+
 iSparta is a tool for converting APNG and WebP images.
 
 # Screenshot

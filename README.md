@@ -1,5 +1,8 @@
 ## iSparta
 
+[![macOS Build](https://img.shields.io/travis/iSparta/iSparta.svg)](https://travis-ci.org/iSparta/iSparta)
+[![Windows Build](https://img.shields.io/appveyor/ci/lizhuoli/iSparta.svg)](https://ci.appveyor.com/project/lizhuoli/iSparta)
+
 [English version](https://github.com/iSparta/iSparta/blob/master/README-en.md)
 
 iSparta 是一款 APNG 和 Webp 转换工具。
