@@ -22,4 +22,6 @@ build
 .cache
 _site/
 isparta.github.io/
-src/nwjs
+script/node_modules
+script/build
+script/cache

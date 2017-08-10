@@ -1,0 +1,32 @@
+version: 1.0.{build}
+image:
+  - Visual Studio 2015
+environment:
+  nodejs_version: ''
+install:
+  - ps: Install-Product node $env:nodejs_version
+build_script:
+  - cd script
+  - npm install
+  - npm run build win32
+  - npm run build win64
+test_script:
+  - npm test
+after_test:
+  - cd %APPVEYOR_BUILD_FOLDER%
+  - mkdir build
+  - if "%APPVEYOR_REPO_TAG%" == "true" (7z a -tzip -mx=9 iSparta-win32.zip script\build\iSparta\win32)
+  - if "%APPVEYOR_REPO_TAG%" == "true" (7z a -tzip -mx=9 iSparta-win64.zip script\build\iSparta\win64)
+  - if "%APPVEYOR_REPO_TAG%" == "true" mv iSparta-win32.zip build/
+  - if "%APPVEYOR_REPO_TAG%" == "true" mv iSparta-win64.zip build/
+artifacts:
+  - path: 'build/*.zip'
+    name: iSparta-windows
+deploy:
+  description: ''
+  provider: GitHub
+  auth_token:
+    secure: h7DDi0thA+gVzkb1F9jpd+Wy0BWQ8JCehNq+xY5OwC4ivxtmlR+IY2/wR9aUKx8U
+  artifact: iSparta-windows
+  on:
+    appveyor_repo_tag: true
