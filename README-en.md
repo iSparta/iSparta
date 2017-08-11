@@ -45,7 +45,7 @@ cd iSparta/src
 npm install
 ```
 
-Because `nw.js` provide a binary bundle for each platform, and its' size is large. So we do not keep the binary bundle into git repo. Go to [nw.js release](https://dl.nwjs.io/v0.12.3/) to download. Currently we use `nwjs-v0.12.3` to build.
+Because `nw.js` provide a binary bundle for each platform, and its' size is large. So we do not keep the binary bundle into git repo. Go to [nw.js release](https://dl.nwjs.io/v0.12.3/) to download. Currently we use `nwjs-v0.12.3` to build. Or you can check the [Build](#Build) description, use the build binary bundle instead.
 
 Then, unzip the downloaded binary bundle, keep the extracted files at the same level of `package.json`, then run the program:
 
@@ -57,22 +57,23 @@ You can execute `nwjs.exe` on Windows.
 
 # Package
 
-According to [nwjs docs](https://github.com/nwjs/nw.js/wiki/how-to-package-and-distribute-your-apps), you need to download the binary bundle for target platform. Then create a directory named `build`, copy these files in the project folder files into `build`:
-
-+ `app`
-+ `node_modules`
-+ `package.json`
-
-on macOS, move the `build` directory into binary bundle and rename to `app.nw`, then package the entire folder.
+Ready for build script:
 
 ```bash
-mv build nwjs.app/Contents/Resources/app.nw
-zip -r iSparta-mac.zip nwjs.app
+cd iSparta/script
+npm install
 ```
 
-on Windows上, move the `build` directory into the same level as `nwjs.exe` and rename it to `package.nw`. Then package the entire folder.
+build for different platform, now support `osx64`、`win32` and `win64`.
 
-The application icon is under `icon` directory, you can use them as needed.
+```bash
+npm run build osx64
+```
+
+Then go to `script/build/` and check the build bundle.
+
+
+Note：On macOS，the built executable binary for Windows platform will not embed the icon.
 
 
 # Contributor

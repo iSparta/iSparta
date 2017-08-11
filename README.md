@@ -47,7 +47,7 @@ cd iSparta/src
 npm install
 ```
 
-由于`nw.js`对每个平台均有一个应用包，且容量较大，因此不放在git repo中，请到[nw.js版本](https://dl.nwjs.io/v0.12.3/)处下载，当前版本使用`nwjs-v0.12.3`构建。
+由于`nw.js`对每个平台均有一个应用包，且容量较大，因此不放在git repo中，请到[nw.js版本](https://dl.nwjs.io/v0.12.3/)处下载，当前版本使用`nwjs-v0.12.3`构建。或者也可以参考[构建](#构建)说明，使用构建的应用包。
 
 然后，将下载后的应用包解压，放到与`package.json`同级目录，然后执行应用：
 
@@ -57,23 +57,25 @@ nwjs.app/Contents/MacOS/nwjs ./
 
 Windows上可以直接执行`nwjs.exe`
 
-# 打包
-参考[nwjs官方文档](https://github.com/nwjs/nw.js/wiki/how-to-package-and-distribute-your-apps)，只需要下载好对应平台的二进制，新建文件夹`build`，将整个项目目录以下文件/文件夹复制到`build`中。
+# 构建
 
-+ `app`
-+ `node_modules`
-+ `package.json`
-
-macOS上，将`build`放入应用包中，改名为`app.nw`，然后整体打包
+准备构建脚本：
 
 ```bash
-mv build nwjs.app/Contents/Resources/app.nw
-zip -r iSparta-mac.zip nwjs.app
+cd iSparta/script
+npm install
 ```
 
-Windows上，将`build`放入到可执行文件`nwjs.exe`的同级目录下，改名为`package.nw`，然后整体打包
+根据不同平台构建，现在支持`osx64`、`win32`和`win64`。
 
-在`icon`目录下有应用的图标，可以按需替换
+```bash
+npm run build osx64
+```
+
+然后可以到`script/build/`目录下找到构建好的应用。
+
+注：在macOS下，构建Windows平台的应用包不会内嵌图标到可执行文件中。
+
 
 # 贡献者
 * [DreamPiggy](https://github.com/dreampiggy)
