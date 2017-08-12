@@ -12,7 +12,9 @@ matrix:
     env:
     - BUILD_PLATFORM=linux64
 install:
-- cd script
+- cd src
+- npm install
+- cd $TRAVIS_BUILD_DIR/script
 - npm install
 - npm run build $BUILD_PLATFORM
 script:
@@ -20,8 +22,9 @@ script:
 before_deploy:
 - cd $TRAVIS_BUILD_DIR
 - mkdir build
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then zip -r -9 iSparta-$BUILD_PLATFORM.zip script/build/iSparta/$BUILD_PLATFORM/iSparta.app ; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then zip -r -9 iSparta-$BUILD_PLATFORM.zip script/build/iSparta/$BUILD_PLATFORM/ ; fi
+- cd script/build/iSparta
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then zip -r -9 iSparta-$BUILD_PLATFORM.zip $BUILD_PLATFORM/ ; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then zip -r -9 iSparta-$BUILD_PLATFORM.zip $BUILD_PLATFORM/ ; fi
 - mv iSparta-$BUILD_PLATFORM.zip $TRAVIS_BUILD_DIR/build/
 deploy:
   provider: releases

@@ -6,7 +6,9 @@ environment:
 install:
   - ps: Install-Product node $env:nodejs_version
 build_script:
-  - cd script
+  - cd src
+  - npm install
+  - cd %APPVEYOR_BUILD_FOLDER%\script
   - npm install
   - npm run build win32
   - npm run build win64
@@ -15,10 +17,11 @@ test_script:
 after_test:
   - cd %APPVEYOR_BUILD_FOLDER%
   - mkdir build
-  - if "%APPVEYOR_REPO_TAG%" == "true" (7z a -tzip -mx=9 iSparta-win32.zip script\build\iSparta\win32)
-  - if "%APPVEYOR_REPO_TAG%" == "true" (7z a -tzip -mx=9 iSparta-win64.zip script\build\iSparta\win64)
-  - if "%APPVEYOR_REPO_TAG%" == "true" mv iSparta-win32.zip build\
-  - if "%APPVEYOR_REPO_TAG%" == "true" mv iSparta-win64.zip build\
+  - cd script\build\iSparta
+  - if "%APPVEYOR_REPO_TAG%" == "true" (7z a -tzip -mx=9 iSparta-win32.zip win32\)
+  - if "%APPVEYOR_REPO_TAG%" == "true" (7z a -tzip -mx=9 iSparta-win64.zip win64\)
+  - if "%APPVEYOR_REPO_TAG%" == "true" (mv iSparta-win32.zip %APPVEYOR_BUILD_FOLDER%\build\)
+  - if "%APPVEYOR_REPO_TAG%" == "true" (mv iSparta-win64.zip %APPVEYOR_BUILD_FOLDER%\build\)
 artifacts:
   - path: 'build\*.zip'
     name: iSparta-windows
