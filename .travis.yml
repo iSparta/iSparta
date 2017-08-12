@@ -5,6 +5,12 @@ matrix:
     node_js: node
     env:
     - BUILD_PLATFORM=osx64
+  - os: linux
+    dist: trusty
+    language: node_js
+    node_js: node
+    env:
+    - BUILD_PLATFORM=linux64
 install:
 - cd script
 - npm install

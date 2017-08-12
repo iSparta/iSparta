@@ -14,13 +14,16 @@ var nwRoot = path.join(__filename, 	'../../src');
 var platform = process.argv[2];
 if (platform === 'osx64') {
 	nwBuildConfig['platforms'] = ['osx64'];
-	nwBuildConfig['files'] = [nwRoot + '/**', '!' + nwRoot + '/app/libs/**/{win32,win64}/**'];
+	nwBuildConfig['files'] = [nwRoot + '/**', '!' + nwRoot + '/app/libs/**/{win32,win64,linux}/**'];
 } else if (platform === 'win64') {
 	nwBuildConfig['platforms'] = ['win64'];
-	nwBuildConfig['files'] = [nwRoot + '/**', '!' + nwRoot + '/app/libs/**/{mac,win32}/**'];
+	nwBuildConfig['files'] = [nwRoot + '/**', '!' + nwRoot + '/app/libs/**/{mac,win32,linux}/**'];
 } else if (platform === 'win32') {
 	nwBuildConfig['platforms'] = ['win32'];
-	nwBuildConfig['files'] = [nwRoot + '/**', '!' + nwRoot + '/app/libs/**/{mac,win64}/**'];
+	nwBuildConfig['files'] = [nwRoot + '/**', '!' + nwRoot + '/app/libs/**/{mac,win64,linux}/**'];
+} else if (platform === 'linux64') {
+	nwBuildConfig['platforms'] = ['linux64'];
+	nwBuildConfig['files'] = [nwRoot + '/**', '!' + nwRoot + '/app/libs/**/{mac,win32,win64}/**'];
 } else {
 	console.error('build platform for: ' + platform + ' is not supported');
 	process.exit(1);
