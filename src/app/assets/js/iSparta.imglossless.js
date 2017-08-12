@@ -2,6 +2,7 @@
 	var exec = require('child_process').exec,
 		os = require('os'),
 		fs = require('fs-extra'),
+		Path = require('path'),
 		gui = require('nw.gui'),
 		doT = require('dot'),
 		i18n = require('i18n');
@@ -190,7 +191,7 @@
 			gifsicle=window.iSparta.handlePath(gifsicle);
 			jpegoptim=window.iSparta.handlePath(jpegoptim);
 			
-			var tempdir=os.tmpdir()+'iSparta/';
+			var tempdir=Path.join(os.tmpdir(), '/iSparta/');
 			tempdir=window.iSparta.handlePath(tempdir);
 			try{
 				dirHandle();

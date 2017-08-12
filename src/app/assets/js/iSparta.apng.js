@@ -2,6 +2,7 @@
 	var exec = require('child_process').exec,
 		os = require('os'),
 		fs = require('fs-extra'),
+		Path = require('path'),
 		gui = require('nw.gui'),
 		doT = require('dot'),
 		i18n = require('i18n');
@@ -199,10 +200,7 @@
 			var pngquant = process.cwd() + '/app/libs/pngloss/'+iSparta.getOsInfo()+'/pngquant';
 			var apngopt = process.cwd() + '/app/libs/apng/'+iSparta.getOsInfo()+'/apngopt';
 		   
-			var tempdir=os.tmpdir()+'iSparta/';
-			if(os.tmpdir().lastIndexOf(window.iSparta.sep)!=os.tmpdir().length-1){
-				tempdir=os.tmpdir()+'/iSparta/';
-			}
+			var tempdir=Path.join(os.tmpdir(), '/iSparta/');
 			tempdir=window.iSparta.handlePath(tempdir);
 			apngasm=window.iSparta.handlePath(apngasm);
 			pngquant=window.iSparta.handlePath(pngquant);

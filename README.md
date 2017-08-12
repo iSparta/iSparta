@@ -40,7 +40,7 @@ iSparta现在支持以下语言：
 
 iSparta使用[nw.js](https://nwjs.io/)框架开发，需要安装[node.js](https://nodejs.org/)。在macOS上可以使用[Homebrew](https://brew.sh/)直接安装，Windows上使用官网安装包进行安装，Linux上使用[包管理器](https://nodejs.org/en/download/package-manager/)安装。
 
-注：在Linux环境下，需要安装`依赖`libpng16`，可使用包管理器安装
+注：在Linux环境下，需要安装依赖`libpng16`，可使用包管理器安装：
 
 ```bash
 sudo apt-get install libpng16-dev

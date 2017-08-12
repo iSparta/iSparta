@@ -20,8 +20,9 @@ script:
 before_deploy:
 - cd $TRAVIS_BUILD_DIR
 - mkdir build
-- zip -r -9 iSparta-mac.zip script/build/iSparta/$BUILD_PLATFORM/iSparta.app
-- mv iSparta-mac.zip $TRAVIS_BUILD_DIR/build/
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then zip -r -9 iSparta-$BUILD_PLATFORM.zip script/build/iSparta/$BUILD_PLATFORM/iSparta.app ; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then zip -r -9 iSparta-$BUILD_PLATFORM.zip script/build/iSparta/$BUILD_PLATFORM/ ; fi
+- mv iSparta-$BUILD_PLATFORM.zip $TRAVIS_BUILD_DIR/build/
 deploy:
   provider: releases
   api_key:

@@ -2,6 +2,7 @@
 	var child_process = require('child_process'),
 		os = require('os'),
 		fs = require('fs-extra'),
+		Path = require('path'),
 		gui = require('nw.gui'),
 		doT = require('dot'),
 		i18n = require('i18n');
@@ -192,7 +193,7 @@
 			apngdisraw=window.iSparta.handlePath(apngdisraw);
 			cwebp=window.iSparta.handlePath(cwebp);
 			
-			var tempdir=os.tmpdir()+'iSparta/';
+			var tempdir=Path.join(os.tmpdir(), '/iSparta/');
 			tempdir=window.iSparta.handlePath(tempdir);
 			var webpmux_args = '';
 
