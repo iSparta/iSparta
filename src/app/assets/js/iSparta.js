@@ -22,7 +22,7 @@
 			process.on('uncaughtException', function (err) {
 				window.iSparta.ui.hideLoading();
 				window.iSparta.ui.hideProgress();
-	        	window.iSparta.ui.showTips(i18n.__("Program error occurred:") + err);
+				window.iSparta.ui.showTips(i18n.__("Program error occurred:") + err);
 			});
 			if(!openedNum){
 				this.localData.remove("apng");
@@ -106,22 +106,22 @@
 			this.popInit();
 
 			$(document).on({
-		        dragleave:function(e){    
-		            e.preventDefault();
-		        },
+				dragleave:function(e){    
+					e.preventDefault();
+				},
 
-		        drop:function(e){      
-		            e.preventDefault();
-		        },
+				drop:function(e){      
+					e.preventDefault();
+				},
 
-		        dragenter:function(e){
-		            e.preventDefault();
-		        },
+				dragenter:function(e){
+					e.preventDefault();
+				},
 
-		        dragover:function(e){      
-		            e.preventDefault();
-		        }
-		    });
+				dragover:function(e){      
+					e.preventDefault();
+				}
+			});
 		},
 
 		sysInit: function() {
@@ -284,148 +284,148 @@
 		}
 	}
 	window.iSparta.fileManager={
-	    length:-1,
-	    nowLen:0,
-	    names:[],
-	    allsize:0,
-	    maxDepth:3,
-	    nowDepth:0,
-	    Files:{},
-	    walk:function(fileList,ext,except,maxdepth,callback){
-	        // only pick one folder each time
-	       	ext=ext?ext:"png";
-	       	maxDepth=maxdepth?maxDepth:3;
-	       	var Files=this.Files;
-	        this.length=0;
-	        Files.fileList=[];
-	        this.names=[];
-	        if(fileList[0].path.length==3){
-	        	return false;
-	        }
-	        
-	        for(var i=0;i<fileList.length;i++){
-	        	
-	            var path=fileList[i].path;
-	            
-	           	if(!fs.existsSync(path)){
-	           		return false;
-	           	}
+		length:-1,
+		nowLen:0,
+		names:[],
+		allsize:0,
+		maxDepth:3,
+		nowDepth:0,
+		Files:{},
+		walk:function(fileList,ext,except,maxdepth,callback){
+			// only pick one folder each time
+			ext=ext?ext:"png";
+			maxDepth=maxdepth?maxDepth:3;
+			var Files=this.Files;
+			this.length=0;
+			Files.fileList=[];
+			this.names=[];
+			if(fileList[0].path.length==3){
+				return false;
+			}
+			
+			for(var i=0;i<fileList.length;i++){
+				
+				var path=fileList[i].path;
+				
+				if(!fs.existsSync(path)){
+					return false;
+				}
 
-	           	this.nowDepth=-1;
-	            if(fs.statSync(path).isDirectory()){
-	            	this.nowDepth++;
-	            	var dirs={};
-	                var url=path.substring(0,path.lastIndexOf(iSparta.sep));
-	                dirs.url=url;
-	                dirs.length=this.length+i;
-	                dirs.files=[];
-	                Files.fileList.push(dirs);
-	                this.walkDir(path,ext,except);
-	                //fileWalk.length++;
-	            }else if(fs.statSync(path).isFile()){
-	                var url=path.substring(0,path.lastIndexOf(iSparta.sep));
+				this.nowDepth=-1;
+				if(fs.statSync(path).isDirectory()){
+					this.nowDepth++;
+					var dirs={};
+					var url=path.substring(0,path.lastIndexOf(iSparta.sep));
+					dirs.url=url;
+					dirs.length=this.length+i;
+					dirs.files=[];
+					Files.fileList.push(dirs);
+					this.walkDir(path,ext,except);
+					//fileWalk.length++;
+				}else if(fs.statSync(path).isFile()){
+					var url=path.substring(0,path.lastIndexOf(iSparta.sep));
 
-	                //if(fileWalk.length==0||url!=fileWalk.allFileList[fileWalk.length].url){
-	                	var dirs={};
-	                	
-	                    dirs.url=url;
-	                    dirs.files=[];
-	                    if(this.nowLen!=this.length||(this.length==0&&(!Files.fileList[this.length]||url!=Files.fileList[this.length].url))){
-	                        Files.fileList.push(dirs);
-	                    }
-	                    if(this.nowLen!=this.length){
-	                        this.nowLen=this.length
-	                    }
+					//if(fileWalk.length==0||url!=fileWalk.allFileList[fileWalk.length].url){
+						var dirs={};
+						
+						dirs.url=url;
+						dirs.files=[];
+						if(this.nowLen!=this.length||(this.length==0&&(!Files.fileList[this.length]||url!=Files.fileList[this.length].url))){
+							Files.fileList.push(dirs);
+						}
+						if(this.nowLen!=this.length){
+							this.nowLen=this.length
+						}
 
-	                    this.walkFile(path,ext,except);
+						this.walkFile(path,ext,except);
 
-	            }
-	            
-	            
-	        }
-	        this.nowDepth=-1;
-	        var len=Files.fileList.length;
-	        var listTemp=Files.fileList;
-	        for(var i=len-1;i>=0;i--){
-	            var len2=Files.fileList.length;
-	            if(Files.fileList[i].files.length==0){
-	                Files.fileList.splice(len2-1,1);
-	               
-	            }
-	        }
-	        
-	        if((typeof callback)=='function'){
-	        	callback();
-	        }
-	        return Files.fileList;
-	    },
-	    walkFile:function(path,ext,except){
-	        //var apng={name:name};
-	         var Files=this.Files;
-	         path.replace(/(^\s*)|(\s*$)/g, "");  
-	         var reg1=new RegExp(".*\\."+ext+ "$", "i"); 
-	        
-	        if(reg1.test(path)){
-	        	 
-	            //apng.frames.push(path);
-	            var url=path;
-	            var repeatIndex=-1;
-	           
-	            var allfile=Files.fileList[this.length].files;
-	            var stat=fs.statSync(path);
-	            var size=stat.size;
-	            path2=path;
-	            var reg2=new RegExp( "\\."+ext+ "$", "i"); 
-	            path=path.replace(reg2,"");
-	            var ppath=path.substring(0,path.lastIndexOf(iSparta.sep));
-	            
-	            var pppath=ppath.substring(0,ppath.lastIndexOf(iSparta.sep));
-	            var name=path.substring(path.lastIndexOf(iSparta.sep)+1,path.length);
-	            if(except){
-	            	var reg3=new RegExp( ".*"+except+ "$", "i"); 
-	            	 if(reg3.test(name)){
-	            	 	return;
-	            	 }
-	            } 
-	            var name2=path2.substring(path2.lastIndexOf(iSparta.sep)+1,path2.length);
-                var file={path2:path2,name2:name2,path:path,ppath:ppath,pppath:pppath,selected:true};
-                file.url=[];
-                
-                
-                file.name=name;
-                file.allSize=size;
-                this.names.push(name);
-                file.url.push(url);
-                allfile.push(file);
-        
+				}
+				
+				
+			}
+			this.nowDepth=-1;
+			var len=Files.fileList.length;
+			var listTemp=Files.fileList;
+			for(var i=len-1;i>=0;i--){
+				var len2=Files.fileList.length;
+				if(Files.fileList[i].files.length==0){
+					Files.fileList.splice(len2-1,1);
+				   
+				}
+			}
+			
+			if((typeof callback)=='function'){
+				callback();
+			}
+			return Files.fileList;
+		},
+		walkFile:function(path,ext,except){
+			//var apng={name:name};
+			 var Files=this.Files;
+			 path.replace(/(^\s*)|(\s*$)/g, "");  
+			 var reg1=new RegExp(".*\\."+ext+ "$", "i"); 
+			
+			if(reg1.test(path)){
+				 
+				//apng.frames.push(path);
+				var url=path;
+				var repeatIndex=-1;
+			   
+				var allfile=Files.fileList[this.length].files;
+				var stat=fs.statSync(path);
+				var size=stat.size;
+				path2=path;
+				var reg2=new RegExp( "\\."+ext+ "$", "i"); 
+				path=path.replace(reg2,"");
+				var ppath=path.substring(0,path.lastIndexOf(iSparta.sep));
+				
+				var pppath=ppath.substring(0,ppath.lastIndexOf(iSparta.sep));
+				var name=path.substring(path.lastIndexOf(iSparta.sep)+1,path.length);
+				if(except){
+					var reg3=new RegExp( ".*"+except+ "$", "i"); 
+					 if(reg3.test(name)){
+						return;
+					 }
+				} 
+				var name2=path2.substring(path2.lastIndexOf(iSparta.sep)+1,path2.length);
+				var file={path2:path2,name2:name2,path:path,ppath:ppath,pppath:pppath,selected:true};
+				file.url=[];
+				
+				
+				file.name=name;
+				file.allSize=size;
+				this.names.push(name);
+				file.url.push(url);
+				allfile.push(file);
+		
 
-	        }
-	    },
-	    walkDir:function(path,ext,except){
-	        var dirList = fs.readdirSync(path);
-	        var that=this;
+			}
+		},
+		walkDir:function(path,ext,except){
+			var dirList = fs.readdirSync(path);
+			var that=this;
 			that.nowDepth++;
-	        dirList.forEach(function(item){
-	        	
-	        	
-	            if(fs.statSync(path + iSparta.sep + item).isDirectory()){ 
-	            	
-	        		if(that.nowDepth<that.maxDepth){
-	        			
-	        			that.walkDir(path + iSparta.sep + item,ext,except);
+			dirList.forEach(function(item){
+				
+				
+				if(fs.statSync(path + iSparta.sep + item).isDirectory()){ 
+					
+					if(that.nowDepth<that.maxDepth){
+						
+						that.walkDir(path + iSparta.sep + item,ext,except);
 
-	        		}
-	        		if(that.nowDepth>=that.maxDepth){
-	        			
-	        		
-	        		}
-	            }else if(fs.statSync(path + iSparta.sep + item).isFile()){
+					}
+					if(that.nowDepth>=that.maxDepth){
+						
+					
+					}
+				}else if(fs.statSync(path + iSparta.sep + item).isFile()){
 
-	                that.walkFile(path + iSparta.sep + item,ext,except);
-	            }
-	        });
-	        that.nowDepth--;
-	        
-	    }
+					that.walkFile(path + iSparta.sep + item,ext,except);
+				}
+			});
+			that.nowDepth--;
+			
+		}
 	}
 })(jQuery);

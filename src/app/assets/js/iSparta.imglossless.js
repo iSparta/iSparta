@@ -37,6 +37,7 @@
 		index:0,
 		isClose:false,
 		mixIndex:0,
+		hasInit:false,
 		init:function(){
 			localData=window.iSparta.localData;
 			var options=localData.getJSON("imglossless");
@@ -58,7 +59,7 @@
 					$(opt).attr("selected","selected");
 				}
 				$savePath[0].options.add(opt);
-		        
+				
 			}
 			var extoptions=$ext.find("option");
 			
@@ -69,7 +70,7 @@
 					
 					
 				}
-		        
+				
 			}
 			for(var i=0;i<options.currentPath.length;i++){
 				var opt=new Option(options.currentPath[i],options.currentPath[i]);
@@ -91,9 +92,10 @@
 					this.ui.fillImglist(fileList);
 				}
 				$currentPath[0].options.add(opt);
-		        
+				
 			}
 			this.ui.init();
+			window.iSparta.imglossless.hasInit = true;
 		},
 		switch:function(id){
 			if(!this.fileList[0]){
@@ -102,11 +104,11 @@
 			}
 			var files=this.fileList[0].files;
 			if(this.nums==0){
-	            for(var j=0;j<files.length;j++){
-	            	if(files[j].selected==true){
-	            		this.nums++;
-	            	}
-	            }
+				for(var j=0;j<files.length;j++){
+					if(files[j].selected==true){
+						this.nums++;
+					}
+				}
 			}
 			if(this.nums==0){
 				window.iSparta.ui.showTips(i18n.__("No image selected"));
@@ -167,38 +169,38 @@
 			var files=this.fileList[0].files;
 			var url=files[id].url[0];
 			var urls=files[id].url;
-            var name=files[id].name;
-            var name2=files[id].name2;
-            var ext=this.options.ext;
-            var path=savePath+"/"+name+ext;
-            var filename=name+ext;
-            if(savePath=="parent"){
-            	var path=files[id].pppath+"/"+name+ext;
-            }else if(savePath=="self"){
-            	var path=files[id].ppath+"/"+name+ext;
-            }
-            var type=name2.substring(name2.indexOf(".")+1);
-            path+="."+type;
-            
-            var pngout = process.cwd() + '/app/libs/imglossless/'+iSparta.getOsInfo()+'/pngout';
-            var gifsicle = process.cwd() + '/app/libs/imglossless/'+iSparta.getOsInfo()+'/gifsicle';
-            var jpegoptim = process.cwd() + '/app/libs/imglossless/'+iSparta.getOsInfo()+'/jpegoptim';
+			var name=files[id].name;
+			var name2=files[id].name2;
+			var ext=this.options.ext;
+			var path=savePath+"/"+name+ext;
+			var filename=name+ext;
+			if(savePath=="parent"){
+				var path=files[id].pppath+"/"+name+ext;
+			}else if(savePath=="self"){
+				var path=files[id].ppath+"/"+name+ext;
+			}
+			var type=name2.substring(name2.indexOf(".")+1);
+			path+="."+type;
+			
+			var pngout = process.cwd() + '/app/libs/imglossless/'+iSparta.getOsInfo()+'/pngout';
+			var gifsicle = process.cwd() + '/app/libs/imglossless/'+iSparta.getOsInfo()+'/gifsicle';
+			var jpegoptim = process.cwd() + '/app/libs/imglossless/'+iSparta.getOsInfo()+'/jpegoptim';
 
-           	pngout=window.iSparta.handlePath(pngout);
-           	gifsicle=window.iSparta.handlePath(gifsicle);
-           	jpegoptim=window.iSparta.handlePath(jpegoptim);
-            
-   			var tempdir=os.tmpdir()+'iSparta/';
-           	tempdir=window.iSparta.handlePath(tempdir);
-           	try{
-	           	dirHandle();
-	        }
+			pngout=window.iSparta.handlePath(pngout);
+			gifsicle=window.iSparta.handlePath(gifsicle);
+			jpegoptim=window.iSparta.handlePath(jpegoptim);
+			
+			var tempdir=os.tmpdir()+'iSparta/';
+			tempdir=window.iSparta.handlePath(tempdir);
+			try{
+				dirHandle();
+			}
 			catch(err){
 				dirHandle();
 			}
 			function dirHandle(){
 				fs.removeSync(tempdir);
-	            fs.mkdirsSync(tempdir);
+				fs.mkdirsSync(tempdir);
 				imglosslessasmExec();
 			};
 			function imglosslessasmExec(){
@@ -225,8 +227,8 @@
 						fs.copy(tempdir+name2, path,function(){
 							window.iSparta.imglossless.switch(id+1);
 						});
-	            	});
-	            	return;
+					});
+					return;
 				}
 				if(type=="jpg"){
 					
@@ -235,20 +237,20 @@
 						fs.copy(tempdir+name2, path,function(){
 							window.iSparta.imglossless.switch(id+1);
 						});
-	               
-	            	});
-	            	return;
+				   
+					});
+					return;
 				}
 				if(type=="png"){
 					
 					exec(pngoutcomd, {timeout: 1000000}, function(e){
 						console.log(pngoutcomd)
-	                	fs.copy(tempdir+name2, path,function(e){
-	                		
-	                		window.iSparta.imglossless.switch(id+1);
-	                	});
-	            	});
-	            	return;
+						fs.copy(tempdir+name2, path,function(e){
+							
+							window.iSparta.imglossless.switch(id+1);
+						});
+					});
+					return;
 					
 				}
 			}
@@ -309,19 +311,19 @@
 				e.preventDefault();
 				$dragArea.removeClass("hover");
 				e.preventDefault(); //取消默认浏览器拖拽效果
-		        var otherFiles = e.dataTransfer.files; //获取文件对象
-		        imglossless.options.mixListIndex++;
-		        var mixIndex=imglossless.options.mixListIndex;
-		        //var opt=new Option(fileList[0].path,fileList[0].path);
-		        var v=ui.fillImglist(otherFiles);
-		        if(v){
-			        var fileList=i18n.__("Convert list")+mixIndex;
-			        var opt=new Option(i18n.__("Convert list")+mixIndex,i18n.__("Convert list")+mixIndex);
-			        $(opt).attr("selected","selected");
+				var otherFiles = e.dataTransfer.files; //获取文件对象
+				imglossless.options.mixListIndex++;
+				var mixIndex=imglossless.options.mixListIndex;
+				//var opt=new Option(fileList[0].path,fileList[0].path);
+				var v=ui.fillImglist(otherFiles);
+				if(v){
+					var fileList=i18n.__("Convert list")+mixIndex;
+					var opt=new Option(i18n.__("Convert list")+mixIndex,i18n.__("Convert list")+mixIndex);
+					$(opt).attr("selected","selected");
 					$currentPath[0].insertBefore(opt,$currentPath[0].options[0]);
-		        	ui.dataHelper.changeCurrentPath(fileList,otherFiles);
-		        }
-		        
+					ui.dataHelper.changeCurrentPath(fileList,otherFiles);
+				}
+				
 				return false;
 			};
 			
@@ -338,52 +340,54 @@
 					var opt=new Option(val,val);
 					$(opt).attr("selected","selected");
 					$currentPath[0].insertBefore(opt,$currentPath[0].options[0]);
-		        	ui.dataHelper.changeCurrentPath(val);
-		        }
-		        
+					ui.dataHelper.changeCurrentPath(val);
+				}
+				
 				return false;
 			});
 		},
 		fillImglist:function(fileList){
 			if(fileList.length == 0){
-	            return false;
-	        }
-	        window.iSparta.ui.showLoading();
-	        var pngLists = window.iSparta.fileManager.walk(fileList,"png","-lossless");
-	        var jpegLists = window.iSparta.fileManager.walk(fileList,"jpg","-lossless");
-	        var gifLists = window.iSparta.fileManager.walk(fileList,"gif","-lossless");
-	        if (!pngLists || !jpegLists || !gifLists) {
-	        	window.iSparta.ui.hideLoading();
-	        	window.iSparta.ui.showTips(i18n.__("Directory load failed! Please check whether the directory exists, disk letter is not allowd"));
-	        	
-	        	return false;
-	        };
-	        var totalLists = [];
-	        if (pngLists && pngLists.length !== 0) {
-	        	Array.prototype.push.apply(totalLists, pngLists);
-	        }
-	        if (jpegLists && jpegLists.length !== 0) {
-	        	Array.prototype.push.apply(totalLists, jpegLists);
-	        }
-	        if (gifLists && gifLists.length !== 0) {
-	        	Array.prototype.push.apply(totalLists, gifLists);
-	        }
-	        window.iSparta.imglossless.fileList = totalLists;
-	       	window.iSparta.ui.hideLoading();
-	       	
-	        var datas={};
-	        datas.all=window.iSparta.imglossless.fileList;
-	       
-	        if(datas.all.length==0){
-	        	window.iSparta.ui.showTips(i18n.__("Please select PNG, JPEG or GIF images"));
-	        	$boxPreview.html(tmplBoxPreview);
-	        }else{
-	        	var doTtmpl = doT.template(tmplFileList);
-	        	var html=doTtmpl(datas);
-	        	$boxPreview.html(html);
-	        }
+				return false;
+			}
+			window.iSparta.ui.showLoading();
+			var pngLists = window.iSparta.fileManager.walk(fileList,"png","-lossless");
+			var jpegLists = window.iSparta.fileManager.walk(fileList,"jpg","-lossless");
+			var gifLists = window.iSparta.fileManager.walk(fileList,"gif","-lossless");
+			if (!pngLists || !jpegLists || !gifLists) {
+				window.iSparta.ui.hideLoading();
+				window.iSparta.ui.showTips(i18n.__("Directory load failed! Please check whether the directory exists, disk letter is not allowd"));
+				
+				return false;
+			};
+			var totalLists = [];
+			if (pngLists && pngLists.length !== 0) {
+				Array.prototype.push.apply(totalLists, pngLists);
+			}
+			if (jpegLists && jpegLists.length !== 0) {
+				Array.prototype.push.apply(totalLists, jpegLists);
+			}
+			if (gifLists && gifLists.length !== 0) {
+				Array.prototype.push.apply(totalLists, gifLists);
+			}
+			window.iSparta.imglossless.fileList = totalLists;
+			window.iSparta.ui.hideLoading();
+			
+			var datas={};
+			datas.all=window.iSparta.imglossless.fileList;
+		   
+			if(datas.all.length==0){
+				if (window.iSparta.imglossless.hasInit) {
+					window.iSparta.ui.showTips(i18n.__("Please select PNG, JPEG or GIF images"));
+				}
+				$boxPreview.html(tmplBoxPreview);
+			}else{
+				var doTtmpl = doT.template(tmplFileList);
+				var html=doTtmpl(datas);
+				$boxPreview.html(html);
+			}
 
-	        return true;
+			return true;
 		},
 		items:function(){
 			var timer=null;
@@ -391,21 +395,21 @@
 			var urlIndex=0;
 			$boxPreview.on("click",".imglist .thumb",function(){
 				var fileList=window.iSparta.imglossless.fileList;
-		        var li=$(this).closest("li");
-		        var pid=li.attr("data-pid");
-		        var id=li.attr("data-id");
-		        li.toggleClass("checked");
-		        if(li.hasClass("checked")){
-		            fileList[pid].files[id].selected=true;
-		        }else{
-		            fileList[pid].files[id].selected=false;
-		        }
-		    });
-		    $boxPreview.on("mouseover",".imglist .thumb",function(){
-		    	var fileList=window.iSparta.imglossless.fileList;
-		    	var li=$(this).closest("li");
-		        var pid=li.attr("data-pid");
-		        var id=li.attr("data-id");
+				var li=$(this).closest("li");
+				var pid=li.attr("data-pid");
+				var id=li.attr("data-id");
+				li.toggleClass("checked");
+				if(li.hasClass("checked")){
+					fileList[pid].files[id].selected=true;
+				}else{
+					fileList[pid].files[id].selected=false;
+				}
+			});
+			$boxPreview.on("mouseover",".imglist .thumb",function(){
+				var fileList=window.iSparta.imglossless.fileList;
+				var li=$(this).closest("li");
+				var pid=li.attr("data-pid");
+				var id=li.attr("data-id");
 				
 				var that=$(this);
 				
@@ -416,27 +420,27 @@
 					that.find("img").attr("src",fileList[pid].files[id].url[urlIndex]);
 					urlIndex++;
 				},window.iSparta.imglossless.options.rate*1000);
-		    });
-		    $boxPreview.on("mouseout",".imglist .thumb",function(){
-		    	var fileList=window.iSparta.imglossless.fileList;
-		    	var li=$(this).closest("li");
-		        var pid=li.attr("data-pid");
-		        var id=li.attr("data-id");
-		    	clearInterval(timer);
-		    	$(this).find("img").attr("src",fileList[pid].files[id].url[0]);
-		    });
-		    $boxPreview.on("click",".imglist .icon-folder-open",function(){
-		        var url=$(this).attr("data-href");
-		        gui.Shell.showItemInFolder(url);
-		    });
-		    $boxPreview.on("blur",".imglist input[type='text']",function(){
-		        var name=$(this).val();
-		        var fileList=window.iSparta.imglossless.fileList;
-		    	var li=$(this).closest("li");
-		        var pid=li.attr("data-pid");
-		        var id=li.attr("data-id");
-		        fileList[pid].files[id].name=name;
-		    });
+			});
+			$boxPreview.on("mouseout",".imglist .thumb",function(){
+				var fileList=window.iSparta.imglossless.fileList;
+				var li=$(this).closest("li");
+				var pid=li.attr("data-pid");
+				var id=li.attr("data-id");
+				clearInterval(timer);
+				$(this).find("img").attr("src",fileList[pid].files[id].url[0]);
+			});
+			$boxPreview.on("click",".imglist .icon-folder-open",function(){
+				var url=$(this).attr("data-href");
+				gui.Shell.showItemInFolder(url);
+			});
+			$boxPreview.on("blur",".imglist input[type='text']",function(){
+				var name=$(this).val();
+				var fileList=window.iSparta.imglossless.fileList;
+				var li=$(this).closest("li");
+				var pid=li.attr("data-pid");
+				var id=li.attr("data-id");
+				fileList[pid].files[id].name=name;
+			});
 		},
 		status:function(){
 			var ui=this;
