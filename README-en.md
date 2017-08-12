@@ -11,7 +11,7 @@ iSparta is a tool for converting APNG and WebP images.
 
 # Download
 
-iSparta now supports macOS and Windows, you can download the latest version at [Official Site](http://isparta.github.io/) or previous releases at [Release](https://github.com/iSparta/iSparta/releases) page.
+iSparta now supports macOS, Windows and Linux. You can download the latest version at [Official Site](http://isparta.github.io/) or previous releases at [Release](https://github.com/iSparta/iSparta/releases) page.
 
 # Language
 
@@ -36,7 +36,13 @@ iSparta now supports following languages:
 
 # Develop
 
-iSparta use [nw.js](https://nwjs.io/) framework to develop. You need [node.js](https://nodejs.org/) installed. Using [Homebrew](https://brew.sh/) to install on macOS, official installer to install on Windows.
+iSparta use [nw.js](https://nwjs.io/) framework to develop. You need [node.js](https://nodejs.org/) installed. Using [Homebrew](https://brew.sh/) to install on macOS, official installer to install on Windows, and [Package Manager](https://nodejs.org/en/download/package-manager/) on Linux.
+
+Notes: On Linux platform, you need to install dependency `libpng16`, you can use package manager to install:
+
+```bash
+sudo apt-get install libpng16-dev
+```
 
 Install node dependencies:
 
@@ -64,7 +70,7 @@ cd iSparta/script
 npm install
 ```
 
-build for different platform, now support `osx64`、`win32` and `win64`.
+build for different platform, now support `osx64`, `win32`, `win64` and `linux64`.
 
 ```bash
 npm run build osx64
@@ -73,7 +79,7 @@ npm run build osx64
 Then go to `script/build/` and check the build bundle.
 
 
-Note：On macOS，the built executable binary for Windows platform will not embed the icon.
+Note：On non-Windows platform, build executable binary for Windows platform will not embed the icon.
 
 
 # Contributor

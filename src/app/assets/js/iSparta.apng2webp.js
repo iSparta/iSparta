@@ -2,6 +2,7 @@
 	var child_process = require('child_process'),
 		os = require('os'),
 		fs = require('fs-extra'),
+		Path = require('path'),
 		gui = require('nw.gui'),
 		doT = require('dot'),
 		i18n = require('i18n');
@@ -41,6 +42,7 @@
 		index:0,
 		isClose:false,
 		mixIndex:0,
+		hasInit:false,
 		init:function(){
 			localData=window.iSparta.localData;
 			var options=localData.getJSON("apng2webp");
@@ -91,6 +93,7 @@
 				
 			}
 			this.ui.init();
+			window.iSparta.apng2webp.hasInit = true;
 		},
 		switch:function(id){
 			if(!this.fileList[0]){
@@ -190,7 +193,7 @@
 			apngdisraw=window.iSparta.handlePath(apngdisraw);
 			cwebp=window.iSparta.handlePath(cwebp);
 			
-			var tempdir=os.tmpdir()+'iSparta/';
+			var tempdir=Path.join(os.tmpdir(), '/iSparta/');
 			tempdir=window.iSparta.handlePath(tempdir);
 			var webpmux_args = '';
 
@@ -199,7 +202,7 @@
 
 			function dirHandle(){
 				fs.removeSync(tempdir);
-	            fs.mkdirsSync(tempdir);
+				fs.mkdirsSync(tempdir);
 				apng2webpExec();
 			};
 			function apng2webpExec() {
@@ -410,7 +413,9 @@
 			datas.all=window.iSparta.apng2webp.fileList;
 		   
 			if(datas.all.length==0){
-				window.iSparta.ui.showTips(i18n.__("Please select APNG images"));
+				if (window.iSparta.apng2webp.hasInit) {
+					window.iSparta.ui.showTips(i18n.__("Please select APNG images"));
+				}
 				$boxPreview.html(tmplBoxPreview);
 			}else{
 				var doTtmpl = doT.template(tmplFileList);

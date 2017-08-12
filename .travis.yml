@@ -5,8 +5,16 @@ matrix:
     node_js: node
     env:
     - BUILD_PLATFORM=osx64
+  - os: linux
+    dist: trusty
+    language: node_js
+    node_js: node
+    env:
+    - BUILD_PLATFORM=linux64
 install:
-- cd script
+- cd src
+- npm install
+- cd $TRAVIS_BUILD_DIR/script
 - npm install
 - npm run build $BUILD_PLATFORM
 script:
@@ -14,8 +22,10 @@ script:
 before_deploy:
 - cd $TRAVIS_BUILD_DIR
 - mkdir build
-- zip -r -9 iSparta-mac.zip script/build/iSparta/$BUILD_PLATFORM/iSparta.app
-- mv iSparta-mac.zip $TRAVIS_BUILD_DIR/build/
+- cd script/build/iSparta
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then zip -r -9 iSparta-$BUILD_PLATFORM.zip $BUILD_PLATFORM/ ; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then zip -r -9 iSparta-$BUILD_PLATFORM.zip $BUILD_PLATFORM/ ; fi
+- mv iSparta-$BUILD_PLATFORM.zip $TRAVIS_BUILD_DIR/build/
 deploy:
   provider: releases
   api_key:

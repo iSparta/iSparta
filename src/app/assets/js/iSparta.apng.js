@@ -2,6 +2,7 @@
 	var exec = require('child_process').exec,
 		os = require('os'),
 		fs = require('fs-extra'),
+		Path = require('path'),
 		gui = require('nw.gui'),
 		doT = require('dot'),
 		i18n = require('i18n');
@@ -44,6 +45,7 @@
 		isClose:false,
 		mixIndex:0,
 		apngData:"",
+		hasInit:false,
 		init:function(){
 			localData=window.iSparta.localData;
 			this.defalueOptions=this.options;
@@ -94,9 +96,10 @@
 					this.ui.fillImglist(fileList);
 				}
 				$currentPath[0].options.add(opt);
-		        
+				
 			}
 			this.ui.init();
+			window.iSparta.apng.hasInit = true;
 		},
 		switch:function(id){
 
@@ -106,11 +109,11 @@
 			}
 			var files=this.fileList[0].files;
 			if(this.nums==0){
-	            for(var j=0;j<files.length;j++){
-	            	if(files[j].selected==true){
-	            		this.nums++;
-	            	}
-	            }
+				for(var j=0;j<files.length;j++){
+					if(files[j].selected==true){
+						this.nums++;
+					}
+				}
 			}
 			if(this.nums==0){
 				window.iSparta.ui.showTips(i18n.__("No image selected"));
@@ -118,7 +121,7 @@
 				
 				if(!id){
 					
-            					
+								
 					id=0;
 					
 				}
@@ -171,63 +174,60 @@
 		},
 		exec:function(id){
 			var self=this;
-   			var loop=this.options.loop;
+			var loop=this.options.loop;
 			var rate=this.options.rate;
 			var quality=this.options.quality;
 			var savePath=this.options.savePath[this.options.savePathIndex];
 			var files=this.fileList[0].files;
 			var url=files[id].url[0];
 			var urls=files[id].url;
-            var name=files[id].name;
-            var apngData;
-            var framesData;
-            var path=savePath+window.iSparta.sep+name+".png";
-            var saveDir=savePath+window.iSparta.sep;
-            if(savePath=="parent"){
-            	var path=files[id].pppath+window.iSparta.sep+name+".png";
-            	saveDir=files[id].pppath+window.iSparta.sep;
-            }else if(savePath=="self"){
-            	var path=files[id].ppath+window.iSparta.sep+name+".png";
-            	saveDir=files[id].ppath+window.iSparta.sep;
-            }
-            saveDir=window.iSparta.handlePath(saveDir);
-            path=window.iSparta.handlePath(path);
-            
-            var apngasm = process.cwd() + '/app/libs/apng/'+iSparta.getOsInfo()+'/apngasm';
-            var pngquant = process.cwd() + '/app/libs/pngloss/'+iSparta.getOsInfo()+'/pngquant';
-            var apngopt = process.cwd() + '/app/libs/apng/'+iSparta.getOsInfo()+'/apngopt';
-           
-            var tempdir=os.tmpdir()+'iSparta/';
-            if(os.tmpdir().lastIndexOf(window.iSparta.sep)!=os.tmpdir().length-1){
-            	tempdir=os.tmpdir()+'/iSparta/';
-            }
-            tempdir=window.iSparta.handlePath(tempdir);
-            apngasm=window.iSparta.handlePath(apngasm);
-            pngquant=window.iSparta.handlePath(pngquant);
-            apngopt=window.iSparta.handlePath(apngopt);
-           	var tempindex=0;
-           	var quantindex=0;
-           	try{
-	           	dirHandle();
-	           }
+			var name=files[id].name;
+			var apngData;
+			var framesData;
+			var path=savePath+window.iSparta.sep+name+".png";
+			var saveDir=savePath+window.iSparta.sep;
+			if(savePath=="parent"){
+				var path=files[id].pppath+window.iSparta.sep+name+".png";
+				saveDir=files[id].pppath+window.iSparta.sep;
+			}else if(savePath=="self"){
+				var path=files[id].ppath+window.iSparta.sep+name+".png";
+				saveDir=files[id].ppath+window.iSparta.sep;
+			}
+			saveDir=window.iSparta.handlePath(saveDir);
+			path=window.iSparta.handlePath(path);
+			
+			var apngasm = process.cwd() + '/app/libs/apng/'+iSparta.getOsInfo()+'/apngasm';
+			var pngquant = process.cwd() + '/app/libs/pngloss/'+iSparta.getOsInfo()+'/pngquant';
+			var apngopt = process.cwd() + '/app/libs/apng/'+iSparta.getOsInfo()+'/apngopt';
+		   
+			var tempdir=Path.join(os.tmpdir(), '/iSparta/');
+			tempdir=window.iSparta.handlePath(tempdir);
+			apngasm=window.iSparta.handlePath(apngasm);
+			pngquant=window.iSparta.handlePath(pngquant);
+			apngopt=window.iSparta.handlePath(apngopt);
+			var tempindex=0;
+			var quantindex=0;
+			try{
+				dirHandle();
+			   }
 			catch(err){
 				dirHandle();
 			}
 			function dirHandle(){
 				fs.removeSync(tempdir);
-	            fs.mkdirsSync(tempdir);
+				fs.mkdirsSync(tempdir);
 				for(var i=0;i<urls.length;i++){
 					fs.copy(urls[i], tempdir+'apng'+(i+1)+'.png', function(err){
 					  tempindex++;
 					  
 					 if(tempindex==urls.length){
-					 	apngasmExec();
+						apngasmExec();
 					 }
 					});
 				}
 			};
 			function pngquantExec(tempindex,len,framesData){
- 				var quanturl=tempdir+'frame'+(tempindex)+'.png';
+				var quanturl=tempdir+'frame'+(tempindex)+'.png';
 				//var quanturl2=tempdir+'apng_new'+(tempindex)+'.png';
 				var quality=self.options.quality;
 				
@@ -239,10 +239,10 @@
 					quantindex++;
 					if(quantindex==urls.length){
 						readFramesFiles(1,len,framesData);
-			  			
-			  		}else{
-			  			pngquantExec(tempindex+1,len);
-			  		}
+						
+					}else{
+						pngquantExec(tempindex+1,len);
+					}
 				});
 			};
 			function readFramesFiles(readnum,len){
@@ -254,37 +254,37 @@
 						imgData+=String.fromCharCode(data[i]);
 					}
 
-			 		if(readnum==len){
+					if(readnum==len){
 
-			 			framesData[readnum-1].img.src="data:image/png;base64," + btoa(imgData);
-			 			framesData[readnum-1].img.data=imgData;
-			 			setTimeout(function(){
-			 			var afterData=window.iSparta.apng.format.formatFrames(framesData[0].width,framesData[0].height,framesData);
-			 			var writeNum=0;
-			 			for(var i=0;i<afterData.length;i++){
+						framesData[readnum-1].img.src="data:image/png;base64," + btoa(imgData);
+						framesData[readnum-1].img.data=imgData;
+						setTimeout(function(){
+						var afterData=window.iSparta.apng.format.formatFrames(framesData[0].width,framesData[0].height,framesData);
+						var writeNum=0;
+						for(var i=0;i<afterData.length;i++){
 
-			 				var base64Data = afterData[i].replace(/^data:image\/\w+;base64,/, "");
+							var base64Data = afterData[i].replace(/^data:image\/\w+;base64,/, "");
 								
 							var dataBuffer = new Buffer(base64Data, 'base64');
 
-			 				fs.writeFile(tempdir+"frame-loss"+(i+1)+".png",dataBuffer, function(err){
+							fs.writeFile(tempdir+"frame-loss"+(i+1)+".png",dataBuffer, function(err){
 								if(err) throw err;
 
-						        writeNum++;
-						        if(writeNum==afterData.length){
+								writeNum++;
+								if(writeNum==afterData.length){
 
-						        	apngasmExecFinal();
-						        }
+									apngasmExecFinal();
+								}
 							 })
-			 			}
-			 			},10)
-			 			
-			 		}else{
-			 			framesData[readnum-1].img.src="data:image/png;base64," + btoa(imgData);
-			 			framesData[readnum-1].img.data=imgData;
-			 			readFramesFiles(readnum+1,len);
-			 		}
-				  	
+						}
+						},10)
+						
+					}else{
+						framesData[readnum-1].img.src="data:image/png;base64," + btoa(imgData);
+						framesData[readnum-1].img.data=imgData;
+						readFramesFiles(readnum+1,len);
+					}
+					
 				});
 			};
 			
@@ -294,12 +294,12 @@
 				var tempPath=tempdir+"apngout.png";
 				// console.log('"'+apngasm+'" "'+tempPath+'" "'+tempdir+'apng1.png'+'" '+rate+" 100"+" /l"+loop)
 				exec('"'+apngasm+'" "'+tempPath+'" "'+tempdir+'apng1.png'+'" '+rate+" 100"+" /l"+loop, {timeout: 1000000}, function(e){
-	               // exec('"'+apngopt+'" "'+tempPath+'" "'+tempPath+'"', {timeout: 10000}, function(e){
+				   // exec('"'+apngopt+'" "'+tempPath+'" "'+tempPath+'"', {timeout: 10000}, function(e){
 
-	                	if(e) throw e;
-	                	
-	                	if(quality!=-1){
-		                	fs.readFile(tempPath, function (err, data) {
+						if(e) throw e;
+						
+						if(quality!=-1){
+							fs.readFile(tempPath, function (err, data) {
 								if (err) throw err;
 								var PNG_SIGNATURE = String.fromCharCode(0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a);
 								var imgData="";
@@ -322,25 +322,25 @@
 
 									 fs.writeFile(tempdir+"frame"+num+".png", dataBuffer, function(err){
 										if(err) throw err;
-								        writeNum++;
-								        if(writeNum==framesData.length){
-								            pngquantExec(1,writeNum,framesData);
-								         	
-								        }
+										writeNum++;
+										if(writeNum==framesData.length){
+											pngquantExec(1,writeNum,framesData);
+											
+										}
 									 });
 								}
 							});
 						  
 						}else{
 							fs.copy(tempPath,path, function(err){
-				 				if(err) throw err;
+								if(err) throw err;
 								var size = fs.statSync(path).size;
-			                	files[id].apngsize = size;
-			                    window.iSparta.apng.switch(id+1);
-		                    });
+								files[id].apngsize = size;
+								window.iSparta.apng.switch(id+1);
+							});
 						}
-	                	
-	            });
+						
+				});
 			}
 			function apngasmExecFinal(){
 				var rate=self.options.rate*100;
@@ -349,57 +349,57 @@
 				
 				var lossPath=saveDir+name+'.png';
 				exec('"'+apngasm+'" "'+lossPath+'" "'+tempdir+'frame-loss1.png'+'" '+rate+" 100"+" /l"+loop, {timeout: 1000000}, function(e){
-	               // exec('"'+apngopt+'" "'+tempPath+'" "'+tempPath+'"', {timeout: 10000}, function(e){
+				   // exec('"'+apngopt+'" "'+tempPath+'" "'+tempPath+'"', {timeout: 10000}, function(e){
 					
 						var size = fs.statSync(lossPath).size;
-	                	files[id].apngsize = size;
-	                    window.iSparta.apng.switch(id+1);								
+						files[id].apngsize = size;
+						window.iSparta.apng.switch(id+1);								
 						  
 						//}	               	
-	               	
-	               	
-	               // });
-	            });
+					
+					
+				   // });
+				});
 			}
 
 		}
 	};
 	// 界面操作
 	var DataBuilder = function() {
-        this.parts = [];
-    };
-    DataBuilder.prototype.append = function(data) {
-        this.parts.push(data);
-    };
-    DataBuilder.prototype.getUrl = function(contentType) {
-        //if (global.btoa) {
-            return "data:" + contentType + ";base64," + btoa(this.parts.join(""));
-        //} else { // IE
-          //  return "data:" + contentType + "," + escape(this.parts.join(""));
-        //}
-    };
-    DataBuilder.prototype.getStr= function() {
+		this.parts = [];
+	};
+	DataBuilder.prototype.append = function(data) {
+		this.parts.push(data);
+	};
+	DataBuilder.prototype.getUrl = function(contentType) {
+		//if (global.btoa) {
+			return "data:" + contentType + ";base64," + btoa(this.parts.join(""));
+		//} else { // IE
+		  //  return "data:" + contentType + "," + escape(this.parts.join(""));
+		//}
+	};
+	DataBuilder.prototype.getStr= function() {
   
-    	return this.parts.join("");
-        
-    };
-    (function() {
-	    var
-	            global = (function(){ return this; })(),
-	            table = new Array(256);
+		return this.parts.join("");
+		
+	};
+	(function() {
+		var
+				global = (function(){ return this; })(),
+				table = new Array(256);
 
-	    for(var i=0; i<256; i++) {
-	        var c=i;
-	        for (var k=0; k<8; k++) c = (c&1) ? 0xEDB88320 ^ (c>>>1) : c>>>1;
-	        table[i] = c;
-	    }
+		for(var i=0; i<256; i++) {
+			var c=i;
+			for (var k=0; k<8; k++) c = (c&1) ? 0xEDB88320 ^ (c>>>1) : c>>>1;
+			table[i] = c;
+		}
 
-	    global.crc32 = function(str) {
-	        var crc = -1;
-	        for( var i = 0, l = str.length; i < l; i++ )
-	            crc = ( crc >>> 8 ) ^ table[( crc ^ str.charCodeAt( i ) ) & 0xFF];
-	        return crc ^ (-1);
-	    };
+		global.crc32 = function(str) {
+			var crc = -1;
+			for( var i = 0, l = str.length; i < l; i++ )
+				crc = ( crc >>> 8 ) ^ table[( crc ^ str.charCodeAt( i ) ) & 0xFF];
+			return crc ^ (-1);
+		};
 	})();
 	window.iSparta.apng.format={
 		frames:[],
@@ -407,134 +407,134 @@
 		
 		PNG_SIGNATURE:String.fromCharCode(0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a),
 		parsePNGData: function(imageData,story) {
-            if (imageData.substr(0, 8) != this.PNG_SIGNATURE) {
-                
-                return false;
-            }
-            this.frames=[];
-            if(story){
-            	this.fcTLData=[];
-            }
-            
-            var headerData, preData = "", postData = "", isAnimated = false;
-            var off = 8, frame = null;
-            var framesData=[];
+			if (imageData.substr(0, 8) != this.PNG_SIGNATURE) {
+				
+				return false;
+			}
+			this.frames=[];
+			if(story){
+				this.fcTLData=[];
+			}
+			
+			var headerData, preData = "", postData = "", isAnimated = false;
+			var off = 8, frame = null;
+			var framesData=[];
 
-            var plte="";
-            var trns="";
+			var plte="";
+			var trns="";
 
-            do {
-                var length = this.readDWord(imageData.substr(off, 4));
-                var type = imageData.substr(off + 4, 4);
-                var data;
-                
-                switch (type) {
-                    case "IHDR":
-                        data = imageData.substr(off + 8, length);
-                        headerData = data;
-                        this.width = this.readDWord(data.substr(0, 4));
-                        this.height = this.readDWord(data.substr(4, 4));
-                       	
-                        break;
-                    case "acTL":
-                        isAnimated = true;
-                        this.numPlays = this.readDWord(imageData.substr(off + 8 + 4, 4));
-                        break;
-                    case "PLTE":
-                    	plte = imageData.substr(off + 8, length);
-                    	break;
-                    case "tRNS":
-                    	trns = imageData.substr(off + 8, length);
-                    	break;
-                    case "fcTL":
-                    	
-                        if (frame) this.frames.push(frame);
-                        data = imageData.substr(off + 8, length);
-                        if(story){
-                        	this.fcTLData.push(data);
-                        }
-                        frame = {};
+			do {
+				var length = this.readDWord(imageData.substr(off, 4));
+				var type = imageData.substr(off + 4, 4);
+				var data;
+				
+				switch (type) {
+					case "IHDR":
+						data = imageData.substr(off + 8, length);
+						headerData = data;
+						this.width = this.readDWord(data.substr(0, 4));
+						this.height = this.readDWord(data.substr(4, 4));
+						
+						break;
+					case "acTL":
+						isAnimated = true;
+						this.numPlays = this.readDWord(imageData.substr(off + 8 + 4, 4));
+						break;
+					case "PLTE":
+						plte = imageData.substr(off + 8, length);
+						break;
+					case "tRNS":
+						trns = imageData.substr(off + 8, length);
+						break;
+					case "fcTL":
+						
+						if (frame) this.frames.push(frame);
+						data = imageData.substr(off + 8, length);
+						if(story){
+							this.fcTLData.push(data);
+						}
+						frame = {};
 
-                        frame.sequence_number = this.readDWord(data.substr(0, 4));
+						frame.sequence_number = this.readDWord(data.substr(0, 4));
 
-                        frame.width     = this.readDWord(data.substr(4, 4));
-                        frame.height    = this.readDWord(data.substr(8, 4));
-                        frame.left      = this.readDWord(data.substr(12, 4));
-                        frame.top       = this.readDWord(data.substr(16, 4));
+						frame.width     = this.readDWord(data.substr(4, 4));
+						frame.height    = this.readDWord(data.substr(8, 4));
+						frame.left      = this.readDWord(data.substr(12, 4));
+						frame.top       = this.readDWord(data.substr(16, 4));
 
-                        var delayN      = this.readWord(data.substr(20, 2));
-                        var delayD      = this.readWord(data.substr(22, 2));
-                        if (delayD == 0) delayD = 100;
-                        frame.delay = 1000 * delayN / delayD;
-                        
-                        if (frame.delay <= 10) frame.delay = 100;
-                        this.playTime += frame.delay;
+						var delayN      = this.readWord(data.substr(20, 2));
+						var delayD      = this.readWord(data.substr(22, 2));
+						if (delayD == 0) delayD = 100;
+						frame.delay = 1000 * delayN / delayD;
+						
+						if (frame.delay <= 10) frame.delay = 100;
+						this.playTime += frame.delay;
 
-                        frame.disposeOp = data.charCodeAt(24);
-                        
-                        frame.blendOp   = data.charCodeAt(25);
-                        frame.dataParts = [];
-                       // console.log(frame)
+						frame.disposeOp = data.charCodeAt(24);
+						
+						frame.blendOp   = data.charCodeAt(25);
+						frame.dataParts = [];
+					   // console.log(frame)
 
-                        break;
-                    case "fdAT":
-                    	var sequence_number = this.readDWord(imageData.substr(off+8, 4));
-                    	
-                        if (frame) frame.dataParts.push(imageData.substr(off + 8 + 4, length - 4));
+						break;
+					case "fdAT":
+						var sequence_number = this.readDWord(imageData.substr(off+8, 4));
+						
+						if (frame) frame.dataParts.push(imageData.substr(off + 8 + 4, length - 4));
 
-                        break;
-                    case "IDAT":
-                        if (frame) frame.dataParts.push(imageData.substr(off + 8, length));
-                        break;
-                    case "IEND":
-                        postData = imageData.substr(off, length + 12);
-                        break;
-                    default:
+						break;
+					case "IDAT":
+						if (frame) frame.dataParts.push(imageData.substr(off + 8, length));
+						break;
+					case "IEND":
+						postData = imageData.substr(off, length + 12);
+						break;
+					default:
 
-                        preData += imageData.substr(off, length + 12);
-                }
-                off += 12 + length;
-            } while(type != "IEND" && off < imageData.length);
-            if (frame) this.frames.push(frame);
+						preData += imageData.substr(off, length + 12);
+				}
+				off += 12 + length;
+			} while(type != "IEND" && off < imageData.length);
+			if (frame) this.frames.push(frame);
 
-            var loadedImages = 0, self = this;
-           
-            for (var i = 0; i < this.frames.length; i++) {
-                var img = new Image();
-                frame = this.frames[i];
-                frame.img = img;
-                
-                var db = new DataBuilder();
-                db.append(this.PNG_SIGNATURE);
-                headerData = this.writeDWord(frame.width) + this.writeDWord(frame.height) + headerData.substr(8);
-                
-                db.append(this.writeChunk("IHDR", headerData));
+			var loadedImages = 0, self = this;
+		   
+			for (var i = 0; i < this.frames.length; i++) {
+				var img = new Image();
+				frame = this.frames[i];
+				frame.img = img;
+				
+				var db = new DataBuilder();
+				db.append(this.PNG_SIGNATURE);
+				headerData = this.writeDWord(frame.width) + this.writeDWord(frame.height) + headerData.substr(8);
+				
+				db.append(this.writeChunk("IHDR", headerData));
 
-                if(plte){
-                	db.append(this.writeChunk("PLTE", plte));
-                }
-                if(trns){
-                	db.append(this.writeChunk("tRNS", trns));
-                }
-                
-            	
-                for (var j = 0; j < frame.dataParts.length; j++)
-                    db.append(this.writeChunk("IDAT", frame.dataParts[j]));
-                db.append(postData);
+				if(plte){
+					db.append(this.writeChunk("PLTE", plte));
+				}
+				if(trns){
+					db.append(this.writeChunk("tRNS", trns));
+				}
+				
+				
+				for (var j = 0; j < frame.dataParts.length; j++)
+					db.append(this.writeChunk("IDAT", frame.dataParts[j]));
+				db.append(postData);
 
-                img.src = db.getUrl("image/png");
-                
-                img.data=db.getStr();
-                framesData.push(img.src);
-                delete frame.dataParts;
-            }
-            return this.frames;
-        },
-        
-        readDWord:function(data) {
-	        var x = 0;
-	        for (var i = 0; i < 4; i++) x += (data.charCodeAt(i) << ((3 - i) * 8));
-	        return x;
+				img.src = db.getUrl("image/png");
+				
+				img.data=db.getStr();
+				framesData.push(img.src);
+				delete frame.dataParts;
+			}
+			return this.frames;
+		},
+		
+		readDWord:function(data) {
+			var x = 0;
+			for (var i = 0; i < 4; i++) x += (data.charCodeAt(i) << ((3 - i) * 8));
+			return x;
 		},
 
 		readWord:function(data) {
@@ -564,54 +564,54 @@
 
 		writeDWord:function(num) {
 			return String.fromCharCode(
-			        ((num >> 24) & 0xff),
-			        ((num >> 16) & 0xff),
-			        ((num >> 8) & 0xff),
-			        (num & 0xff)
+					((num >> 24) & 0xff),
+					((num >> 16) & 0xff),
+					((num >> 8) & 0xff),
+					(num & 0xff)
 			);
 		},
-        formatFrames:function(width,height,frames) {
-        
-        	var context=null,
+		formatFrames:function(width,height,frames) {
+		
+			var context=null,
 				fNum = 0,
-	        	prevF = null,
-	        	afterImgData=[];
-            var canvas = document.createElement("canvas");
-            canvas.width = width;
-            canvas.height = height;
-            var context = canvas.getContext("2d");
+				prevF = null,
+				afterImgData=[];
+			var canvas = document.createElement("canvas");
+			canvas.width = width;
+			canvas.height = height;
+			var context = canvas.getContext("2d");
 
-            for(var fNum=0;fNum<frames.length;fNum++){
-            	var frame = this.frames[fNum];
+			for(var fNum=0;fNum<frames.length;fNum++){
+				var frame = this.frames[fNum];
 
-            	if (fNum == 0) {
-	                if (frame.disposeOp == 2) frame.disposeOp = 1;
-	            }
-	          
-	            if (prevF && prevF.disposeOp == 1) {
-	            	context.clearRect(prevF.left, prevF.top, prevF.width, prevF.height);
-	            } else if (prevF && prevF.disposeOp == 2) {
-	            	
-	            	context.putImageData(prevF.iData,prevF.left, prevF.top);
-	            }
-	            prevF = frame;
+				if (fNum == 0) {
+					if (frame.disposeOp == 2) frame.disposeOp = 1;
+				}
+			  
+				if (prevF && prevF.disposeOp == 1) {
+					context.clearRect(prevF.left, prevF.top, prevF.width, prevF.height);
+				} else if (prevF && prevF.disposeOp == 2) {
+					
+					context.putImageData(prevF.iData,prevF.left, prevF.top);
+				}
+				prevF = frame;
 
-	            prevF.iData = null;
-	            if (prevF.disposeOp == 2) {
-	                prevF.iData = context.getImageData(frame.left, frame.top, frame.width, frame.height);
-	            }
-	            if (frame.blendOp == 0){
+				prevF.iData = null;
+				if (prevF.disposeOp == 2) {
+					prevF.iData = context.getImageData(frame.left, frame.top, frame.width, frame.height);
+				}
+				if (frame.blendOp == 0){
 					context.clearRect(frame.left, frame.top, frame.width, frame.height);
-	 			}
-	 			
-	 			context.drawImage(frame.img, frame.left,frame.top);
+				}
+				
+				context.drawImage(frame.img, frame.left,frame.top);
 
-	 			afterImgData.push(canvas.toDataURL("image/png"));
-	 			// afterImgData.push(context.getImageData(0,0,width,height));
-            }
-            return afterImgData;
-            
-        }
+				afterImgData.push(canvas.toDataURL("image/png"));
+				// afterImgData.push(context.getImageData(0,0,width,height));
+			}
+			return afterImgData;
+			
+		}
 	};
 	window.iSparta.apng.ui={
 		dataHelper:{},
@@ -668,19 +668,19 @@
 				e.preventDefault();
 				$dragArea.removeClass("hover");
 				e.preventDefault(); //取消默认浏览器拖拽效果
-		        var otherFiles = e.dataTransfer.files; //获取文件对象
-		        apng.options.mixListIndex++;
-		        var mixIndex=apng.options.mixListIndex;
-		        //var opt=new Option(fileList[0].path,fileList[0].path);
-		        var v=ui.fillImglist(otherFiles);
-		        if(v){
-			        var fileList=i18n.__("Convert list")+mixIndex;
-			        var opt=new Option(i18n.__("Convert list")+mixIndex,i18n.__("Convert list")+mixIndex);
-			        $(opt).attr("selected","selected");
+				var otherFiles = e.dataTransfer.files; //获取文件对象
+				apng.options.mixListIndex++;
+				var mixIndex=apng.options.mixListIndex;
+				//var opt=new Option(fileList[0].path,fileList[0].path);
+				var v=ui.fillImglist(otherFiles);
+				if(v){
+					var fileList=i18n.__("Convert list")+mixIndex;
+					var opt=new Option(i18n.__("Convert list")+mixIndex,i18n.__("Convert list")+mixIndex);
+					$(opt).attr("selected","selected");
 					$currentPath[0].insertBefore(opt,$currentPath[0].options[0]);
-		        	ui.dataHelper.changeCurrentPath(fileList,otherFiles);
-		        }
-		        
+					ui.dataHelper.changeCurrentPath(fileList,otherFiles);
+				}
+				
 				return false;
 			};
 			$dragArea.click(function(e) {
@@ -696,59 +696,61 @@
 					var opt=new Option(val,val);
 					$(opt).attr("selected","selected");
 					$currentPath[0].insertBefore(opt,$currentPath[0].options[0]);
-		        	ui.dataHelper.changeCurrentPath(val);
-		        }
-		        
+					ui.dataHelper.changeCurrentPath(val);
+				}
+				
 				return false;
 			});
 		},
 		fillImglist:function(fileList){
 			if(fileList.length == 0){
-	            return false;
-	        }
-	        window.iSparta.ui.showLoading();
+				return false;
+			}
+			window.iSparta.ui.showLoading();
 
-	        if(!window.iSparta.apng.fileManager.walk(fileList,function(){})){
-	        	window.iSparta.ui.hideLoading();
-	        	window.iSparta.ui.showTips(i18n.__("Directory load failed! Please check whether the directory exists, disk letter is not allowd"));
-	        	return false;
+			if(!window.iSparta.apng.fileManager.walk(fileList,function(){})){
+				window.iSparta.ui.hideLoading();
+				window.iSparta.ui.showTips(i18n.__("Directory load failed! Please check whether the directory exists, disk letter is not allowd"));
+				return false;
 
-	        };
-	       	window.iSparta.ui.hideLoading();
+			};
+			window.iSparta.ui.hideLoading();
 
-	        var datas={};
-	        var fileList=window.iSparta.apng.fileList;
-	        
-	        var delIndex=[];
+			var datas={};
+			var fileList=window.iSparta.apng.fileList;
+			
+			var delIndex=[];
 
-	        for(var i=0;i<fileList.length;i++){
-	        	
-	        	for(var j=0;j<fileList[i].files.length;j++){
-	        		
+			for(var i=0;i<fileList.length;i++){
+				
+				for(var j=0;j<fileList[i].files.length;j++){
+					
 					if(fileList[i].files[j].url.length<2){
 						var temp=[i,j]
-		        		delIndex.push(temp);
-		        	}
-	        	}
-	        	
-	        }
-	        for(var i=0;i<delIndex.length;i++){
-	        	
-	        	fileList[delIndex[i][0]].files.splice(delIndex[i][1]-i,1);
-	        }
-	        window.iSparta.apng.fileList=fileList;
-	        datas.all=window.iSparta.apng.fileList;
-	       
-	        if(datas.all.length==0){
-	        	window.iSparta.ui.showTips(i18n.__("Please select multiple PNG images, keep the filename serialized and image size equal"));
+						delIndex.push(temp);
+					}
+				}
+				
+			}
+			for(var i=0;i<delIndex.length;i++){
+				
+				fileList[delIndex[i][0]].files.splice(delIndex[i][1]-i,1);
+			}
+			window.iSparta.apng.fileList=fileList;
+			datas.all=window.iSparta.apng.fileList;
+		   
+			if(datas.all.length==0){
+				if (window.iSparta.apng.hasInit) {
+					window.iSparta.ui.showTips(i18n.__("Please select multiple PNG images, keep the filename serialized and image size equal"));
+				}
 				$boxPreview.html(tmplBoxPreview);
-	        }else{
-	        	var doTtmpl = doT.template(tmplFileList);
-	        	var html=doTtmpl(datas);
-	        	$boxPreview.html(html);
-	        }
+			}else{
+				var doTtmpl = doT.template(tmplFileList);
+				var html=doTtmpl(datas);
+				$boxPreview.html(html);
+			}
 
-	        return true;
+			return true;
 		},
 		items:function(){
 			var timer=null;
@@ -756,22 +758,22 @@
 			var urlIndex=0;
 			$boxPreview.on("click",".imglist .thumb",function(){
 				var fileList=window.iSparta.apng.fileList;
-		        var li=$(this).closest("li");
-		        var pid=li.attr("data-pid");
-		        var id=li.attr("data-id");
-		        li.toggleClass("checked");
-		        if(li.hasClass("checked")){
-		            fileList[pid].files[id].selected=true;
-		        }else{
-		            fileList[pid].files[id].selected=false;
-		        }
-		    });
+				var li=$(this).closest("li");
+				var pid=li.attr("data-pid");
+				var id=li.attr("data-id");
+				li.toggleClass("checked");
+				if(li.hasClass("checked")){
+					fileList[pid].files[id].selected=true;
+				}else{
+					fileList[pid].files[id].selected=false;
+				}
+			});
 
-		    $boxPreview.on("mouseover",".imglist .thumb",function(){
-		    	var fileList=window.iSparta.apng.fileList;
-		    	var li=$(this).closest("li");
-		        var pid=li.attr("data-pid");
-		        var id=li.attr("data-id");
+			$boxPreview.on("mouseover",".imglist .thumb",function(){
+				var fileList=window.iSparta.apng.fileList;
+				var li=$(this).closest("li");
+				var pid=li.attr("data-pid");
+				var id=li.attr("data-id");
 				
 				var that=$(this);
 				
@@ -782,27 +784,27 @@
 					that.find("img").attr("src",fileList[pid].files[id].url[urlIndex]);
 					urlIndex++;
 				},window.iSparta.apng.options.rate*1000);
-		    });
-		    $boxPreview.on("mouseout",".imglist .thumb",function(){
-		    	var fileList=window.iSparta.apng.fileList;
-		    	var li=$(this).closest("li");
-		        var pid=li.attr("data-pid");
-		        var id=li.attr("data-id");
-		    	clearInterval(timer);
-		    	$(this).find("img").attr("src",fileList[pid].files[id].url[0]);
-		    });
-		    $boxPreview.on("click",".imglist .icon-folder-open",function(){
-		        var url=$(this).attr("data-href");
-		        gui.Shell.showItemInFolder(url);
-		    });
-		    $boxPreview.on("blur",".imglist input[type='text']",function(){
-		        var name=$(this).val();
-		        var fileList=window.iSparta.apng.fileList;
-		    	var li=$(this).closest("li");
-		        var pid=li.attr("data-pid");
-		        var id=li.attr("data-id");
-		        fileList[pid].files[id].name=name;
-		    });
+			});
+			$boxPreview.on("mouseout",".imglist .thumb",function(){
+				var fileList=window.iSparta.apng.fileList;
+				var li=$(this).closest("li");
+				var pid=li.attr("data-pid");
+				var id=li.attr("data-id");
+				clearInterval(timer);
+				$(this).find("img").attr("src",fileList[pid].files[id].url[0]);
+			});
+			$boxPreview.on("click",".imglist .icon-folder-open",function(){
+				var url=$(this).attr("data-href");
+				gui.Shell.showItemInFolder(url);
+			});
+			$boxPreview.on("blur",".imglist input[type='text']",function(){
+				var name=$(this).val();
+				var fileList=window.iSparta.apng.fileList;
+				var li=$(this).closest("li");
+				var pid=li.attr("data-pid");
+				var id=li.attr("data-id");
+				fileList[pid].files[id].name=name;
+			});
 		},
 		status:function(){
 			var ui=this;
@@ -954,173 +956,173 @@
 	};
 	// 文件目录递归与操作
 	window.iSparta.apng.fileManager={
-	    length:-1,
-	    nowLen:0,
-	    names:[],
-	    allsize:0,
-	    maxDepth:3,
-	    nowDepth:0,
-	    Apng:{},
-	    walk:function(fileList,callback){
-	        // 一次只拉一个文件夹
-	       	var Apng=this.Apng;
-	        this.length=0;
-	        Apng.fileList=[];
-	        this.names=[];
-	        if(fileList[0].path.length==3){
-	        	return false;
-	        }
-	        for(var i=0;i<fileList.length;i++){
-	        	
-	            var path=fileList[i].path;
-	            
-	           	if(!fs.existsSync(path)){
-	           		// console.log(fs.existsSync(path))
-	           		return false;
-	           	}
-	           	this.nowDepth=-1;
-	            if(fs.statSync(path).isDirectory()){
-	            	this.nowDepth++;
-	            	var dirs={};
-	                var url=path.substring(0,path.lastIndexOf(window.iSparta.sep));
-	                dirs.url=url;
-	                dirs.length=this.length+i;
-	                dirs.files=[];
-	                Apng.fileList.push(dirs);
-	                this.walkDir(path);
-	                //fileWalk.length++;
-	            }else if(fs.statSync(path).isFile()){
-	                var url=path.substring(0,path.lastIndexOf(window.iSparta.sep));
-	                var dirs={};
-	                
-	                //if(fileWalk.length==0||url!=fileWalk.allFileList[fileWalk.length].url){
-	                    dirs.url=url;
-	                    dirs.files=[];
-	                    if(this.nowLen!=this.length||(this.length==0&&(!Apng.fileList[this.length]||url!=Apng.fileList[this.length].url))){
-	                        Apng.fileList.push(dirs);
-	                    }
-	                    if(this.nowLen!=this.length){
-	                        this.nowLen=this.length
-	                    }
-	                    this.walkFile(path);
-	                    //return ;
-	               // }
-	                //fileWalk.walkFile(path);
-
-	            }
-	            
-	            
-	        }
-	        this.nowDepth=-1;
-	        var len=Apng.fileList.length;
-	        var listTemp=Apng.fileList;
-	        for(var i=len-1;i>=0;i--){
-	            var len2=Apng.fileList.length;
-	            if(Apng.fileList[i].files.length==0){
-	                
-	                Apng.fileList.splice(len2-1,1);
-	               
-	            }
-	        }
-	        window.iSparta.apng.fileList=Apng.fileList;
-	        if((typeof callback)=='function'){
-	        	callback();
-	        }
-	        return true;
-	    },
-	    walkFile:function(path){
-	        //var apng={name:name};
-	         var Apng=this.Apng;
-	        if(/.*\d+\.png$/i.test(path)){
-	            //apng.frames.push(path);
-	            var url=path;
-	            var repeatIndex=-1;
-	           
-	            var allfile=Apng.fileList[this.length].files;
-	            var stat=fs.statSync(path);
-	            var size=stat.size;
-	            path2=path;
-	            path=path.replace(/\d+\.png$/i,"");
-	            
-	            var ppath=path.substring(0,path.lastIndexOf(window.iSparta.sep));
-	            var pppath=ppath.substring(0,ppath.lastIndexOf(window.iSparta.sep));
-	            var name=path.substring(path.lastIndexOf(window.iSparta.sep)+1,path.length);
-	            if(name.length<2){
-	                name=path.substring(0,path.lastIndexOf(window.iSparta.sep));
-	                name=name.substring(name.lastIndexOf(window.iSparta.sep)+1,name.length);
-	            }
-	            var index=0;
-	            for(var i=0;i<this.names.length;i++){
-	                if(name==this.names[i]){
-	                    
-	                    var name2=this.names[i].match(/(.*?)(\d+)$/i);
-
-	                    if(name2){
-	                        
-	                        var num=parseInt(name2[2]);
-	                        var pre=name2[1];
-	                        if(num>index){
-	                            num=num+1;
-	                            name=pre+num;
-	                        }
-	                    }else{
-	                         name=name+1;
-	                    }
-	                }
-	            }
-	            for(var i=0;i<allfile.length;i++){
-	                if(path==allfile[i].path){
-	                    repeatIndex=i;
-	                }
-	            }
-	            if(allfile.length!=0&&repeatIndex!=-1){
-	                allfile[repeatIndex].url.push(url);
-	                allfile[repeatIndex].allPngSize+=size;
-
-	            }else{
-	                if(allfile.length!=0&&allfile[allfile.length-1].url.length==1){
-	                    allfile.splice(allfile.length-1,1);
-	                }
-	                var file={path2:path,path:path,ppath:ppath,pppath:pppath,selected:true};
-	                file.url=[];
-	                
-	                
-	                file.name=name;
-	                file.allPngSize=size;
-	                this.names.push(name);
-	                file.url.push(url);
-	                allfile.push(file);
-	                file.allPngSize=0;
-	            }
-	        }
-	    },
-	    walkDir:function(path){
-	        var dirList = fs.readdirSync(path);
-	        var that=this;
-			that.nowDepth++;
-	        dirList.forEach(function(item){
-	        	
-	            if(fs.statSync(path + window.iSparta.sep + item).isDirectory()){ 
-	            	
-	        		if(that.nowDepth<that.maxDepth){
-	        			
-	        			that.walkDir(path + window.iSparta.sep + item);
-
-	        		}
-	        		if(that.nowDepth>=that.maxDepth){
-	        			
-	        		
-	        		}
-	        		
+		length:-1,
+		nowLen:0,
+		names:[],
+		allsize:0,
+		maxDepth:3,
+		nowDepth:0,
+		Apng:{},
+		walk:function(fileList,callback){
+			// 一次只拉一个文件夹
+			var Apng=this.Apng;
+			this.length=0;
+			Apng.fileList=[];
+			this.names=[];
+			if(fileList[0].path.length==3){
+				return false;
+			}
+			for(var i=0;i<fileList.length;i++){
+				
+				var path=fileList[i].path;
+				
+				if(!fs.existsSync(path)){
+					// console.log(fs.existsSync(path))
+					return false;
+				}
+				this.nowDepth=-1;
+				if(fs.statSync(path).isDirectory()){
+					this.nowDepth++;
+					var dirs={};
+					var url=path.substring(0,path.lastIndexOf(window.iSparta.sep));
+					dirs.url=url;
+					dirs.length=this.length+i;
+					dirs.files=[];
+					Apng.fileList.push(dirs);
+					this.walkDir(path);
+					//fileWalk.length++;
+				}else if(fs.statSync(path).isFile()){
+					var url=path.substring(0,path.lastIndexOf(window.iSparta.sep));
+					var dirs={};
 					
-	               
-	            }else if(fs.statSync(path + window.iSparta.sep + item).isFile()){
-	                that.walkFile(path + window.iSparta.sep + item);
-	            }
-	        });
-	        that.nowDepth--;
-	        
-	    }
+					//if(fileWalk.length==0||url!=fileWalk.allFileList[fileWalk.length].url){
+						dirs.url=url;
+						dirs.files=[];
+						if(this.nowLen!=this.length||(this.length==0&&(!Apng.fileList[this.length]||url!=Apng.fileList[this.length].url))){
+							Apng.fileList.push(dirs);
+						}
+						if(this.nowLen!=this.length){
+							this.nowLen=this.length
+						}
+						this.walkFile(path);
+						//return ;
+				   // }
+					//fileWalk.walkFile(path);
+
+				}
+				
+				
+			}
+			this.nowDepth=-1;
+			var len=Apng.fileList.length;
+			var listTemp=Apng.fileList;
+			for(var i=len-1;i>=0;i--){
+				var len2=Apng.fileList.length;
+				if(Apng.fileList[i].files.length==0){
+					
+					Apng.fileList.splice(len2-1,1);
+				   
+				}
+			}
+			window.iSparta.apng.fileList=Apng.fileList;
+			if((typeof callback)=='function'){
+				callback();
+			}
+			return true;
+		},
+		walkFile:function(path){
+			//var apng={name:name};
+			 var Apng=this.Apng;
+			if(/.*\d+\.png$/i.test(path)){
+				//apng.frames.push(path);
+				var url=path;
+				var repeatIndex=-1;
+			   
+				var allfile=Apng.fileList[this.length].files;
+				var stat=fs.statSync(path);
+				var size=stat.size;
+				path2=path;
+				path=path.replace(/\d+\.png$/i,"");
+				
+				var ppath=path.substring(0,path.lastIndexOf(window.iSparta.sep));
+				var pppath=ppath.substring(0,ppath.lastIndexOf(window.iSparta.sep));
+				var name=path.substring(path.lastIndexOf(window.iSparta.sep)+1,path.length);
+				if(name.length<2){
+					name=path.substring(0,path.lastIndexOf(window.iSparta.sep));
+					name=name.substring(name.lastIndexOf(window.iSparta.sep)+1,name.length);
+				}
+				var index=0;
+				for(var i=0;i<this.names.length;i++){
+					if(name==this.names[i]){
+						
+						var name2=this.names[i].match(/(.*?)(\d+)$/i);
+
+						if(name2){
+							
+							var num=parseInt(name2[2]);
+							var pre=name2[1];
+							if(num>index){
+								num=num+1;
+								name=pre+num;
+							}
+						}else{
+							 name=name+1;
+						}
+					}
+				}
+				for(var i=0;i<allfile.length;i++){
+					if(path==allfile[i].path){
+						repeatIndex=i;
+					}
+				}
+				if(allfile.length!=0&&repeatIndex!=-1){
+					allfile[repeatIndex].url.push(url);
+					allfile[repeatIndex].allPngSize+=size;
+
+				}else{
+					if(allfile.length!=0&&allfile[allfile.length-1].url.length==1){
+						allfile.splice(allfile.length-1,1);
+					}
+					var file={path2:path,path:path,ppath:ppath,pppath:pppath,selected:true};
+					file.url=[];
+					
+					
+					file.name=name;
+					file.allPngSize=size;
+					this.names.push(name);
+					file.url.push(url);
+					allfile.push(file);
+					file.allPngSize=0;
+				}
+			}
+		},
+		walkDir:function(path){
+			var dirList = fs.readdirSync(path);
+			var that=this;
+			that.nowDepth++;
+			dirList.forEach(function(item){
+				
+				if(fs.statSync(path + window.iSparta.sep + item).isDirectory()){ 
+					
+					if(that.nowDepth<that.maxDepth){
+						
+						that.walkDir(path + window.iSparta.sep + item);
+
+					}
+					if(that.nowDepth>=that.maxDepth){
+						
+					
+					}
+					
+					
+				   
+				}else if(fs.statSync(path + window.iSparta.sep + item).isFile()){
+					that.walkFile(path + window.iSparta.sep + item);
+				}
+			});
+			that.nowDepth--;
+			
+		}
 	}
 
 
