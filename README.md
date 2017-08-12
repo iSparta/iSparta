@@ -13,7 +13,7 @@ iSparta 是一款 APNG 和 Webp 转换工具。
 
 # 下载
 
-iSparta现在支持macOS和Windows系统，可以在[官网](http://isparta.github.io/)下载最新版本，或者到[Release](https://github.com/iSparta/iSparta/releases)页面下载历史版本。
+iSparta现在支持macOS、Windows和Linux系统。你可以在[官网](http://isparta.github.io/)下载最新版本，或者到[Release](https://github.com/iSparta/iSparta/releases)页面下载历史版本。
 
 # 语言
 
@@ -38,7 +38,13 @@ iSparta现在支持以下语言：
 
 # 开发
 
-iSparta使用[nw.js](https://nwjs.io/)框架开发，需要安装[node.js](https://nodejs.org/)。在macOS上可以使用[Homebrew](https://brew.sh/)直接安装，Windows上使用官网安装包进行安装。
+iSparta使用[nw.js](https://nwjs.io/)框架开发，需要安装[node.js](https://nodejs.org/)。在macOS上可以使用[Homebrew](https://brew.sh/)直接安装，Windows上使用官网安装包进行安装，Linux上使用[包管理器](https://nodejs.org/en/download/package-manager/)安装。
+
+注：在Linux环境下，需要安装`依赖`libpng16`，可使用包管理器安装
+
+```bash
+sudo apt-get install libpng16-dev
+```
 
 安装node依赖：
 
@@ -47,7 +53,7 @@ cd iSparta/src
 npm install
 ```
 
-由于`nw.js`对每个平台均有一个应用包，且容量较大，因此不放在git repo中，请到[nw.js版本](https://dl.nwjs.io/v0.12.3/)处下载，当前版本使用`nwjs-v0.12.3`构建。或者也可以参考[构建](#构建)说明，使用构建的应用包。
+由于`nw.js`对每个平台均有一个应用包，且容量较大，因此不放在git repo中，请到[nw.js版本](https://dl.nwjs.io/v0.12.3/)处下载，当前版本使用`nwjs-v0.12.3`构建。或者也可以参考[构建](#构建)说明，使用构建的应用包来替代。
 
 然后，将下载后的应用包解压，放到与`package.json`同级目录，然后执行应用：
 
@@ -66,7 +72,7 @@ cd iSparta/script
 npm install
 ```
 
-根据不同平台构建，现在支持`osx64`、`win32`和`win64`。
+根据不同平台构建，现在支持`osx64`、`win32`、`win64`和`linux64`。
 
 ```bash
 npm run build osx64
@@ -74,7 +80,7 @@ npm run build osx64
 
 然后可以到`script/build/`目录下找到构建好的应用。
 
-注：在macOS下，构建Windows平台的应用包不会内嵌图标到可执行文件中。
+注：在非Windows平台下，构建Windows平台的应用包不会内嵌图标到可执行文件中。
 
 
 # 贡献者
