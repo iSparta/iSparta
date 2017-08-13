@@ -82,6 +82,9 @@ npm run build osx64
 
 注：在非Windows平台下，构建Windows平台的应用包不会内嵌图标到可执行文件中。
 
+# 作者
+* [hahnzhu](https://github.com/hahnzhu)
+* [jeakey](https://github.com/jeakey)
 
 # 贡献者
 * [DreamPiggy](https://github.com/dreampiggy)
@@ -89,6 +92,7 @@ npm run build osx64
 # 致谢
 
 + [apngasm](http://apngasm.sourceforge.net/)
++ [apngopt](https://sourceforge.net/projects/apng/files/APNG_Optimizer/)
 + [apng2webp](https://github.com/Benny-/apng2webp)
 + [pngout](http://advsys.net/ken/utils.htm)
 + [pngquant](https://pngquant.org/)

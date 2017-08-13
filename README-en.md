@@ -81,6 +81,9 @@ Then go to `script/build/` and check the build bundle.
 
 Note：On non-Windows platform, build executable binary for Windows platform will not embed the icon.
 
+# Author
+* [hahnzhu](https://github.com/hahnzhu)
+* [jeakey](https://github.com/jeakey)
 
 # Contributor
 * [DreamPiggy](https://github.com/dreampiggy)
@@ -88,6 +91,7 @@ Note：On non-Windows platform, build executable binary for Windows platform wil
 # Thanks
 
 + [apngasm](http://apngasm.sourceforge.net/)
++ [apngopt](https://sourceforge.net/projects/apng/files/APNG_Optimizer/)
 + [apng2webp](https://github.com/Benny-/apng2webp)
 + [pngout](http://advsys.net/ken/utils.htm)
 + [pngquant](https://pngquant.org/)
