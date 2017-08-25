@@ -6,7 +6,6 @@
 #apng .box_preview  li.checked .info{background: #888;}
 #apng .box_preview  li.checked:hover .info{background: #888;}
 #apng .box_preview  li:hover .info{background: #ccc;}
-#apng #apng_last_delay{width:80px;margin-right: 5px;}
 #apng select#apng_select_savePath{width: 80px;}
 
 

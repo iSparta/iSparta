@@ -1,5 +1,5 @@
 (function ($) {
-	var exec = require('child_process').exec,
+	var child_process = require('child_process'),
 		os = require('os'),
 		fs = require('fs-extra'),
 		Path = require('path'),
@@ -7,6 +7,7 @@
 		doT = require('dot'),
 		i18n = require('i18n');
 	var $loop=$("#apng_select_loop"),
+		$config=$("#apng_select_config"),
 		$rate=$("#apng_select_rate"),
 		$quality=$("#apng_select_quality"),
 		$savePath=$("#apng_select_savePath"),
@@ -30,6 +31,7 @@
 		options:{
 			loop:0,
 			rate:1,
+			config:'lossless',
 			quality:60,
 			savePath:["parent","self"],
 			currentPath:[],
@@ -44,7 +46,6 @@
 		index:0,
 		isClose:false,
 		mixIndex:0,
-		apngData:"",
 		hasInit:false,
 		init:function(){
 			localData=window.iSparta.localData;
@@ -52,11 +53,9 @@
 			var options=localData.getJSON("apng");
 			$.extend(this.options,options);
 
-			// this.options.quality=-1;
 			options=this.options;
-			// console.log(options)
-			
 			$loop.val(options.loop);
+			$config.val(options.config);
 			$rate.val(options.rate);
 			$quality.val(options.quality);
 			$currentLanguage.val(window.locale.getLocale());
@@ -176,14 +175,13 @@
 			var self=this;
 			var loop=this.options.loop;
 			var rate=this.options.rate;
+			var config=this.options.config;
 			var quality=this.options.quality;
 			var savePath=this.options.savePath[this.options.savePathIndex];
 			var files=this.fileList[0].files;
 			var url=files[id].url[0];
 			var urls=files[id].url;
 			var name=files[id].name;
-			var apngData;
-			var framesData;
 			var path=savePath+window.iSparta.sep+name+".png";
 			var saveDir=savePath+window.iSparta.sep;
 			if(savePath=="parent"){
@@ -197,171 +195,136 @@
 			path=window.iSparta.handlePath(path);
 			
 			var apngasm = process.cwd() + '/app/libs/apng/'+iSparta.getOsInfo()+'/apngasm';
+			// var apngopt = process.cwd() + '/app/libs/apng/'+iSparta.getOsInfo()+'/apngopt';
 			var pngquant = process.cwd() + '/app/libs/pngloss/'+iSparta.getOsInfo()+'/pngquant';
-			var apngopt = process.cwd() + '/app/libs/apng/'+iSparta.getOsInfo()+'/apngopt';
+			var pngout = process.cwd() + '/app/libs/imglossless/'+iSparta.getOsInfo()+'/pngout';
 		   
 			var tempdir=Path.join(os.tmpdir(), '/iSparta/');
 			tempdir=window.iSparta.handlePath(tempdir);
 			apngasm=window.iSparta.handlePath(apngasm);
+			// apngopt=window.iSparta.handlePath(apngopt);
 			pngquant=window.iSparta.handlePath(pngquant);
-			apngopt=window.iSparta.handlePath(apngopt);
-			var tempindex=0;
-			var quantindex=0;
-			try{
-				dirHandle();
-			   }
-			catch(err){
-				dirHandle();
-			}
+			pngout=window.iSparta.handlePath(pngout);
+
+			var qualityArg = quality >= 10 ? ' --quality '+(quality - 10)+'-'+quality : ''
+			var originPngPaths = [];
+
+			dirHandle();
 			function dirHandle(){
 				fs.removeSync(tempdir);
 				fs.mkdirsSync(tempdir);
-				for(var i=0;i<urls.length;i++){
-					fs.copy(urls[i], tempdir+'apng'+(i+1)+'.png', function(err){
-					  tempindex++;
-					  
-					 if(tempindex==urls.length){
-						apngasmExec();
-					 }
+				var urlsPromises = urls.map(function(url,i){
+					return new Promise(function(resolve, reject) {
+						var tempPath = tempdir+'png'+(i+1)+'.png';
+						originPngPaths[i] = tempPath;
+						fs.copy(url, tempPath, function(err) {
+							if (err) {
+								throw err;
+							} else {
+								resolve();
+							}
+						});
 					});
-				}
-			};
-			function pngquantExec(tempindex,len,framesData){
-				var quanturl=tempdir+'frame'+(tempindex)+'.png';
-				//var quanturl2=tempdir+'apng_new'+(tempindex)+'.png';
-				var quality=self.options.quality;
-				
-				quality=(quality-10)+"-"+quality;
-				var quanttxt='"'+pngquant+'" --force  --quality '+quality+'  --ext .png "'+quanturl+'"';
-
-				exec(quanttxt, {timeout: 1000000}, function(e){
-
-					quantindex++;
-					if(quantindex==urls.length){
-						readFramesFiles(1,len,framesData);
-						
-					}else{
-						pngquantExec(tempindex+1,len);
-					}
+				});
+				Promise.all(urlsPromises).then(function() {
+					png2apngExec();
+				}).catch(function(err) {
+					console.log(err);
+					window.iSparta.ui.hideLoading();
+					window.iSparta.ui.hideProgress();
+					window.iSparta.ui.showTips(i18n.__("Program error occurred:") + err);
+					fs.removeSync(tempdir);
 				});
 			};
-			function readFramesFiles(readnum,len){
-				fs.readFile(tempdir+"frame"+readnum+".png", function(err, data){
-					
-					if (err) throw err;
-					var imgData="";
-					for(var i=0;i<data.length;i++){
-						imgData+=String.fromCharCode(data[i]);
-					}
-
-					if(readnum==len){
-
-						framesData[readnum-1].img.src="data:image/png;base64," + btoa(imgData);
-						framesData[readnum-1].img.data=imgData;
-						setTimeout(function(){
-						var afterData=window.iSparta.apng.format.formatFrames(framesData[0].width,framesData[0].height,framesData);
-						var writeNum=0;
-						for(var i=0;i<afterData.length;i++){
-
-							var base64Data = afterData[i].replace(/^data:image\/\w+;base64,/, "");
-								
-							var dataBuffer = new Buffer(base64Data, 'base64');
-
-							fs.writeFile(tempdir+"frame-loss"+(i+1)+".png",dataBuffer, function(err){
-								if(err) throw err;
-
-								writeNum++;
-								if(writeNum==afterData.length){
-
-									apngasmExecFinal();
-								}
-							 })
-						}
-						},10)
-						
-					}else{
-						framesData[readnum-1].img.src="data:image/png;base64," + btoa(imgData);
-						framesData[readnum-1].img.data=imgData;
-						readFramesFiles(readnum+1,len);
-					}
-					
-				});
-			};
-			
-			function apngasmExec(){
-				//var url=tempdir+'apng_new1.png';
-				rate=self.options.rate*100;
-				var tempPath=tempdir+"apngout.png";
-				// console.log('"'+apngasm+'" "'+tempPath+'" "'+tempdir+'apng1.png'+'" '+rate+" 100"+" /l"+loop)
-				exec('"'+apngasm+'" "'+tempPath+'" "'+tempdir+'apng1.png'+'" '+rate+" 100"+" /l"+loop, {timeout: 1000000}, function(e){
-				   // exec('"'+apngopt+'" "'+tempPath+'" "'+tempPath+'"', {timeout: 10000}, function(e){
-
-						if(e) throw e;
-						
-						if(quality!=-1){
-							fs.readFile(tempPath, function (err, data) {
-								if (err) throw err;
-								var PNG_SIGNATURE = String.fromCharCode(0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a);
-								var imgData="";
-								for(var i=0;i<data.length;i++){
-									imgData+=String.fromCharCode(data[i]);
-								}
-								window.iSparta.apng.apngData=imgData;
-								framesData=null;
-
-								framesData=window.iSparta.apng.format.parsePNGData(imgData,true);
-
-								var writeNum=0;
-
-								for(var i=0;i<framesData.length;i++){
-									
-									var base64Data = framesData[i].img.src.replace(/^data:image\/\w+;base64,/, "");
-									
-									var dataBuffer = new Buffer(base64Data, 'base64');
-									var num=i+1;
-
-									 fs.writeFile(tempdir+"frame"+num+".png", dataBuffer, function(err){
-										if(err) throw err;
-										writeNum++;
-										if(writeNum==framesData.length){
-											pngquantExec(1,writeNum,framesData);
-											
-										}
-									 });
-								}
-							});
-						  
-						}else{
-							fs.copy(tempPath,path, function(err){
-								if(err) throw err;
-								var size = fs.statSync(path).size;
-								files[id].apngsize = size;
-								window.iSparta.apng.switch(id+1);
-							});
-						}
-						
+			function png2apngExec() {
+				pngoptExec().then(function() {
+					return apngasmExec();
+				}).then(function() {
+					window.iSparta.apng.switch(id+1);
+				}).catch(function(err) {
+					console.log(err);
+					window.iSparta.ui.hideLoading();
+					window.iSparta.ui.hideProgress();
+					window.iSparta.ui.showTips(i18n.__("Convert failed! Please check PNG file format, the image size should be equal"));
+					fs.removeSync(tempdir);
 				});
 			}
-			function apngasmExecFinal(){
-				var rate=self.options.rate*100;
-				
-				var tempPath=tempdir+"apngout.png";
-				
-				var lossPath=saveDir+name+'.png';
-				exec('"'+apngasm+'" "'+lossPath+'" "'+tempdir+'frame-loss1.png'+'" '+rate+" 100"+" /l"+loop, {timeout: 1000000}, function(e){
-				   // exec('"'+apngopt+'" "'+tempPath+'" "'+tempPath+'"', {timeout: 10000}, function(e){
-					
-						var size = fs.statSync(lossPath).size;
-						files[id].apngsize = size;
-						window.iSparta.apng.switch(id+1);								
-						  
-						//}	               	
-					
-					
-				   // });
+			function pngoptExec() {
+				var originPngPromises = originPngPaths.map(function(pngPath,i) {
+					if (config === 'lossy') {
+						return pngquantExec(pngPath,i);
+					} else {
+						return pngoutExec(pngPath,i);
+					}
+				});
+				return Promise.all(originPngPromises);
+			}
+			// png lossy compression
+			function pngquantExec(pngPath,i) {
+				var outputPath = tempdir+'frame'+(i+1)+'.png';
+				var pngquantcomd = '"'+pngquant+'" --force'+qualityArg+' --output "'+outputPath+'" 8 "'+pngPath+'"';
+				console.log(pngquantcomd);
+				return new Promise(function(resolve, reject) {
+					child_process.exec(pngquantcomd, {timeout: 1000000}, function(err, stdout, stderr) {
+						if (err) {
+							console.log('stdout: ' + stdout);
+							console.log('stderr: ' + stderr);
+							throw err;
+						}
+						resolve();
+					});
 				});
 			}
-
+			// png lossless compression
+			function pngoutExec(pngPath,i) {
+				var outputPath = tempdir+'frame'+(i+1)+'.png';
+				var pngoutcomd = '"'+pngout+'" "'+pngPath+'" "'+outputPath+'" -force -y';
+				console.log(pngoutcomd);
+				return new Promise(function(resolve, reject) {
+					child_process.exec(pngoutcomd, {timeout: 1000000}, function(err, stdout, stderr) {
+						if (err) {
+							console.log('stdout: ' + stdout);
+							console.log('stderr: ' + stderr);
+							throw err;
+						}
+						resolve();
+					});
+				});
+			};
+			// png to apng asm
+			function apngasmExec() {
+				var inputPath = tempdir+'frame*.png';
+				var apngasmcomd = '"'+apngasm+'" "'+path+'" "'+inputPath+'" '+rate*100+' 100'+' -l'+loop+'';
+				console.log(apngasmcomd);
+				return new Promise(function(resolve, reject) {
+					child_process.exec(apngasmcomd, {timeout: 1000000}, function(err, stdout, stderr) {
+						if (err) {
+							console.log('stdout: ' + stdout);
+							console.log('stderr: ' + stderr);
+							throw err;
+						}
+						resolve();
+					});
+				});
+			};
+			// apng opt is buggy for / parse(on macOS and Linux)
+			// and the disposal optimise is also included in apngasm, so we drop out this process
+			// function apngoptExec() {
+			// 	var inputPath = tempdir+"apngout.png";
+			// 	var apngoptcomd = '"'+apngopt+'" "'+inputPath+'" "'+path+'"';
+			// 	console.log(apngoptcomd);
+			// 	return new Promise(function(resolve, reject) {
+			// 		child_process.exec(apngoptcomd, {timeout: 1000000}, function(err, stdout, stderr) {
+			// 			if (err) {
+			// 				console.log(stdout);
+			// 				console.log('\n');
+			// 				console.log(stderr);
+			// 				throw err;
+			// 			}
+			// 			resolve();
+			// 		});
+			// 	});
+			// };
 		}
 	};
 	// 界面操作
@@ -383,236 +346,7 @@
 		return this.parts.join("");
 		
 	};
-	(function() {
-		var
-				global = (function(){ return this; })(),
-				table = new Array(256);
 
-		for(var i=0; i<256; i++) {
-			var c=i;
-			for (var k=0; k<8; k++) c = (c&1) ? 0xEDB88320 ^ (c>>>1) : c>>>1;
-			table[i] = c;
-		}
-
-		global.crc32 = function(str) {
-			var crc = -1;
-			for( var i = 0, l = str.length; i < l; i++ )
-				crc = ( crc >>> 8 ) ^ table[( crc ^ str.charCodeAt( i ) ) & 0xFF];
-			return crc ^ (-1);
-		};
-	})();
-	window.iSparta.apng.format={
-		frames:[],
-		fcTLData:[],
-		
-		PNG_SIGNATURE:String.fromCharCode(0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a),
-		parsePNGData: function(imageData,story) {
-			if (imageData.substr(0, 8) != this.PNG_SIGNATURE) {
-				
-				return false;
-			}
-			this.frames=[];
-			if(story){
-				this.fcTLData=[];
-			}
-			
-			var headerData, preData = "", postData = "", isAnimated = false;
-			var off = 8, frame = null;
-			var framesData=[];
-
-			var plte="";
-			var trns="";
-
-			do {
-				var length = this.readDWord(imageData.substr(off, 4));
-				var type = imageData.substr(off + 4, 4);
-				var data;
-				
-				switch (type) {
-					case "IHDR":
-						data = imageData.substr(off + 8, length);
-						headerData = data;
-						this.width = this.readDWord(data.substr(0, 4));
-						this.height = this.readDWord(data.substr(4, 4));
-						
-						break;
-					case "acTL":
-						isAnimated = true;
-						this.numPlays = this.readDWord(imageData.substr(off + 8 + 4, 4));
-						break;
-					case "PLTE":
-						plte = imageData.substr(off + 8, length);
-						break;
-					case "tRNS":
-						trns = imageData.substr(off + 8, length);
-						break;
-					case "fcTL":
-						
-						if (frame) this.frames.push(frame);
-						data = imageData.substr(off + 8, length);
-						if(story){
-							this.fcTLData.push(data);
-						}
-						frame = {};
-
-						frame.sequence_number = this.readDWord(data.substr(0, 4));
-
-						frame.width     = this.readDWord(data.substr(4, 4));
-						frame.height    = this.readDWord(data.substr(8, 4));
-						frame.left      = this.readDWord(data.substr(12, 4));
-						frame.top       = this.readDWord(data.substr(16, 4));
-
-						var delayN      = this.readWord(data.substr(20, 2));
-						var delayD      = this.readWord(data.substr(22, 2));
-						if (delayD == 0) delayD = 100;
-						frame.delay = 1000 * delayN / delayD;
-						
-						if (frame.delay <= 10) frame.delay = 100;
-						this.playTime += frame.delay;
-
-						frame.disposeOp = data.charCodeAt(24);
-						
-						frame.blendOp   = data.charCodeAt(25);
-						frame.dataParts = [];
-					   // console.log(frame)
-
-						break;
-					case "fdAT":
-						var sequence_number = this.readDWord(imageData.substr(off+8, 4));
-						
-						if (frame) frame.dataParts.push(imageData.substr(off + 8 + 4, length - 4));
-
-						break;
-					case "IDAT":
-						if (frame) frame.dataParts.push(imageData.substr(off + 8, length));
-						break;
-					case "IEND":
-						postData = imageData.substr(off, length + 12);
-						break;
-					default:
-
-						preData += imageData.substr(off, length + 12);
-				}
-				off += 12 + length;
-			} while(type != "IEND" && off < imageData.length);
-			if (frame) this.frames.push(frame);
-
-			var loadedImages = 0, self = this;
-		   
-			for (var i = 0; i < this.frames.length; i++) {
-				var img = new Image();
-				frame = this.frames[i];
-				frame.img = img;
-				
-				var db = new DataBuilder();
-				db.append(this.PNG_SIGNATURE);
-				headerData = this.writeDWord(frame.width) + this.writeDWord(frame.height) + headerData.substr(8);
-				
-				db.append(this.writeChunk("IHDR", headerData));
-
-				if(plte){
-					db.append(this.writeChunk("PLTE", plte));
-				}
-				if(trns){
-					db.append(this.writeChunk("tRNS", trns));
-				}
-				
-				
-				for (var j = 0; j < frame.dataParts.length; j++)
-					db.append(this.writeChunk("IDAT", frame.dataParts[j]));
-				db.append(postData);
-
-				img.src = db.getUrl("image/png");
-				
-				img.data=db.getStr();
-				framesData.push(img.src);
-				delete frame.dataParts;
-			}
-			return this.frames;
-		},
-		
-		readDWord:function(data) {
-			var x = 0;
-			for (var i = 0; i < 4; i++) x += (data.charCodeAt(i) << ((3 - i) * 8));
-			return x;
-		},
-
-		readWord:function(data) {
-			var x = 0;
-			for (var i = 0; i < 2; i++) x += (data.charCodeAt(i) << ((1 - i) * 8));
-			return x;
-		},
-
-		writeChunk:function(type, data) {
-			var res = "";
-			res += this.writeDWord(data.length);
-			res += type;
-			res += data;
-			res += this.writeDWord(crc32(type + data));
-
-			return res;
-		},
-		writefdATChunk:function(type, data,num) {
-			var res = "";
-			res += this.writeDWord(data.length+4);
-			res += type;
-			res += this.writeDWord(num);
-			res += data;
-			res += this.writeDWord(crc32(type +this.writeDWord(num)+ data));
-			return res;
-		},
-
-		writeDWord:function(num) {
-			return String.fromCharCode(
-					((num >> 24) & 0xff),
-					((num >> 16) & 0xff),
-					((num >> 8) & 0xff),
-					(num & 0xff)
-			);
-		},
-		formatFrames:function(width,height,frames) {
-		
-			var context=null,
-				fNum = 0,
-				prevF = null,
-				afterImgData=[];
-			var canvas = document.createElement("canvas");
-			canvas.width = width;
-			canvas.height = height;
-			var context = canvas.getContext("2d");
-
-			for(var fNum=0;fNum<frames.length;fNum++){
-				var frame = this.frames[fNum];
-
-				if (fNum == 0) {
-					if (frame.disposeOp == 2) frame.disposeOp = 1;
-				}
-			  
-				if (prevF && prevF.disposeOp == 1) {
-					context.clearRect(prevF.left, prevF.top, prevF.width, prevF.height);
-				} else if (prevF && prevF.disposeOp == 2) {
-					
-					context.putImageData(prevF.iData,prevF.left, prevF.top);
-				}
-				prevF = frame;
-
-				prevF.iData = null;
-				if (prevF.disposeOp == 2) {
-					prevF.iData = context.getImageData(frame.left, frame.top, frame.width, frame.height);
-				}
-				if (frame.blendOp == 0){
-					context.clearRect(frame.left, frame.top, frame.width, frame.height);
-				}
-				
-				context.drawImage(frame.img, frame.left,frame.top);
-
-				afterImgData.push(canvas.toDataURL("image/png"));
-				// afterImgData.push(context.getImageData(0,0,width,height));
-			}
-			return afterImgData;
-			
-		}
-	};
 	window.iSparta.apng.ui={
 		dataHelper:{},
 		init:function(){
@@ -629,6 +363,9 @@
 			});
 			$quality.on("change",function(){
 				ui.dataHelper.changeQuality($(this).val());
+			});
+			$config.on("change",function(){
+				ui.dataHelper.changeConfig($(this).val());
 			});
 			$rate.on("change",function(){
 				ui.dataHelper.changeRate($(this).val());
@@ -868,7 +605,11 @@
 		changeQuality:function(quality){
 			var apng=window.iSparta.apng;
 			apng.options.quality=quality;
-			
+			window.iSparta.localData.setJSON("apng",apng.options);
+		},
+		changeConfig:function(config){
+			var apng=window.iSparta.apng;
+			apng.options.config=config;
 			window.iSparta.localData.setJSON("apng",apng.options);
 		},
 		changeRate:function(rate){

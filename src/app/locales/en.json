@@ -10,7 +10,6 @@
 	"Frame rate": "Frame rate",
 	"s/frame": "s/frame",
 	"Compression ratio": "Compression ratio",
-	"No compression": "No compression",
 	"Output directory": "Output directory",
 	"Choose directory": "Choose directory",
 	"Start convert": "Start convert",
@@ -37,12 +36,13 @@
 	"Same level directory": "Same level directory",
 	"Convert list": "Convert list",
 	"No image selected": "No image selected",
-	"Directory load failed! Please check whether the directory exists, disk letter is not allowd": "Directory load failed! Please check whether the directory exists, disk letter is not allowd",
+	"Directory load failed! Please check whether the directory exists, disk letter is not allowd": "Directory load failed!<br>Please check whether the directory exists, disk letter is not allowd",
 	"Please select multiple PNG images, keep the filename serialized and image size equal": "Please select multiple PNG images, keep the filename serialized and image size equal",
 	"Please select APNG images": "Please select APNG images",
 	"Please select PNG images": "Please select PNG images",
 	"Please select PNG or JPEG images": "Please select PNG or JPEG images",
 	"Please select PNG, JPEG or GIF images": "Please select PNG, JPEG or GIF images",
-	"Convert failed! Please check APNG file format": "Convert failed! Please check APNG file format",
+	"Convert failed! Please check PNG file format, the image size should be equal": "Convert failed!<br>Please check PNG file format, the image size should be equal",
+	"Convert failed! Please check APNG file format": "Convert failed!<br>Please check APNG file format",
 	"Processing images: (%s/%s)": "Processing images: (%s/%s)"
 }

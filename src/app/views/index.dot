@@ -62,9 +62,16 @@
 								[[=i18n.__("s/frame")]]
 							</div>
 							<div class="option">
+								<label>[[=i18n.__("Compression config")]]</label>
+								<select id="apng_select_config">
+									<option value="lossy">[[=i18n.__("lossy")]]</option>
+									<option value="lossless">[[=i18n.__("lossless")]]</option>
+								</select>
+							</div>
+							<div class="option">
 								<label>[[=i18n.__("Compression ratio")]]</label>
 								<select id="apng_select_quality">
-									<option value="-1">[[=i18n.__("No compression")]]</option>
+									<option value="">[[=i18n.__("ignore")]]</option>
 									<option value="100">100%</option>
 									<option value="95">95%</option>
 									<option value="90">90%</option>
@@ -409,7 +416,7 @@
 							<div class="option">
 								<label>[[=i18n.__("Quality")]]</label>
 								<select id="pngloss_select_quality">
-									<option value="" selected="selected">[[=i18n.__("ignore")]]</option>
+									<option value="">[[=i18n.__("ignore")]]</option>
 									<option value="100">100%</option>
 									<option value="95">95%</option>
 									<option value="90">90%</option>
@@ -428,13 +435,14 @@
 									<option value="25">25%</option>
 									<option value="20">20%</option>
 									<option value="15">15%</option>
+									<option value="10">10%</option>
 								</select>
 							</div>
 							<div class="option">
 								<label>[[=i18n.__("Color depth")]]</label>
 								<select id="pngloss_select_colors">
 									<option value="">[[=i18n.__("ignore")]]</option>
-									<option value="256" selected="selected">256</option>
+									<option value="256">256</option>
 									<option value="192">192</option>
 									<option value="128">128</option>
 									<option value="64">64</option>

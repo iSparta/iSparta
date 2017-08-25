@@ -216,7 +216,9 @@
 					window.iSparta.apng2webp.switch(id+1);
 				}).catch(function(err) {
 					console.log(err);
-					window.iSparta.ui.showTips(i18n.__("Convert failed! Please check APNG file format"));
+					window.iSparta.ui.hideLoading();
+					window.iSparta.ui.hideProgress();
+					window.iSparta.ui.showTips(i18n.__("Convert failed! Please check PNG file format, the image size should be equal"));
 					fs.removeSync(tempdir);
 				});
 			};
@@ -224,7 +226,11 @@
 				var apng2webp_apngoptcomd = '"'+apng2webp_apngopt+'" "'+url+'" "'+tempdir+de_optimised_name+'"';
 				return new Promise(function(resolve, reject) {
 					child_process.exec(apng2webp_apngoptcomd, {timeout: 1000000}, function(err, stdout, stderr) {
-						if (err) throw new commandLineException(err, stdout, stderr);
+						if (err) {
+							console.log('stdout: ' + stdout);
+							console.log('stderr: ' + stderr);
+							throw err;
+						}
 						resolve();
 					});
 				});
@@ -233,7 +239,11 @@
 				var apngdisrawcomd = '"'+apngdisraw+'" "'+tempdir+de_optimised_name+'" "'+animation_name+'"';
 				return new Promise(function(resolve, reject) {
 					child_process.exec(apngdisrawcomd, {timeout: 1000000}, function(err, stdout, stderr) {
-						if (err) throw new commandLineException(err, stdout, stderr);
+						if (err) {
+							console.log('stdout: ' + stdout);
+							console.log('stderr: ' + stderr);
+							throw err;
+						}
 						resolve();
 					});
 				});
@@ -249,7 +259,11 @@
 					
 					return new Promise(function(resolve, reject) {
 						child_process.exec(cwebpcomd, {timeout: 1000000}, function(err, stdout, stderr) {
-							if (err) throw new commandLineException(err, stdout, stderr);
+							if (err) {
+								console.log('stdout: ' + stdout);
+								console.log('stderr: ' + stderr);
+								throw err;
+							}
 							var delay = Math.round((frame['delay_num']) / (frame['delay_den']) * 1000);
 							if (delay === 0) { // The specs say zero is allowed, but should be treated as 10 ms.
 								delay = 10;
@@ -260,7 +274,7 @@
 							} else if (frame['blend_op'] === 1) {
 								blend_mode = '+b';
 							} else {
-								throw new webpConvertException("Webp can't handle this blend operation");
+								throw new Error("Webp can't handle this blend operation");
 							}
 							var webpmux_arg = ' -frame "' + webp_frame_file + '" +' + delay + '+' + frame['x'] + '+' + frame['y'] + '+' + frame['dispose_op'] + blend_mode;
 							resolve(webpmux_arg);
@@ -283,20 +297,15 @@
 				webpmuxcomd += ' -o "' + path + '"';
 				return new Promise(function(resolve, reject) {
 					child_process.exec(webpmuxcomd, {timeout: 1000000}, function(err, stdout, stderr) {
-						if (err) throw new commandLineException(err, stdout, stderr);
+						if (err) {
+							console.log('stdout: ' + stdout);
+							console.log('stderr: ' + stderr);
+							throw err;
+						}
 						resolve();
 					});
 				});
 			};
-			function webpConvertException(message) {
-				this.name = "WebP convert exception";
-				this.message = message;
-			}
-			function commandLineException(err, stdout, stderr) {
-				this.name = "Command line exception";
-				this.stdout = stdout;
-				this.stderr = stderr;
-			}
 		}
 	};
 	

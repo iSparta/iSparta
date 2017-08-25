@@ -4,9 +4,11 @@
 		os = require('os'),
 		fs = require('fs'),
 		i18n = require('i18n'),
-		doT = require('dot');
+		doT = require('dot'),
+		package = require('./../package.json');
 
-	var version = "2.0";
+	var version = package.version;
+	var arch = package.arch;
 	
 	window.iSparta = {
 		sep:"/",
@@ -44,27 +46,44 @@
 			return temp;
 		},
 		getOsInfo: function() {
-			var _pf = navigator.platform;
-			var appVer = navigator.userAgent;
+			switch(process.platform) {
+	        case 'darwin':
+	            return 'mac';
+	        case 'win32': {
+	        	// use package build arch first
+	        	if (!arch) {
+	        		arch = (process.arch === 'x64' || process.env.hasOwnProperty('PROCESSOR_ARCHITEW6432')) ? 'x64' : 'ia32';
+	        	}
+	            return (arch === 'x64') ? 'win64' : 'win32';
+	        }
+	        case 'linux':
+	            return 'linux';
+	        default:
+	        	return "unknown";
+	        }
+	    },
+		// getOsInfo: function() {
+		// 	var _pf = navigator.platform;
+		// 	var appVer = navigator.userAgent;
 			
-			if (_pf == "Win32" || _pf == "Windows") {
-				if (appVer.indexOf("WOW64")>-1) { 
-					_bit = "win64"; 
-				} else { 
-					_bit = "win32";
-				}
-				return _bit;
-			}
-			if (_pf.indexOf("Mac")!=-1) { 
-				return "mac"; 
-			} else if (_pf == "X11") {
-				return "unix"; 
-			} else if (String(_pf).indexOf("Linux") > -1) { 
-				return "linux"; 
-			} else {
-				return "unknown"; 
-			}
-		},
+		// 	if (_pf == "Win32" || _pf == "Windows") {
+		// 		if (appVer.indexOf("WOW64")>-1) { 
+		// 			_bit = "win64"; 
+		// 		} else { 
+		// 			_bit = "win32";
+		// 		}
+		// 		return _bit;
+		// 	}
+		// 	if (_pf.indexOf("Mac")!=-1) { 
+		// 		return "mac"; 
+		// 	} else if (_pf == "X11") {
+		// 		return "unix"; 
+		// 	} else if (String(_pf).indexOf("Linux") > -1) { 
+		// 		return "linux"; 
+		// 	} else {
+		// 		return "unknown"; 
+		// 	}
+		// },
 
 		postData: function(data, type) {
 			// var hostname = os.hostname();
@@ -125,6 +144,13 @@
 		},
 
 		sysInit: function() {
+			if (iSparta.getOsInfo()==='mac') {
+				var nativeMenuBar = new gui.Menu({ type: "menubar" });
+				nativeMenuBar.createMacBuiltin("iSparta", {
+					hideEdit: true
+				});
+				win.menu = nativeMenuBar;
+			}
 			$('.close').click(function() {
 				win.close();
 			});
