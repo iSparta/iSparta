@@ -183,7 +183,6 @@
 			cwebp=window.iSparta.handlePath(cwebp);
 
 			var cwebpcomd = '"' + cwebp + '" ' + param + '"' + url + '" -o "' + path + '"';
-			console.log(cwebpcomd);
 
 			child_process.exec(cwebpcomd, {timeout: 1000000}, function(err, stdout, stderr) {
 				if (err) throw err;
@@ -491,7 +490,6 @@
 					var len=webp.options.currentPath.length;
 					webp.options.currentPathIndex=0;
 					var otherFiles={id:webp.options.mixListIndex,path:[]};
-					console.log(theOtherFiles)
 					for(var i=0;i<theOtherFiles.length;i++){
 						otherFiles.path.push(theOtherFiles[i].path);
 					}

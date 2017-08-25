@@ -606,7 +606,6 @@
 					var len=apng2webp.options.currentPath.length;
 					apng2webp.options.currentPathIndex=0;
 					var otherFiles={id:apng2webp.options.mixListIndex,path:[]};
-					console.log(theOtherFiles)
 					for(var i=0;i<theOtherFiles.length;i++){
 						otherFiles.path.push(theOtherFiles[i].path);
 					}

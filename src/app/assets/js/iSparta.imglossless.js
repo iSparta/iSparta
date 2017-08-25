@@ -245,7 +245,6 @@
 				if(type=="png"){
 					
 					exec(pngoutcomd, {timeout: 1000000}, function(e){
-						console.log(pngoutcomd)
 						fs.copy(tempdir+name2, path,function(e){
 							
 							window.iSparta.imglossless.switch(id+1);
@@ -564,7 +563,6 @@
 					var len=imglossless.options.currentPath.length;
 					imglossless.options.currentPathIndex=0;
 					var otherFiles={id:imglossless.options.mixListIndex,path:[]};
-					console.log(theOtherFiles)
 					for(var i=0;i<theOtherFiles.length;i++){
 						otherFiles.path.push(theOtherFiles[i].path);
 					}

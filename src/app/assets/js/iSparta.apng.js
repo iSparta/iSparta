@@ -210,6 +210,7 @@
 			var originPngPaths = [];
 
 			dirHandle();
+
 			function dirHandle(){
 				fs.removeSync(tempdir);
 				fs.mkdirsSync(tempdir);
@@ -262,8 +263,7 @@
 			// png lossy compression
 			function pngquantExec(pngPath,i) {
 				var outputPath = tempdir+'frame'+(i+1)+'.png';
-				var pngquantcomd = '"'+pngquant+'" --force'+qualityArg+' --output "'+outputPath+'" 8 "'+pngPath+'"';
-				console.log(pngquantcomd);
+				var pngquantcomd = '"'+pngquant+'" --force'+qualityArg+' --output "'+outputPath+'" "'+pngPath+'"';
 				return new Promise(function(resolve, reject) {
 					child_process.exec(pngquantcomd, {timeout: 1000000}, function(err, stdout, stderr) {
 						if (err) {
@@ -279,7 +279,6 @@
 			function pngoutExec(pngPath,i) {
 				var outputPath = tempdir+'frame'+(i+1)+'.png';
 				var pngoutcomd = '"'+pngout+'" "'+pngPath+'" "'+outputPath+'" -force -y';
-				console.log(pngoutcomd);
 				return new Promise(function(resolve, reject) {
 					child_process.exec(pngoutcomd, {timeout: 1000000}, function(err, stdout, stderr) {
 						if (err) {
@@ -295,7 +294,6 @@
 			function apngasmExec() {
 				var inputPath = tempdir+'frame*.png';
 				var apngasmcomd = '"'+apngasm+'" "'+path+'" "'+inputPath+'" '+rate*100+' 100'+' -l'+loop+'';
-				console.log(apngasmcomd);
 				return new Promise(function(resolve, reject) {
 					child_process.exec(apngasmcomd, {timeout: 1000000}, function(err, stdout, stderr) {
 						if (err) {
@@ -312,14 +310,12 @@
 			// function apngoptExec() {
 			// 	var inputPath = tempdir+"apngout.png";
 			// 	var apngoptcomd = '"'+apngopt+'" "'+inputPath+'" "'+path+'"';
-			// 	console.log(apngoptcomd);
 			// 	return new Promise(function(resolve, reject) {
 			// 		child_process.exec(apngoptcomd, {timeout: 1000000}, function(err, stdout, stderr) {
 			// 			if (err) {
-			// 				console.log(stdout);
-			// 				console.log('\n');
-			// 				console.log(stderr);
-			// 				throw err;
+			//				console.log('stdout: ' + stdout);
+			//				console.log('stderr: ' + stderr);
+			//				throw err;
 			// 			}
 			// 			resolve();
 			// 		});

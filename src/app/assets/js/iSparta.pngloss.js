@@ -259,8 +259,10 @@
 				}
 				// console.log(pngquantcomd)
 				if(type.toLowerCase()=="png"){
-					console.log(pngquantcomd)
 					exec(pngquantcomd, {timeout: 1000000}, function(e){
+						if (e) {
+							console.log(e);
+						}
 						
 						var afterPath="";
 						if(savePath=="self"){
@@ -310,11 +312,11 @@
 				var length = this.readDWord(imageData.substr(off, 4));
 				var type = imageData.substr(off + 4, 4);
 				var data;
-				console.log(type)
+				// console.log(type)
 				switch (type) {
 					case "acTL":
 					var num = this.readDWord(imageData.substr(off + 8 + 4, 4));
-					console.log(num)
+					// console.log(num)
 					break;
 					case "npTc":
 						this.npTcData+=imageData.substr(off + 8, length);
@@ -324,7 +326,7 @@
 				}
 				off += 12 + length;
 			} while(type != "IEND" && off < imageData.length);
-			console.log(this.npTcData);
+			// console.log(this.npTcData);
 			return this.npTcData;
 		},
 		writeNpData:function(filepath,callback){
@@ -787,7 +789,6 @@
 					var len=pngloss.options.currentPath.length;
 					pngloss.options.currentPathIndex=0;
 					var otherFiles={id:pngloss.options.mixListIndex,path:[]};
-					console.log(theOtherFiles)
 					for(var i=0;i<theOtherFiles.length;i++){
 						otherFiles.path.push(theOtherFiles[i].path);
 					}
