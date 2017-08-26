@@ -229,9 +229,10 @@
 						if (err) {
 							console.log('stdout: ' + stdout);
 							console.log('stderr: ' + stderr);
-							throw err;
+							reject(err);
+						} else {
+							resolve();
 						}
-						resolve();
 					});
 				});
 			};
@@ -242,9 +243,10 @@
 						if (err) {
 							console.log('stdout: ' + stdout);
 							console.log('stderr: ' + stderr);
-							throw err;
+							reject(err);
+						} else {
+							resolve();
 						}
-						resolve();
 					});
 				});
 			};
@@ -262,7 +264,8 @@
 							if (err) {
 								console.log('stdout: ' + stdout);
 								console.log('stderr: ' + stderr);
-								throw err;
+								reject(err);
+								return;
 							}
 							var delay = Math.round((frame['delay_num']) / (frame['delay_den']) * 1000);
 							if (delay === 0) { // The specs say zero is allowed, but should be treated as 10 ms.
@@ -300,9 +303,10 @@
 						if (err) {
 							console.log('stdout: ' + stdout);
 							console.log('stderr: ' + stderr);
-							throw err;
+							reject(err);
+						} else {
+							resolve();
 						}
-						resolve();
 					});
 				});
 			};

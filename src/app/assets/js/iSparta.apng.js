@@ -269,9 +269,10 @@
 						if (err) {
 							console.log('stdout: ' + stdout);
 							console.log('stderr: ' + stderr);
-							throw err;
+							reject(err);
+						} else {
+							resolve();
 						}
-						resolve();
 					});
 				});
 			}
@@ -284,9 +285,10 @@
 						if (err) {
 							console.log('stdout: ' + stdout);
 							console.log('stderr: ' + stderr);
-							throw err;
+							reject(err);
+						} else {
+							resolve();
 						}
-						resolve();
 					});
 				});
 			};
@@ -299,9 +301,10 @@
 						if (err) {
 							console.log('stdout: ' + stdout);
 							console.log('stderr: ' + stderr);
-							throw err;
+							reject(err);
+						} else {
+							resolve();
 						}
-						resolve();
 					});
 				});
 			};
@@ -313,11 +316,12 @@
 			// 	return new Promise(function(resolve, reject) {
 			// 		child_process.exec(apngoptcomd, {timeout: 1000000}, function(err, stdout, stderr) {
 			// 			if (err) {
-			//				console.log('stdout: ' + stdout);
-			//				console.log('stderr: ' + stderr);
-			//				throw err;
+			// 				console.log('stdout: ' + stdout);
+			// 				console.log('stderr: ' + stderr);
+			// 				reject(err);
+			// 			} else {
+			// 				resolve();
 			// 			}
-			// 			resolve();
 			// 		});
 			// 	});
 			// };
