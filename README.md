@@ -15,7 +15,7 @@ iSparta is a tool for converting APNG and WebP images.
 
 # Download
 
-iSparta now supports macOS, Windows and Linux. You can download the latest version at [Official Site](http://isparta.github.io/) or previous releases at [Release](https://github.com/iSparta/iSparta/releases) page.
+iSparta now supports macOS, Windows and Linux. You can download the latest version at our [Official Site](http://isparta.github.io/) or previous releases at [Release](https://github.com/iSparta/iSparta/releases) page.
 
 # Language
 
@@ -84,6 +84,11 @@ Then go to `script/build/` and check the build bundle.
 
 
 Note：On non-Windows platform, build executable binary for Windows platform will not embed the icon.
+
+# FAQ
+You can check [FAQ](https://github.com/iSparta/iSparta/wiki/FAQ) here about some common questions.
+
+Our [Official Site](http://isparta.github.io/) also provide some tutorials. 
 
 # Author
 * [hahnzhu](https://github.com/hahnzhu)

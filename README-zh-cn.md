@@ -13,7 +13,7 @@ iSparta 是一款 APNG 和 Webp 转换工具。
 
 # 下载
 
-iSparta现在支持macOS、Windows和Linux系统。你可以在[官网](http://isparta.github.io/)下载最新版本，或者到[Release](https://github.com/iSparta/iSparta/releases)页面下载历史版本。
+iSparta现在支持macOS、Windows和Linux系统。你可以在我们的[官网](http://isparta.github.io/)下载最新版本，或者到[Release](https://github.com/iSparta/iSparta/releases)页面下载历史版本。
 
 # 语言
 
@@ -81,6 +81,11 @@ npm run build osx64
 然后可以到`script/build/`目录下找到构建好的应用。
 
 注：在非Windows平台下，构建Windows平台的应用包不会内嵌图标到可执行文件中。
+
+# FAQ
+你可以到[FAQ](https://github.com/iSparta/iSparta/wiki/FAQ)来查看一些常见问题。
+
+我们的[官网](http://isparta.github.io/)也提供了一些教程。 
 
 # 作者
 * [hahnzhu](https://github.com/hahnzhu)
