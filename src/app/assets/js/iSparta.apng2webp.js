@@ -218,7 +218,7 @@
 					console.log(err);
 					window.iSparta.ui.hideLoading();
 					window.iSparta.ui.hideProgress();
-					window.iSparta.ui.showTips(i18n.__("Convert failed! Please check PNG file format, the image size should be equal"));
+					window.iSparta.ui.showTips(i18n.__("Convert failed! Please check APNG file format"));
 					fs.removeSync(tempdir);
 				});
 			};
