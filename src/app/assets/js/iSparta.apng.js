@@ -241,18 +241,23 @@
 					fs.removeSync(tempdir);
 				});
 			};
+
+			function errorHandler(err) {
+				console.log(err);
+				window.iSparta.apng.apngData="";
+				window.iSparta.apng.nums=0;
+				window.iSparta.apng.index=0;
+				window.iSparta.apng.isClose=false;
+				window.iSparta.ui.hideLoading();
+				window.iSparta.ui.hideProgress();
+				window.iSparta.ui.showTips(i18n.__("Convert failed! Please check PNG file format, the image size should be equal"));
+				fs.removeSync(tempdir);
+			}
+
 			function png2apngExec() {
 				if (config === 'lossy') {
 					// lossy use the old version lossy convertor
-					try {
-						apngasmExec();
-					} catch(err) {
-						console.log(err);
-						window.iSparta.ui.hideLoading();
-						window.iSparta.ui.hideProgress();
-						window.iSparta.ui.showTips(i18n.__("Convert failed! Please check PNG file format, the image size should be equal"));
-						fs.removeSync(tempdir);
-					}
+					apngasmExec();
 				} else {
 					// lossless use the refactored lossless convertor
 					losslessPng2apngExec();
@@ -269,6 +274,10 @@
 				var quanttxt='"'+pngquant+'" --force  --quality '+quality+'  --ext .png "'+quanturl+'"';
 
 				child_process.exec(quanttxt, {timeout: 1000000}, function(e){
+					if (e) {
+						errorHandler(e);
+						return;
+					}
 
 					quantindex++;
 					if(quantindex==urls.length){
@@ -281,8 +290,8 @@
 			};
 			function readFramesFiles(readnum,len){
 				fs.readFile(tempdir+"frame"+readnum+".png", function(err, data){
-					
 					if (err) throw err;
+
 					var imgData="";
 					for(var i=0;i<data.length;i++){
 						imgData+=String.fromCharCode(data[i]);
@@ -326,11 +335,11 @@
 				//var url=tempdir+'apng_new1.png';
 				rate=self.options.rate*100;
 				var tempPath=tempdir+"apngout.png";
-				// console.log('"'+apngasm+'" "'+tempPath+'" "'+tempdir+'apng1.png'+'" '+rate+" 100"+" /l"+loop)
-				child_process.exec('"'+apngasm+'" "'+tempPath+'" "'+tempdir+'apng1.png'+'" '+rate+" 100"+" /l"+loop, {timeout: 1000000}, function(e){
-				   // exec('"'+apngopt+'" "'+tempPath+'" "'+tempPath+'"', {timeout: 10000}, function(e){
-
-						if(e) throw e;
+				child_process.exec('"'+apngasm+'" "'+tempPath+'" "'+tempdir+'apng1.png'+'" '+rate+" 100"+" -l"+loop, {timeout: 1000000}, function(e){
+						if(e) {
+							errorHandler(e);
+							return;
+						}
 						
 						if(quality!=-1){
 							fs.readFile(tempPath, function (err, data) {
@@ -383,16 +392,14 @@
 				
 				var lossPath=saveDir+name+'.png';
 				child_process.exec('"'+apngasm+'" "'+lossPath+'" "'+tempdir+'frame-loss1.png'+'" '+rate+" 100"+" -l"+loop, {timeout: 1000000}, function(e){
-				   // exec('"'+apngopt+'" "'+tempPath+'" "'+tempPath+'"', {timeout: 10000}, function(e){
-					
-						var size = fs.statSync(lossPath).size;
-						files[id].apngsize = size;
-						window.iSparta.apng.switch(id+1);								
-						  
-						//}	               	
-					
-					
-				   // });
+					if (e) {
+						errorHandler(e);
+						return;
+					}
+
+					var size = fs.statSync(lossPath).size;
+					files[id].apngsize = size;
+					window.iSparta.apng.switch(id+1);
 				});
 			}
 
@@ -405,11 +412,7 @@
 				}).then(function() {
 					window.iSparta.apng.switch(id+1);
 				}).catch(function(err) {
-					console.log(err);
-					window.iSparta.ui.hideLoading();
-					window.iSparta.ui.hideProgress();
-					window.iSparta.ui.showTips(i18n.__("Convert failed! Please check PNG file format, the image size should be equal"));
-					fs.removeSync(tempdir);
+					errorHandler(err);
 				});
 			}
 			function losslessPngoptExec() {
