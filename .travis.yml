@@ -1,43 +1,36 @@
+osx_image: xcode8.3
+sudo: required
+dist: trusty
+language: c
 matrix:
   include:
   - os: osx
-    language: node_js
-    node_js: node
-    env:
-    - BUILD_PLATFORM=osx64
   - os: linux
-    dist: trusty
-    language: node_js
-    node_js: node
-    env:
-    - BUILD_PLATFORM=linux64
-install:
-- cd src
-- npm install
-- cd $TRAVIS_BUILD_DIR/script
-- npm install
-- npm run build $BUILD_PLATFORM
-script:
-- npm test
-before_deploy:
-- cd $TRAVIS_BUILD_DIR
-- mkdir build
-- cd script/build/iSparta
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then zip -r -9 iSparta-$BUILD_PLATFORM.zip $BUILD_PLATFORM/ ; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then zip -r -9 iSparta-$BUILD_PLATFORM.zip $BUILD_PLATFORM/ ; fi
-- mv iSparta-$BUILD_PLATFORM.zip $TRAVIS_BUILD_DIR/build/
-deploy:
-  provider: releases
-  api_key:
-    secure: GxcAm6BJdOJRlke8Kn5ENCSSa+zOlGZ8Jo8vr0LQxngVCTBrjsFVIu8flOiZW580oopiIKRAlshplFU1jjp1z4PoHNOrNFy/6qsza9UsQ/4hrNPJUP8fZMuXqfeJ0qm9A0Pz17NI2ou66HCzqQvaMpwdeMaxmFS9iiQzV0QSazM=
-  file_glob: true
-  file: $TRAVIS_BUILD_DIR/build/*.zip
-  skip_cleanup: true
-  on:
-    tags: true
-    repo: iSparta/iSparta
+    env: CC=clang CXX=clang++ npm_config_clang=1
+    compiler: clang
 cache:
   directories:
-  - script/cache
-notifications:
-  email: false
+  - node_modules
+  - "$HOME/.electron"
+  - "$HOME/.cache"
+addons:
+  apt:
+    packages:
+    - libgnome-keyring-dev
+    - icnsutils
+before_install:
+- mkdir -p /tmp/git-lfs && curl -L https://github.com/github/git-lfs/releases/download/v1.2.1/git-lfs-$([
+  "$TRAVIS_OS_NAME" == "linux" ] && echo "linux" || echo "darwin")-amd64-1.2.1.tar.gz
+  | tar -xz -C /tmp/git-lfs --strip-components 1 && /tmp/git-lfs/git-lfs pull
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils; fi
+install:
+- nvm install 7
+- curl -o- -L https://yarnpkg.com/install.sh | bash
+- source ~/.bashrc
+- npm install -g xvfb-maybe
+- yarn
+script:
+- yarn run build
+branches:
+  only:
+  - master

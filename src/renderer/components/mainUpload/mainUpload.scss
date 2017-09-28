@@ -1,0 +1,26 @@
+.upload-wrap{
+  width: 360px;
+  height: 224px;
+  position: absolute;
+    left: 50%; 
+    top: 50%;
+    transform: translate(-50%,-60%);
+}
+.mod-upload{
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  bottom:0;
+  background:#fff;
+  z-index:9;
+  .upload-content{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-60%);
+  }
+}
+.el-upload__tip{
+  text-align:center;
+}
