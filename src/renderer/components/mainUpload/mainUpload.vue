@@ -24,7 +24,7 @@
 <script>
 
 import { f as fsOperate } from '../drag/file.js'
-import * as d from '../drag/drag.js';
+import * as d from '../drag/drag.js'
 
 const {dialog} = require('electron').remote
 
@@ -41,27 +41,26 @@ export default {
     }
   },
   methods: {
-    beforeUpload(){
-      return false;
+    beforeUpload () {
+      return false
     },
     handle () {
-      return false;
+      return false
     },
-    upFile(filsList){
-
-      dialog.showOpenDialog({ properties: [ 'openFile', 'openDirectory', 'multiSelections' ]},(res)=>{
-            this.muFileList = res;
-            console.log(this.muFileList);
-            fsOperate.readerFiles(this.muFileList).then((ars) => {
-              var Obj = {}
-              for (var i in ars) {
-                Obj.basic = ars[i].basic
-                Obj.options = ars[i].options
-                this.$store.dispatch('add', Obj)
-              }
-            })
-      });
-      return false;
+    upFile (filsList) {
+      dialog.showOpenDialog({ properties: [ 'openFile', 'openDirectory', 'multiSelections' ]}, (res) => {
+        this.muFileList = res
+        console.log(this.muFileList)
+        fsOperate.readerFiles(this.muFileList).then((ars) => {
+          var Obj = {}
+          for (var i in ars) {
+            Obj.basic = ars[i].basic
+            Obj.options = ars[i].options
+            this.$store.dispatch('add', Obj)
+          }
+        })
+      })
+      return false
     }
   },
   mounted () {

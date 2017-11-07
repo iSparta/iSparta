@@ -2,11 +2,11 @@ import os from 'os'
 import path from 'path'
 import Process from 'child_process'
 
-const ipc = require('electron').ipcRenderer;
-ipc.send('get-app-path');
-var basePath=""
+const ipc = require('electron').ipcRenderer
+ipc.send('get-app-path')
+var basePath = ''
 ipc.on('got-app-path', function (event, path) {
-  basePath = path;
+  basePath = path
 })
 
 const tmpDir = path.join(os.tmpdir(), 'iSparta')
@@ -19,7 +19,7 @@ export default class Action {
   format (store) {
     // this.items = []
 
-    var selectedItem =  _.filter(store.state.items, {isSelected: true});
+    var selectedItem = _.filter(store.state.items, {isSelected: true})
     this.items = JSON.parse(JSON.stringify(selectedItem))
     // console.log(this.items)
     for (var i = 0; i < this.items.length; i++) {
@@ -36,10 +36,10 @@ export default class Action {
     var pf = getOsInfo()
     // console.log(basePath)
     // console.log(process.env)
-    if(process.env.NODE_ENV == "development"){
-      var bin = path.join(process.cwd() ,'/static/bin/', pf, exec)
-    }else{
-      var bin = path.join(basePath ,'/static/bin/', pf, exec)
+    if (process.env.NODE_ENV == 'development') {
+      var bin = path.join(process.cwd(), '/static/bin/', pf, exec)
+    } else {
+      var bin = path.join(basePath, '/static/bin/', pf, exec)
     }
 
     if (pf == 'win32' || pf == 'win64') {
@@ -69,14 +69,14 @@ export default class Action {
 		    		if (err) {
 		    			// console.log('this command error:'+execCommand);
 		    			console.log('stdout: ' + stdout)
-              console.log('stderr: ' + stderr)
+      console.log('stderr: ' + stderr)
 		    			console.warn(err)
-              store.dispatch('editProcess', {
-                index : item.index,
-                text: '生成失败',
-                schedule: -1
-              })
-              store.dispatch('setLock', false)
+      store.dispatch('editProcess', {
+        index: item.index,
+        text: '生成失败',
+        schedule: -1
+      })
+      store.dispatch('setLock', false)
 		    			reject({command: execCommand, err: err})
 		    		} else {
 		    			resolve({command: execCommand})
@@ -89,7 +89,7 @@ export default class Action {
 function getOsInfo () {
   var _pf = navigator.platform
   var appVer = navigator.userAgent
-  var _bit = ""
+  var _bit = ''
   if (_pf == 'Win32' || _pf == 'Windows') {
     if (appVer.indexOf('WOW64') > -1 || appVer.indexOf('Win64') > -1) {
       _bit = 'win64'

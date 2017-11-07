@@ -7,7 +7,7 @@ export default function (item, store) {
 	// apngquant
 
   store.dispatch('editProcess', {
-    index : item.index,
+    index: item.index,
     text: '正在解析图片...',
     schedule: 0.4
   })
@@ -26,7 +26,7 @@ export default function (item, store) {
   return action.exec('cd ' + path.dirname(item.basic.fileList[0]) + ' && ' + action.bin('gif2apng'), [
     fileName,
     item.options.outputName + '.png'
-  ],item,store).then(() => {
+  ], item, store).then(() => {
     item.basic.fileList = [
       path.join(item.basic.tmpOutputDir, item.options.outputName + '.png')
     ]

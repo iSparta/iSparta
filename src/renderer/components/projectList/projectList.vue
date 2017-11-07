@@ -103,27 +103,27 @@ export default {
       // console.log(label)
       return labelMap[label]
     },
-    isStarted(schedule){
-      if(schedule > 0 && schedule < 1 ){
-        return true;
-      }else{
-        return false;
+    isStarted (schedule) {
+      if (schedule > 0 && schedule < 1) {
+        return true
+      } else {
+        return false
       }
     },
-    processStatus(schedule){
-      if(schedule  == 1 ){
-        return "success";
-      }else if(schedule  == -1 ){
-        return "fail";
-      }else{
-        return "";
+    processStatus (schedule) {
+      if (schedule == 1) {
+        return 'success'
+      } else if (schedule == -1) {
+        return 'fail'
+      } else {
+        return ''
       }
     },
-    isFail(schedule){
-      if(schedule  == -1 ){
-        return true;
-      }else{
-        return false;
+    isFail (schedule) {
+      if (schedule == -1) {
+        return true
+      } else {
+        return false
       }
     },
     processPrecent (schedule) {
@@ -166,8 +166,8 @@ export default {
       }
     },
     changeFold (outputPath, index) {
-      if(this.isLocked){
-        return false;
+      if (this.isLocked) {
+        return false
       }
       ipc.send('change-item-fold', outputPath, index)
     }

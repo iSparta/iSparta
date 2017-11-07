@@ -6,7 +6,7 @@ import pngs2apng from './pngs2apng'
 
 export default function (item, store) {
   store.dispatch('editProcess', {
-    index : item.index,
+    index: item.index,
     text: '正在解析图片...',
     schedule: 0.4
   })
@@ -33,7 +33,7 @@ export default function (item, store) {
         dwebpFunc.push(action.exec(action.bin('dwebp'), [
           path.join(webpDir, i + '.webp'),
           '-o ' + path.join(webpDir, i + '.png')
-        ],item,store).then(() => {
+        ], item, store).then(() => {
           item.basic.fileList[i - 1] = path.join(webpDir, i + '.png')
           return item.basic.fileList[i]
         }))
@@ -58,7 +58,7 @@ function getframe (item, frame, callback) {
   		'-get frame ' + frame,
     item.basic.fileList[0],
     '-o ' + path.join(webpDir, frame + '.webp')
-  ],item,store).then(() => {
+  ], item, store).then(() => {
     getframe(item, frame + 1, callback)
   }).catch(() => {
     if ((typeof callback) === 'function') {

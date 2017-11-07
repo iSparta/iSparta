@@ -24,7 +24,7 @@ Vue.use(ElementUI)
 // "/Works/170816.ispart2/iSparta2.0/test/pngs" -> "../iSparta2.0/test/pngs/"
 Vue.filter('basePath', function (value) {
   // console.warn(process.env);
-  var basePath = '../' + _.compact(_.takeRight(value.split('/'), 3)).join('/');
+  var basePath = '../' + _.compact(_.takeRight(value.split('/'), 3)).join('/')
   return basePath
 })
 

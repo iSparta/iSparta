@@ -58,12 +58,12 @@
 import processor from '../../util/processor'
 const ipc = require('electron').ipcRenderer
 export default {
-  data() {
+  data () {
     return {
       // formatStatic: ['APNG', 'GIF', 'WEBP']
     }
   },
-  created() {
+  created () {
     // 回应输出到目录的操作
     ipc.on('change-multiItem-fold', (event, path) => {
       // console.log(this.$store,path[0]);
@@ -72,11 +72,11 @@ export default {
     })
   },
   computed: {
-    selectedList() {
+    selectedList () {
       var selectedList = this.$store.getters.getterSelected
       return selectedList
     },
-    curtSetting() {
+    curtSetting () {
       if (this.selectedList.length == 0) {
         return false
       } else if (this.selectedList.length == 1) {
@@ -89,7 +89,7 @@ export default {
         return this.selectedList
       }
     },
-    isStarted() {
+    isStarted () {
       var schedule = this.selectedList[0].process.schedule
       if (schedule > 0 && schedule < 1) {
         return true
@@ -97,14 +97,14 @@ export default {
         return false
       }
     },
-    showFrame(){
-      if (this.selectedList[0].basic.type == 'PNGS'){
-        return true;
-      }else{
-        return false;
+    showFrame () {
+      if (this.selectedList[0].basic.type == 'PNGS') {
+        return true
+      } else {
+        return false
       }
     },
-    formatStatic() {
+    formatStatic () {
       if (this.selectedList[0].basic.type == 'GIF') {
         return ['APNG', 'WEBP']
       } else {
@@ -112,54 +112,54 @@ export default {
       }
     },
     frameRate: {
-      get() {
+      get () {
         // console.warn(this.curtSetting.length)
         return this.curtSetting.frameRate
       },
-      set(value) {
+      set (value) {
         this.$store.dispatch('editMultiOptions', {
           frameRate: value
         })
       }
     },
     loop: {
-      get() {
+      get () {
         // console.warn(this.curtSetting.frameRate)
         return this.curtSetting.loop
       },
-      set(value) {
+      set (value) {
         this.$store.dispatch('editMultiOptions', {
           loop: value
         })
       }
     },
     outputName: {
-      get() {
+      get () {
         // console.warn(this.curtSetting.frameRate)
         return this.curtSetting.outputName
       },
-      set(value) {
+      set (value) {
         this.$store.dispatch('editOptions', {
           outputName: value
         })
       }
     },
     formatList: {
-      get() {
+      get () {
         // console.warn(this.curtSetting.outputFormat)
         return this.curtSetting.outputFormat
       },
-      set(value) {
+      set (value) {
         this.$store.dispatch('editOptions', {
           outputFormat: value
         })
       }
     },
     floydCheck: {
-      get() {
+      get () {
         return this.curtSetting.floyd.checked
       },
-      set(value) {
+      set (value) {
         this.$store.dispatch('editMultiOptions', {
           floyd: {
             'checked': value,
@@ -169,11 +169,11 @@ export default {
       }
     },
     floyd: {
-      get() {
+      get () {
         // console.warn(this.curtSetting.frameRate)
         return this.curtSetting.floyd.value
       },
-      set(value) {
+      set (value) {
         this.$store.dispatch('editMultiOptions', {
           floyd: {
             'checked': this.floydCheck,
@@ -183,10 +183,10 @@ export default {
       }
     },
     qualityCheck: {
-      get() {
+      get () {
         return this.curtSetting.quality.checked
       },
-      set(value) {
+      set (value) {
         this.$store.dispatch('editMultiOptions', {
           quality: {
             'checked': value,
@@ -196,11 +196,11 @@ export default {
       }
     },
     quality: {
-      get() {
+      get () {
         // console.warn(this.curtSetting.frameRate)
         return this.curtSetting.quality.value
       },
-      set(value) {
+      set (value) {
         this.$store.dispatch('editMultiOptions', {
           quality: {
             'checked': this.qualityCheck,
@@ -212,12 +212,12 @@ export default {
 
   },
   methods: {
-    changeOutput: function() {
+    changeOutput: function () {
       var outputPath = this.selectedList[0].basic.outputPath
       // console.log(outputPath)
       ipc.send('change-multiItem-fold', outputPath)
     },
-    start: function(sameOutputPath) {
+    start: function (sameOutputPath) {
       // console.log(sameOutputPath)
       for (var i = 0; i < this.selectedList.length; i++) {
         this.$store.dispatch('editProcess', {
@@ -228,9 +228,8 @@ export default {
       }
       setTimeout(() => {
         this.$store.dispatch('setLock', true)
-        processor(this.$store,sameOutputPath).then()
+        processor(this.$store, sameOutputPath).then()
       }, 20)
-
     }
   },
   watch: {

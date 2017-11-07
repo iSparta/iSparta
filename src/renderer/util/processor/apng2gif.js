@@ -4,7 +4,7 @@ import fs from 'fs-extra'
 
 export default function (item, store) {
   store.dispatch('editProcess', {
-    index : item.index,
+    index: item.index,
     text: '正在输出GIF...',
     schedule: 0.8
   })
@@ -23,5 +23,5 @@ export default function (item, store) {
   return action.exec('cd ' + path.dirname(item.basic.fileList[0]) + ' && ' + action.bin('apng2gif'), [
     fileName,
     item.options.outputName + '.gif'
-  ],item,store)
+  ], item, store)
 }

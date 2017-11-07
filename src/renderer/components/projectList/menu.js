@@ -16,7 +16,7 @@ class rightMenu {
       menu.append(new MenuItem({
         label: '打开文件目录',
         click () {
-          var srcPath = option.inputPath.replace(/\/[^\/]*$/,"")
+          var srcPath = option.inputPath.replace(/\/[^\/]*$/, '')
           shell.showItemInFolder(srcPath)
         }
       }))

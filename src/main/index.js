@@ -31,8 +31,8 @@ function createWindow () {
     height: 700,
     // frame: true,
     titleBarStyle: 'default',
-    webPreferences:{
-      devTools:true
+    webPreferences: {
+      devTools: true
     }
   })
 

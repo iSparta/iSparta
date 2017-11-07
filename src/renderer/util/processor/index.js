@@ -10,7 +10,6 @@ import path 		from 'path'
 import TYPE 		from '../../store/enum/type'
 
 export default function (store, sameOutputPath) {
-
   var action = new Action(store)
 	// var promise=null;
   var itemPromises = []
@@ -22,12 +21,12 @@ export default function (store, sameOutputPath) {
     var promise = null
 
     // 统一输出到目录
-    if(sameOutputPath){
-      item.basic.outputPath=sameOutputPath;
+    if (sameOutputPath) {
+      item.basic.outputPath = sameOutputPath
     }
 
     store.dispatch('editProcess', {
-      index : item.index,
+      index: item.index,
       text: '开始转换...',
       schedule: 0.1
     })
@@ -60,7 +59,7 @@ export default function (store, sameOutputPath) {
     itemPromises.push(promise)
   }
 
-  return Promise.all(itemPromises).then(()=>{
+  return Promise.all(itemPromises).then(() => {
     store.dispatch('setLock', false)
   })
 }
@@ -100,10 +99,9 @@ function apng2other (item, store) {
 		// delete tmp dir
     // return fs.remove(item.basic.tmpOutputDir)
     store.dispatch('editProcess', {
-      index : item.index,
+      index: item.index,
       text: '生成成功！',
       schedule: 1
     })
-
   })
 }

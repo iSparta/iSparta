@@ -1,6 +1,7 @@
 <template>
   <div id="wrapper" @dragover.prevent @drop="beforeUpload">
     <main-upload></main-upload>
+    <globalsetting></globalsetting>
     <div class="wrap-main">
         <project-list></project-list>
         <sort-bar></sort-bar>
@@ -14,6 +15,7 @@
 <script>
 import mainUpload from './mainUpload/mainUpload.vue'
 import projectlist from './projectList/projectList.vue'
+import globalSetting from './globalSetting/globalSetting.vue'
 import sortBar from './sortBar/sortBar.vue'
 import setting from './setting/setting.vue'
 import { f as fsOperate } from './drag/file.js'
@@ -24,7 +26,8 @@ export default {
     'main-upload': mainUpload,
     'project-list': projectlist,
     'sort-bar': sortBar,
-    'setting': setting
+    'setting': setting,
+    'globalsetting': globalSetting
   },
 
   methods: {

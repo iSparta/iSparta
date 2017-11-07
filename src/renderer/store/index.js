@@ -8,7 +8,7 @@ import * as types from './mutation-types'
 Vue.use(Vuex)
 
 // 原始数据
-const defaultState = {
+var defaultState = {
   options: {
     'frameRate': 26,
     'loop': 0,
@@ -37,19 +37,29 @@ const defaultState = {
   isSelected: true
 }
 
+
+
 // state
 var state = {
   items: [],
   locked: false
 }
+
+var globalSetting = window.localStorage.getItem('globalSetting');
+if(!globalSetting){
+    let tempSetting  = defaultState;
+    window.localStorage.setItem('globalSetting', JSON.stringify(tempSetting))
+}
+
+
 // get localstorage data
 var localData = window.localStorage.getItem('iSparta-item')
 if (localData) {
-  //取loaclstorage时重置进度
-  var localItems =JSON.parse(localData)
+  // 取loaclstorage时重置进度
+  var localItems = JSON.parse(localData)
   _.each(localItems, function (item) {
-    item.process.text = "";
-    item.process.schedule = 0;
+    item.process.text = ''
+    item.process.schedule = 0
   })
   state.items = localItems
 }
@@ -60,7 +70,9 @@ const mutations = {
     if (state.locked) {
       return false
     }
-    var itemData = _.cloneDeep(_.extend(defaultState, data))
+    let tempState = JSON.parse(window.localStorage.getItem('globalSetting'));
+    // console.log(defaultState);
+    var itemData = _.cloneDeep(_.extend(tempState, data))
     _.each(state.items, function (item) {
       item.isSelected = false
     })
@@ -188,7 +200,6 @@ const actions = {
   },
   multiSelect (context, index) {
     context.commit('MULTI_SELECT', index)
-
   },
   allSelect (context) {
     context.commit('ALL_SELECTED')
