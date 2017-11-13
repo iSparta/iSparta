@@ -9,7 +9,7 @@ iSparta 是一款 APNG 和 Webp 转换工具。
 
 # 截图
 
-![](https://raw.githubusercontent.com/iSparta/iSparta/master/static/screenshot/iSparta3.1.png)
+<img src="https://raw.githubusercontent.com/iSparta/iSparta/master/static/screenshot/iSparta3.1.png" alt="screenshot" width="600">
 
 # 下载
 
