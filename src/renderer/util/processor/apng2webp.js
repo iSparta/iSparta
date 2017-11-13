@@ -7,22 +7,14 @@ import TYPE 		from '../../store/enum/type'
 export default function (item, store, locale) {
   store.dispatch('editProcess', {
     index: item.index,
-<<<<<<< Updated upstream
-    text: '正在输出WEBP...',
-=======
     text: locale.outputing+' WEBP...',
->>>>>>> Stashed changes
     schedule: 0.8
   })
 
   var tmpDir = item.basic.tmpDir
   	return action.exec(action.bin('apngdis'), [
     item.basic.fileList[0]
-<<<<<<< Updated upstream
-  ], item, store).then(() => {
-=======
   ], item, store, locale).then(() => {
->>>>>>> Stashed changes
     var data = fs.readFileSync(path.join(tmpDir, 'apngframe_metadata.json'), {encoding: 'utf-8'})
     var animation = JSON.parse(data)
     var frames = animation['frames']
@@ -34,11 +26,7 @@ export default function (item, store, locale) {
         item.options.quality.checked ? '-q ' + item.options.quality.value : '' ,
         png_frame_file,
         '-o ' + webp_frame_file
-<<<<<<< Updated upstream
-      ], item, store).then(() => {
-=======
       ], item, store, locale).then(() => {
->>>>>>> Stashed changes
         var delay = Math.round((frame['delay_num']) / (frame['delay_den']) * 1000)
         if (delay === 0) { // The specs say zero is allowed, but should be treated as 10 ms.
           delay = 10
@@ -64,10 +52,6 @@ export default function (item, store, locale) {
       args,
       '-loop ' + item.options.loop,
       '-o ' + path.join(item.basic.tmpOutputDir, item.options.outputName + '.webp')
-<<<<<<< Updated upstream
-    ], item, store)
-=======
     ], item, store, locale)
->>>>>>> Stashed changes
   })
 }

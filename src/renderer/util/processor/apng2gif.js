@@ -5,11 +5,7 @@ import fs from 'fs-extra'
 export default function (item, store, locale) {
   store.dispatch('editProcess', {
     index: item.index,
-<<<<<<< Updated upstream
-    text: '正在输出GIF...',
-=======
     text: locale.outputing+' GIF...',
->>>>>>> Stashed changes
     schedule: 0.8
   })
 
@@ -27,9 +23,5 @@ export default function (item, store, locale) {
   return action.exec('cd ' + path.dirname(item.basic.fileList[0]) + ' && ' + action.bin('apng2gif'), [
     fileName,
     item.options.outputName + '.gif'
-<<<<<<< Updated upstream
-  ], item, store)
-=======
   ], item, store, locale)
->>>>>>> Stashed changes
 }

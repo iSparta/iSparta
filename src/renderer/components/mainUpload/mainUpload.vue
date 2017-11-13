@@ -46,10 +46,7 @@ export default {
       dialog.showOpenDialog({ properties: [ 'openFile', 'openDirectory', 'multiSelections' ]}, (res) => {
         this.muFileList = res
         console.log(this.muFileList)
-<<<<<<< Updated upstream
-=======
         if(!this.muFileList){return false;}
->>>>>>> Stashed changes
         fsOperate.readerFiles(this.muFileList).then((ars) => {
           var Obj = {}
           for (var i in ars) {

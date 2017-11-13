@@ -5,11 +5,7 @@ import Process from 'child_process'
 const ipc = require('electron').ipcRenderer
 ipc.send('get-app-path')
 var basePath = ''
-<<<<<<< Updated upstream
-ipc.on('got-app-path', function (event, path) {
-=======
 ipc.on('got-app-path', function(event, path) {
->>>>>>> Stashed changes
   basePath = path
 })
 
@@ -23,13 +19,9 @@ export default class Action {
   format(store) {
     // this.items = []
 
-<<<<<<< Updated upstream
-    var selectedItem = _.filter(store.state.items, {isSelected: true})
-=======
     var selectedItem = _.filter(store.state.items, {
       isSelected: true
     })
->>>>>>> Stashed changes
     this.items = JSON.parse(JSON.stringify(selectedItem))
     // console.log(this.items)
     for (var i = 0; i < this.items.length; i++) {
@@ -66,36 +58,6 @@ export default class Action {
     }
     return num
   }
-<<<<<<< Updated upstream
-  static exec (command, args, item, store, callback) {
-	    return new Promise(function (resolve, reject) {
-	    	var execCommand = args
-	    	execCommand.unshift(command)
-	    	execCommand = execCommand.join(' ')
-	    	console.log(execCommand)
-	    	if (callback) {
-	    		Process.exec(execCommand, callback)
-	    	} else {
-	    		Process.exec(execCommand, function (err, stdout, stderr) {
-		    		if (err) {
-		    			// console.log('this command error:'+execCommand);
-		    			console.log('stdout: ' + stdout)
-      console.log('stderr: ' + stderr)
-		    			console.warn(err)
-      store.dispatch('editProcess', {
-        index: item.index,
-        text: '生成失败',
-        schedule: -1
-      })
-      store.dispatch('setLock', false)
-		    			reject({command: execCommand, err: err})
-		    		} else {
-		    			resolve({command: execCommand})
-		    		}
-		    	})
-	    	}
-	    })
-=======
   static exec(command, args, item, store, locale, callback) {
     return new Promise(function(resolve, reject) {
       var execCommand = args
@@ -129,7 +91,6 @@ export default class Action {
         })
       }
     })
->>>>>>> Stashed changes
   }
 }
 

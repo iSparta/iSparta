@@ -55,10 +55,6 @@ export default {
     }
   },
   created () {
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
     // 回应输出到目录的操作
     ipc.on('change-multiItem-fold', (event, path) => {
       // console.log(this.$store,path[0]);
@@ -93,11 +89,7 @@ export default {
       }
     },
     showFrame () {
-<<<<<<< Updated upstream
-      if (this.selectedList[0].basic.type == 'PNGS') {
-=======
       if (this.selectedList[0].basic.type == 'PNGs') {
->>>>>>> Stashed changes
         return true
       } else {
         return false
@@ -154,36 +146,6 @@ export default {
         })
       }
     },
-<<<<<<< Updated upstream
-    floydCheck: {
-      get () {
-        return this.curtSetting.floyd.checked
-      },
-      set (value) {
-        this.$store.dispatch('editMultiOptions', {
-          floyd: {
-            'checked': value,
-            'value': this.floyd
-          }
-        })
-      }
-    },
-    floyd: {
-      get () {
-        // console.warn(this.curtSetting.frameRate)
-        return this.curtSetting.floyd.value
-      },
-      set (value) {
-        this.$store.dispatch('editMultiOptions', {
-          floyd: {
-            'checked': this.floydCheck,
-            'value': value
-          }
-        })
-      }
-    },
-=======
->>>>>>> Stashed changes
     qualityCheck: {
       get () {
         return this.curtSetting.quality.checked
@@ -203,12 +165,9 @@ export default {
         return this.curtSetting.quality.value
       },
       set (value) {
-<<<<<<< Updated upstream
-=======
         if(value > 100 || value < 0){
           return false;
         }
->>>>>>> Stashed changes
         this.$store.dispatch('editMultiOptions', {
           quality: {
             'checked': this.qualityCheck,
@@ -220,15 +179,12 @@ export default {
 
   },
   methods: {
-<<<<<<< Updated upstream
-=======
     floydBlur:function(self){
       self.srcElement.value = this.floyd;
     },
     qualityBlur:function(self){
       self.srcElement.value = this.quality;
     },
->>>>>>> Stashed changes
     changeOutput: function () {
       var outputPath = this.selectedList[0].basic.outputPath
       // console.log(outputPath)
@@ -246,11 +202,7 @@ export default {
       }
       setTimeout(() => {
         this.$store.dispatch('setLock', true)
-<<<<<<< Updated upstream
-        processor(this.$store, sameOutputPath).then()
-=======
         processor(this.$store, sameOutputPath,locale).then()
->>>>>>> Stashed changes
       }, 20)
     }
   },

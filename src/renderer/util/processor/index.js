@@ -9,12 +9,8 @@ import fs 			from 'fs-extra'
 import path 		from 'path'
 import TYPE 		from '../../store/enum/type'
 
-<<<<<<< Updated upstream
-export default function (store, sameOutputPath) {
-=======
 export default function (store, sameOutputPath,locale) {
   // console.log(locale)
->>>>>>> Stashed changes
   var action = new Action(store)
 	// var promise=null;
   var itemPromises = []
@@ -32,11 +28,7 @@ export default function (store, sameOutputPath,locale) {
 
     store.dispatch('editProcess', {
       index: item.index,
-<<<<<<< Updated upstream
-      text: '开始转换...',
-=======
       text: locale.startConvert+'...',
->>>>>>> Stashed changes
       schedule: 0.1
     })
 
@@ -109,11 +101,7 @@ function apng2other (item, store,locale) {
     // return fs.remove(item.basic.tmpOutputDir)
     store.dispatch('editProcess', {
       index: item.index,
-<<<<<<< Updated upstream
-      text: '生成成功！',
-=======
       text: locale.convertSuccess+'！',
->>>>>>> Stashed changes
       schedule: 1
     })
   })
