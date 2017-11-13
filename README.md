@@ -78,7 +78,7 @@ npm run build:win32
 ```bash
 npm run build:win64
 ```
-构建linux64应用：
+构建linux应用：
 
 ```bash
 npm run build:linux
