@@ -11,7 +11,7 @@ export default {
     }
     holder.ondrop = function (e) {
       foldPath.push(e.dataTransfer.files)
-      console.log(foldPath)
+      // console.log(foldPath)
       e.preventDefault()
     }
         // return new Promise(function(resolve, reject) {

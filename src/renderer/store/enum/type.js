@@ -1,5 +1,5 @@
 export default {
-  PNGS: 'PNGS',
+  PNGs: 'PNGs',
   APNG: 'APNG',
   GIF: 'GIF',
   WEBP: 'WEBP',

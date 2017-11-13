@@ -1,4 +1,4 @@
-## iSparta
+## iSparta 3.1
 
 [![macOS & Linux Build](https://img.shields.io/travis/iSparta/iSparta.svg)](https://travis-ci.org/iSparta/iSparta)
 [![Windows Build](https://img.shields.io/appveyor/ci/lizhuoli/iSparta.svg)](https://ci.appveyor.com/project/lizhuoli/iSparta)
@@ -9,7 +9,7 @@ iSparta 是一款 APNG 和 Webp 转换工具。
 
 # 截图
 
-![](https://raw.githubusercontent.com/iSparta/iSparta/master/static/screenshot/iSparta3.0.png)
+![](https://raw.githubusercontent.com/iSparta/iSparta/master/static/screenshot/iSparta3.1.png)
 
 # 下载
 
@@ -20,7 +20,8 @@ iSparta现在支持macOS、Windows和Linux系统。你可以在我们的[官网]
 iSparta现在支持以下语言：
 
 + 简体中文
-
++ 繁體中文
++ English
 
 # 功能
 
@@ -59,7 +60,7 @@ npm run dev
 # 构建
 
 
-根据不同平台构建，现在支持`osx64`、`win32`、`win64`和`linux64`。
+根据不同平台构建，现在支持`osx64`、`win32`、`win64`和`linux`。
 
 构建osx64应用：
 
@@ -80,7 +81,7 @@ npm run build:win64
 构建linux64应用：
 
 ```bash
-npm run build:linux64
+npm run build:linux
 ```
 
 然后可以到`build/`目录下找到构建好的应用。
@@ -89,8 +90,6 @@ npm run build:linux64
 
 # To-Do List
 
-* 增加全局设置功能
-* 增加多语言支持
 * 增加热更新支持
 * 增加视频转apng
 

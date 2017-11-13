@@ -56,7 +56,7 @@ let items = [{
   },
   basic: {
     'address': 2,
-    'format': 'PNGS',
+    'format': 'PNGs',
     'selected': 0,
     'name': 'npc'
   },

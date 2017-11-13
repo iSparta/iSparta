@@ -3,10 +3,14 @@ import path from 'path'
 import action from './action'
 import apngCompress from './apngCompress'
 
-export default function (item, store) {
+export default function (item, store, locale) {
   store.dispatch('editProcess', {
     index: item.index,
+<<<<<<< Updated upstream
     text: '正在解析图片...',
+=======
+    text: locale.analysing+'...',
+>>>>>>> Stashed changes
     schedule: 0.4
   })
 
@@ -27,12 +31,17 @@ export default function (item, store) {
     path.join(item.basic.tmpOutputDir, item.options.outputName + '.png'),
     path.join(tmpDir, firstPNG),
     '1 ' + item.options.frameRate,
+<<<<<<< Updated upstream
     '-l' + item.options.loop 
   ], item, store).then(() => {
+=======
+    '-l' + item.options.loop
+  ], item, store, locale).then(() => {
+>>>>>>> Stashed changes
 		// reset fileList
     item.basic.fileList = [
       path.join(item.basic.tmpOutputDir, item.options.outputName + '.png')
     ]
-    return apngCompress(item, 0, store)
+    return apngCompress(item, 0, store, locale)
   })
 }

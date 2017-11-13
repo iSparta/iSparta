@@ -8,11 +8,17 @@ import * as types from './mutation-types'
 Vue.use(Vuex)
 
 // 原始数据
+<<<<<<< Updated upstream
 var defaultState = {
+=======
+const defaultState = {
+  language:'zh-cn',
+>>>>>>> Stashed changes
   options: {
     'frameRate': 26,
     'loop': 0,
-    'outputName': 'iSpt',
+    'outputSuffix': 'iSpt',
+    'outputName': '',
     'outputFormat': ['APNG'],
     'floyd': {
       checked: true,
@@ -45,6 +51,10 @@ var state = {
   locked: false
 }
 
+<<<<<<< Updated upstream
+=======
+//init globalSetting
+>>>>>>> Stashed changes
 var globalSetting = window.localStorage.getItem('globalSetting');
 if(!globalSetting){
     let tempSetting  = defaultState;

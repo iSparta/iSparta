@@ -96,7 +96,7 @@ export default {
     // 映射标签样式
     getLabel (label) {
       var labelMap = {
-        'PNGS': 'primary',
+        'PNGs': 'primary',
         'APNG': 'success',
         'GIF': 'warning'
       }
@@ -153,15 +153,17 @@ export default {
     },
     itemRightClick (currentItem, index) {
       // console.log(rightMenu)
+      var locale =this.$i18n.messages[this.$i18n.locale]
+      // console.log(locale);
       this.$store.dispatch('setSelected', index)
       // console.log(this.isMultiItems)
       if (this.isMultiItems) {
         window.setTimeout(() => {
-          rightMenu.default.init(this.$store, currentItem, index, true)
+          rightMenu.default.init(this.$store, currentItem, index, true ,locale)
         }, 10)
       } else {
         window.setTimeout(() => {
-          rightMenu.default.init(this.$store, currentItem, index, false)
+          rightMenu.default.init(this.$store, currentItem, index, false ,locale)
         }, 10)
       }
     },

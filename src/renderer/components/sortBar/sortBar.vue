@@ -17,7 +17,7 @@
       return {
         sortTags: [
           {name: 'ALL', type: '', pre: ''},
-          {name: 'PNGS', type: 'gray', pre: 'primary'},
+          {name: 'PNGs', type: 'gray', pre: 'primary'},
           {name: 'APNG', type: 'gray', pre: 'success'},
           {name: 'GIF', type: 'gray', pre: 'warning'}
           // {name: 'WEBP', type: 'gray', pre: 'warning'}

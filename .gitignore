@@ -1,5 +1,4 @@
-src/node_modules
-src/app/data.php
+node_modules/
 *.iml
 .idea/
 .ipr
@@ -25,3 +24,7 @@ isparta.github.io/
 script/node_modules
 script/build
 script/cache
+
+src/renderer/util/processor/pngs2apng.js
+
+src/renderer/util/processor/pngs2apng.js

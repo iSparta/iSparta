@@ -2,10 +2,16 @@
 
 process.env.NODE_ENV = 'production'
 
-const { say } = require('cfonts')
+const {
+  say
+} = require('cfonts')
 const chalk = require('chalk')
 const del = require('del')
 const packager = require('electron-packager')
+const createDMG = require('electron-installer-dmg')
+const electronInstaller = require('electron-winstaller');
+const path = require('path')
+const fs = require('fs-extra')
 const webpack = require('webpack')
 const Multispinner = require('multispinner')
 
@@ -23,13 +29,13 @@ if (process.env.BUILD_TARGET === 'clean') clean()
 else if (process.env.BUILD_TARGET === 'web') web()
 else build()
 
-function clean () {
+function clean() {
   del.sync(['build/*', '!build/icons', '!build/icons/icon.*'])
   console.log(`\n${doneLog}\n`)
   process.exit()
 }
 
-function build () {
+function build() {
   greeting()
 
   del.sync(['dist/electron/*', '!.gitkeep'])
@@ -70,7 +76,7 @@ function build () {
   })
 }
 
-function pack (config) {
+function pack(config) {
   return new Promise((resolve, reject) => {
     webpack(config, (err, stats) => {
       if (err) reject(err.stack || err)
@@ -78,13 +84,13 @@ function pack (config) {
         let err = ''
 
         stats.toString({
-          chunks: false,
-          colors: true
-        })
-        .split(/\r?\n/)
-        .forEach(line => {
-          err += `    ${line}\n`
-        })
+            chunks: false,
+            colors: true
+          })
+          .split(/\r?\n/)
+          .forEach(line => {
+            err += `    ${line}\n`
+          })
 
         reject(err)
       } else {
@@ -98,19 +104,98 @@ function pack (config) {
 }
 
 
-function bundleApp () {
+function bundleApp() {
   packager(buildConfig, (err, appPaths) => {
     if (err) {
       console.log(`\n${errorLog}${chalk.yellow('`electron-packager`')} says...\n`)
       console.log(err + '\n')
     } else {
-      console.log(`\n${doneLog}\n`)
+      packApp(process.env.BUILD_TARGET,appPaths[0]);
     }
   })
 }
 
+function packApp(target,appPath) {
+  switch (target) {
+    case 'darwin':
+      console.log(`Moving files...`);
+      var upperPath =path.resolve(appPath,"..");
+      var sourcesPath = appPath+'/sources';
+      var InstallPath = appPath+'/installer';
+      var tempPath = upperPath+ '/sources';
+      // console.log(`${appPath}`);
+      // console.log(`${upperPath}`);
+      fs.copy(appPath, tempPath,{
+        overwrite:true
+      }, err => {
+        if (err) return console.error(err)
+        fs.emptyDir(appPath, err => {
+          if (err) return console.error(err)
+          fs.move(tempPath, sourcesPath,{
+            overwrite:true
+          }, err => {
+            // console.log(sourcesPath + '/iSparta2.0.app');
+            // console.log(InstallPath);
+            fs.ensureDir(InstallPath, err => {
+              console.log(`Creating Mac DMG...`);
+              createDMG({
+                appPath: sourcesPath + '/iSparta.app',
+                name: 'iSparta',
+                out: InstallPath,
+                overwrite: true
+              }, function done(err) {
+                // console.error(err);
+                console.log(`\n${doneLog}\n`)
+              })
+            })
+          })
+        })
+      })
+      break;
+      case 'win32':
+      case 'win64':
+      console.log(`Moving files...`);
+      var upperPath =path.resolve(appPath,"..");
+      var sourcesPath = appPath+'/sources';
+      var InstallPath = appPath+'/installer';
+      var tempPath = upperPath+ '/sources';
+      // console.log(`${appPath}`);
+      // console.log(`${upperPath}`);
+      fs.copy(appPath, tempPath,{
+        overwrite:true
+      }, err => {
+        if (err) return console.error(err)
+        fs.emptyDir(appPath, err => {
+          if (err) return console.error(err)
+          fs.move(tempPath, sourcesPath,{
+            overwrite:true
+          }, err => {
+            // console.log(sourcesPath + '/iSparta2.0.app');
+            // console.log(InstallPath);
+            fs.ensureDir(InstallPath, err => {
+              console.log(`Creating Windows Installer...`);
+              electronInstaller.createWindowsInstaller({
+                  appDirectory: sourcesPath,
+                  outputDirectory: InstallPath,
+                  authors: 'L',
+                  exe: 'iSparta.exe'
+                }).then(()=>{
+                  console.log(`\n${doneLog}\n`)
+                },(e)=>{
+                  console.log(`No dice: ${e.message}`);
+                })
+            })
+          })
+        })
+      })
+      break;
+      default:
+        console.log(`\n${doneLog}\n`)
+      break;
+  }
+}
 
-function web () {
+function web() {
   del.sync(['dist/web/*', '!.gitkeep'])
   webpack(webConfig, (err, stats) => {
     if (err || stats.hasErrors()) console.log(err)
@@ -124,7 +209,7 @@ function web () {
   })
 }
 
-function greeting () {
+function greeting() {
   const cols = process.stdout.columns
   let text = ''
 

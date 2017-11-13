@@ -1,56 +1,47 @@
 <template>
 <section class="mod-setting" v-if="curtSetting">
-  <h3 class="ui-border-t">输出设置</h3>
+  <h3 class="ui-border-t">{{ $t("outputConfig") }}</h3>
   <section class="mod-multi" v-if="curtSetting.length">
-    <p>目前为多选状态，使用各自的配置输出</p>
-    <el-button type="primary" v-on:click="start('')" :disabled="isStarted">&ensp;批量开始&ensp;</el-button>
-    <el-button type="primary" v-on:click="changeOutput" :disabled="isStarted">输出到目录</el-button>
+    <p>{{ $t("multiText") }}</p>
+    <el-button type="primary" v-on:click="start('')" :disabled="isStarted">&ensp;{{ $t("batchStart") }}&ensp;</el-button>
+    <el-button type="primary" v-on:click="changeOutput" :disabled="isStarted">{{ $t("outputTofolder") }}</el-button>
   </section>
   <section class="mod-form" v-else>
     <div class="ui-border-b" v-if="showFrame">
       <el-form label-width="">
-        <el-form-item label="帧频:">
-          <el-input v-model.number="frameRate" type="number" max="100" min="0" size="mini" placeholder="24"></el-input>fps
+        <el-form-item :label="$t('fps')">
+          <el-input v-model.number="frameRate" type="number" max="100" min="0" size="mini" placeholder="24"></el-input>
         </el-form-item>
-        <el-form-item label="循环:">
-          <el-input v-model.number="loop" type="number" size="mini" placeholder="0"></el-input>次
-          <i>(0次代表无限循环)</i>
+        <el-form-item :label="$t('loop')">
+          <el-input v-model.number="loop" type="number" size="mini" placeholder="0"></el-input>{{ $t('times') }}
+          <i>({{ $t('loopTips') }})</i>
         </el-form-item>
       </el-form>
     </div>
     <div class="ui-border-b mod-output">
       <el-form label-width="">
-        <el-form-item label="输出名字:" class="suffix">
+        <el-form-item  :label="$t('outputName')"class="suffix">
           <el-input v-model="outputName" size="mini" placeholder="output-ispt"></el-input>
         </el-form-item>
-        <p>输出格式:</p>
+        <p>{{ $t("outputFormat") }}</p>
         <el-checkbox-group v-model="formatList" :min="1">
           <el-checkbox v-for="format in formatStatic" :label="format" :key="format">{{format}}</el-checkbox>
         </el-checkbox-group>
       </el-form>
     </div>
     <div class="ui-border-b mod-quality">
-      <p>压缩质量:</p>
+      <p>{{ $t("compressionQuality") }}</p>
       <el-form :inline="true">
         <el-form-item>
-          <el-checkbox v-model="floydCheck">floyd&nbsp;&nbsp;&nbsp;</el-checkbox>
+          <el-checkbox v-model="qualityCheck">Quality</el-checkbox>
         </el-form-item>
         <el-form-item>
-          <el-input v-model.number="floyd" type="number" max="1" min="0" size="mini" placeholder="1"></el-input>
-          <i>(0-1)</i>
-        </el-form-item>
-      </el-form>
-      <el-form :inline="true">
-        <el-form-item>
-          <el-checkbox v-model="qualityCheck">quality</el-checkbox>
-        </el-form-item>
-        <el-form-item>
-          <el-input v-model.number="quality" type="number" max="100" min="0" size="mini" placeholder="100"></el-input>
+          <el-input v-model.number="quality" type="number" size="mini" placeholder="100" @blur="qualityBlur"></el-input>
           <i>(0-100)</i>
         </el-form-item>
       </el-form>
     </div>
-    <el-button type="primary" v-on:click="start('')" :disabled="isStarted">&emsp;开始&emsp;</el-button>
+    <el-button type="primary" v-on:click="start('')" :disabled="isStarted">&emsp;{{ $t("start") }}&emsp;</el-button>
   </section>
 </section>
 </template>
@@ -64,6 +55,10 @@ export default {
     }
   },
   created () {
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
     // 回应输出到目录的操作
     ipc.on('change-multiItem-fold', (event, path) => {
       // console.log(this.$store,path[0]);
@@ -98,7 +93,11 @@ export default {
       }
     },
     showFrame () {
+<<<<<<< Updated upstream
       if (this.selectedList[0].basic.type == 'PNGS') {
+=======
+      if (this.selectedList[0].basic.type == 'PNGs') {
+>>>>>>> Stashed changes
         return true
       } else {
         return false
@@ -155,6 +154,7 @@ export default {
         })
       }
     },
+<<<<<<< Updated upstream
     floydCheck: {
       get () {
         return this.curtSetting.floyd.checked
@@ -182,6 +182,8 @@ export default {
         })
       }
     },
+=======
+>>>>>>> Stashed changes
     qualityCheck: {
       get () {
         return this.curtSetting.quality.checked
@@ -201,6 +203,12 @@ export default {
         return this.curtSetting.quality.value
       },
       set (value) {
+<<<<<<< Updated upstream
+=======
+        if(value > 100 || value < 0){
+          return false;
+        }
+>>>>>>> Stashed changes
         this.$store.dispatch('editMultiOptions', {
           quality: {
             'checked': this.qualityCheck,
@@ -212,6 +220,15 @@ export default {
 
   },
   methods: {
+<<<<<<< Updated upstream
+=======
+    floydBlur:function(self){
+      self.srcElement.value = this.floyd;
+    },
+    qualityBlur:function(self){
+      self.srcElement.value = this.quality;
+    },
+>>>>>>> Stashed changes
     changeOutput: function () {
       var outputPath = this.selectedList[0].basic.outputPath
       // console.log(outputPath)
@@ -219,6 +236,7 @@ export default {
     },
     start: function (sameOutputPath) {
       // console.log(sameOutputPath)
+      let locale = this.$i18n.messages[this.$i18n.locale]
       for (var i = 0; i < this.selectedList.length; i++) {
         this.$store.dispatch('editProcess', {
           index: i,
@@ -228,7 +246,11 @@ export default {
       }
       setTimeout(() => {
         this.$store.dispatch('setLock', true)
+<<<<<<< Updated upstream
         processor(this.$store, sameOutputPath).then()
+=======
+        processor(this.$store, sameOutputPath,locale).then()
+>>>>>>> Stashed changes
       }, 20)
     }
   },

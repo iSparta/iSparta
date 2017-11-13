@@ -5,21 +5,31 @@ import Process from 'child_process'
 const ipc = require('electron').ipcRenderer
 ipc.send('get-app-path')
 var basePath = ''
+<<<<<<< Updated upstream
 ipc.on('got-app-path', function (event, path) {
+=======
+ipc.on('got-app-path', function(event, path) {
+>>>>>>> Stashed changes
   basePath = path
 })
 
 const tmpDir = path.join(os.tmpdir(), 'iSparta')
 
 export default class Action {
-  constructor (state) {
+  constructor(state) {
     this.state = state
     this.format(state)
   }
-  format (store) {
+  format(store) {
     // this.items = []
 
+<<<<<<< Updated upstream
     var selectedItem = _.filter(store.state.items, {isSelected: true})
+=======
+    var selectedItem = _.filter(store.state.items, {
+      isSelected: true
+    })
+>>>>>>> Stashed changes
     this.items = JSON.parse(JSON.stringify(selectedItem))
     // console.log(this.items)
     for (var i = 0; i < this.items.length; i++) {
@@ -30,9 +40,9 @@ export default class Action {
     }
   }
 
-	// util
+  // util
 
-  static bin (exec) {
+  static bin(exec) {
     var pf = getOsInfo()
     // console.log(basePath)
     // console.log(process.env)
@@ -47,15 +57,16 @@ export default class Action {
     }
     return bin
   }
-	// add 0 to num
-  static pad (num, n) {
-	  	var len = num.toString().length
-	    while (len < n) {
-	        num = '0' + num
-	        len++
-	    }
-	    return num
+  // add 0 to num
+  static pad(num, n) {
+    var len = num.toString().length
+    while (len < n) {
+      num = '0' + num
+      len++
+    }
+    return num
   }
+<<<<<<< Updated upstream
   static exec (command, args, item, store, callback) {
 	    return new Promise(function (resolve, reject) {
 	    	var execCommand = args
@@ -84,9 +95,45 @@ export default class Action {
 		    	})
 	    	}
 	    })
+=======
+  static exec(command, args, item, store, locale, callback) {
+    return new Promise(function(resolve, reject) {
+      var execCommand = args
+      execCommand.unshift(command)
+      execCommand = execCommand.join(' ')
+      console.log(execCommand)
+      if (callback) {
+        Process.exec(execCommand, callback)
+      } else {
+        Process.exec(execCommand, function(err, stdout, stderr) {
+          if (err) {
+            console.log('this command error:' + execCommand);
+            console.log('stdout: ' + stdout)
+            console.log('stderr: ' + stderr)
+            console.warn(err)
+            store.dispatch('editProcess', {
+              index: item.index,
+              text: locale.convertFail,
+              schedule: -1
+            })
+            store.dispatch('setLock', false)
+            reject({
+              command: execCommand,
+              err: err
+            })
+          } else {
+            resolve({
+              command: execCommand
+            })
+          }
+        })
+      }
+    })
+>>>>>>> Stashed changes
   }
 }
-function getOsInfo () {
+
+function getOsInfo() {
   var _pf = navigator.platform
   var appVer = navigator.userAgent
   var _bit = ''

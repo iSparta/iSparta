@@ -26,9 +26,9 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     resizable: true,
     minWidth: 820,
-    minHeight: 700,
+    minHeight: 800,
     width: 820,
-    height: 700,
+    height: 800,
     // frame: true,
     titleBarStyle: 'default',
     webPreferences: {

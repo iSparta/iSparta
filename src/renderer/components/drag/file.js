@@ -5,7 +5,11 @@ const _ = require('lodash')
 
 // 正则匹配
 const reg = {
+<<<<<<< Updated upstream
   'PNGS': /.*\.png$/i,
+=======
+  'PNGs': /.*\.png$/i,
+>>>>>>> Stashed changes
     // 'WEBP': /.*\.webp$/i,
   'GIF': /.*\.gif$/i,
   'MP4': /.*\.mp4$/i
@@ -55,7 +59,11 @@ class actionFiles {
     let pathname = path.dirname(files)
     for (var i in reg) {
       if (reg[i].test(files)) {
+<<<<<<< Updated upstream
         if (i == 'PNGS') {
+=======
+        if (i == 'PNGs') {
+>>>>>>> Stashed changes
           var buffer = fs.readFileSync(files)
           var byte = buffer.slice(33, 41).toString('ascii')
           if (byte.match('acTL')) {
@@ -71,6 +79,7 @@ class actionFiles {
   }
 
   writeBasic (format, address, fileList) {
+<<<<<<< Updated upstream
     var temp = {}
     let globalSetting = JSON.parse(window.localStorage.getItem('globalSetting'))
     temp.basic = {}
@@ -88,10 +97,19 @@ class actionFiles {
         value:globalSetting.options.quality.value
       }
     }
+=======
+    let temp = {}
+    let globalSetting = JSON.parse(window.localStorage.getItem('globalSetting'))
+    temp.basic = {}
+    temp.options = globalSetting.options
+    //去除文件名空格
+    temp.options.outputName = path.basename(fileList[0]).split('.')[0].replace(/[ ]/g,"") + '_'+globalSetting.options.outputSuffix
+>>>>>>> Stashed changes
     temp.basic.type = format
     temp.basic.inputPath = address + '/' + path.basename(fileList[0]).split('.')[0]
     temp.basic.outputPath = address
     temp.basic.fileList = fileList
+<<<<<<< Updated upstream
     temp.options.outputName = path.basename(fileList[0]).split('.')[0] + '_iSpt'
     items.push(temp)
   }
@@ -111,11 +129,35 @@ class actionFiles {
         tempPrefix[prefix].push(pngs[i])
       }
       if (i == pngs.length - 1) {}
+=======
+    items.push(temp)
+  }
+
+  writePngBasic (PNGs) {
+    // console.warn(PNGs)
+    let tempPrefix = {}
+    for (var i = 0; i < PNGs.length; i++) {
+      let prefixpath = path.dirname(PNGs[i])
+      let prefixname = path.basename(PNGs[i]).replace(/\d+\.png$/i, '')
+      let prefix = prefixpath + prefixname
+      // console.log(path.basename(PNGs[i]))
+      if (!tempPrefix[prefix]) {
+        tempPrefix[prefix] = []
+        tempPrefix[prefix].push(PNGs[i])
+      } else {
+        tempPrefix[prefix].push(PNGs[i])
+      }
+      if (i == PNGs.length - 1) {}
+>>>>>>> Stashed changes
     }
 
     for (var i in tempPrefix) {
       if (tempPrefix[i].length > 1) {
+<<<<<<< Updated upstream
         this.writeBasic('PNGS', path.dirname(tempPrefix[i][0]), tempPrefix[i])
+=======
+        this.writeBasic('PNGs', path.dirname(tempPrefix[i][0]), tempPrefix[i])
+>>>>>>> Stashed changes
       }
     }
   }

@@ -2,12 +2,16 @@ import fs from 'fs-extra'
 import path from 'path'
 import action from './action'
 import apngCompress from './apngCompress'
-import pngs2apng from './pngs2apng'
+import PNGs2apng from './PNGs2apng'
 
 export default function (item, store) {
   store.dispatch('editProcess', {
     index: item.index,
+<<<<<<< Updated upstream
     text: '正在解析图片...',
+=======
+    text: locale.analysing+'...',
+>>>>>>> Stashed changes
     schedule: 0.4
   })
 
@@ -33,13 +37,17 @@ export default function (item, store) {
         dwebpFunc.push(action.exec(action.bin('dwebp'), [
           path.join(webpDir, i + '.webp'),
           '-o ' + path.join(webpDir, i + '.png')
+<<<<<<< Updated upstream
         ], item, store).then(() => {
+=======
+        ], item, store, locale).then(() => {
+>>>>>>> Stashed changes
           item.basic.fileList[i - 1] = path.join(webpDir, i + '.png')
           return item.basic.fileList[i]
         }))
       }
       Promise.all(dwebpFunc).then(() => {
-        pngs2apng(item).then(() => {
+        PNGs2apng(item).then(() => {
           resolve()
         })
       })
@@ -58,7 +66,11 @@ function getframe (item, frame, callback) {
   		'-get frame ' + frame,
     item.basic.fileList[0],
     '-o ' + path.join(webpDir, frame + '.webp')
+<<<<<<< Updated upstream
   ], item, store).then(() => {
+=======
+  ], item, store, locale).then(() => {
+>>>>>>> Stashed changes
     getframe(item, frame + 1, callback)
   }).catch(() => {
     if ((typeof callback) === 'function') {

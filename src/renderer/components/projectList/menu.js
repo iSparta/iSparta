@@ -10,25 +10,26 @@ const {
 } = remote
 
 class rightMenu {
-  static init (store, option, index, isMultiItems) {
+  static init (store, option, index, isMultiItems ,locale ) {
     const menu = new Menu()
+
     if (!isMultiItems) {
       menu.append(new MenuItem({
-        label: '打开文件目录',
+        label: locale.openOriginal,
         click () {
           var srcPath = option.inputPath.replace(/\/[^\/]*$/, '')
           shell.showItemInFolder(srcPath)
         }
       }))
       menu.append(new MenuItem({
-        label: '打开输出目录',
+        label: locale.openDist,
         click () {
           var distPath = option.outputPath
           shell.showItemInFolder(distPath)
         }
       }))
       menu.append(new MenuItem({
-        label: '修改输出目录',
+        label: locale.changeDist,
         click () {
           ipc.send('change-item-fold', option.outputPath, index)
         }
@@ -38,7 +39,7 @@ class rightMenu {
       }))
     }
     menu.append(new MenuItem({
-      label: '删除项目',
+      label: locale.delItem,
       click () {
         store.dispatch('remove')
       }

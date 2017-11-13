@@ -3,20 +3,15 @@
     <div class="upload-wrap" v-on:click="upFile">
     <el-upload
       class="upload-content"
-      drag 
-      action="javascript:void(0)" 
+      drag
+      action="javascript:void(0)"
       :before-upload="beforeUpload"
-      disabled 
-      multiple 
+      disabled
+      multiple
      >
       <i class="el-icon-upload"></i>
-      <div class="el-upload__text">将文件拖到此处，或<em>点击打开</em></div>
-      <div class="el-upload__tip" slot="tip">
-        只能上传
-        <el-tooltip class="item" effect="dark" content="Top Center 提示文字" placement="top">
-          <el-button type="text">PNG序列</el-button>
-        </el-tooltip>
-        、APNG、webP、GIF这四种图片格式</div>
+      <div class="el-upload__text">{{ $t("uploadTips") }}</div>
+      <div class="el-upload__tip" slot="tip">{{ $t("uploadRule") }}</div>
     </el-upload>
     </div>
   </section>
@@ -51,6 +46,10 @@ export default {
       dialog.showOpenDialog({ properties: [ 'openFile', 'openDirectory', 'multiSelections' ]}, (res) => {
         this.muFileList = res
         console.log(this.muFileList)
+<<<<<<< Updated upstream
+=======
+        if(!this.muFileList){return false;}
+>>>>>>> Stashed changes
         fsOperate.readerFiles(this.muFileList).then((ars) => {
           var Obj = {}
           for (var i in ars) {

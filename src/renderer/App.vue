@@ -7,7 +7,6 @@
   export default {
     data () {
       return {
-        name: 'iSparta 2.0'
       }
     }
 
