@@ -5,7 +5,7 @@ import fs from 'fs-extra'
 export default function (item, isLossless, store, locale) {
   store.dispatch('editProcess', {
     index: item.index,
-    text: locale.compressing+'...',
+    text: locale.compressing + '...',
     schedule: 0.6
   })
 
@@ -20,7 +20,7 @@ export default function (item, isLossless, store, locale) {
   item.basic.fileList[0] = tmpFile
 
 	// apngquant
-  if (isLossless) {
+  if (!item.options.quality.checked) {
     return apngopt(item, store, locale)
   } else {
     return action.exec(action.bin('apngquant'), [

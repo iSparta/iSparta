@@ -9,7 +9,7 @@ import fs 			from 'fs-extra'
 import path 		from 'path'
 import TYPE 		from '../../store/enum/type'
 
-export default function (store, sameOutputPath,locale) {
+export default function (store, sameOutputPath, locale) {
   // console.log(locale)
   var action = new Action(store)
 	// var promise=null;
@@ -28,32 +28,32 @@ export default function (store, sameOutputPath,locale) {
 
     store.dispatch('editProcess', {
       index: item.index,
-      text: locale.startConvert+'...',
+      text: locale.startConvert + '...',
       schedule: 0.1
     })
 
     switch (item.basic.type) {
       case TYPE.PNGs:
-        promise = PNGs2apng(item, store,locale).then(() => {
-          return apng2other(item, store,locale)
+        promise = PNGs2apng(item, store, locale).then(() => {
+          return apng2other(item, store, locale)
         })
         break
 
       case TYPE.GIF:
-        promise = gif2apng(item, store,locale).then(() => {
-          return apng2other(item, store,locale)
+        promise = gif2apng(item, store, locale).then(() => {
+          return apng2other(item, store, locale)
         })
         break
 
       case TYPE.APNG:
-        promise = apngCompress(item, 0, store,locale).then(() => {
-          return apng2other(item, store,locale)
+        promise = apngCompress(item, 0, store, locale).then(() => {
+          return apng2other(item, store, locale)
         })
         break
 
       case TYPE.WEBP:
-        promise = webp2apng(item, store,locale).then(() => {
-          return apng2other(item, store,locale)
+        promise = webp2apng(item, store, locale).then(() => {
+          return apng2other(item, store, locale)
         })
         break
     }
@@ -64,7 +64,7 @@ export default function (store, sameOutputPath,locale) {
     store.dispatch('setLock', false)
   })
 }
-function apng2other (item, store,locale) {
+function apng2other (item, store, locale) {
   var funcArr = []
   var hasApng = false
   item.basic.fileList[0] = path.join(item.basic.tmpOutputDir, item.options.outputName + '.png')
@@ -78,7 +78,7 @@ function apng2other (item, store,locale) {
         break
 
       case TYPE.GIF:
-        funcArr.push(apng2gif(item, store,locale).then(() => {
+        funcArr.push(apng2gif(item, store, locale).then(() => {
           return fs.copy(
 					path.join(item.basic.tmpOutputDir, item.options.outputName + '.gif'),
 					path.join(item.basic.outputPath, item.options.outputName + '.gif')
@@ -87,7 +87,7 @@ function apng2other (item, store,locale) {
         break
 
       case TYPE.WEBP:
-        funcArr.push(apng2webp(item, store,locale).then(() => {
+        funcArr.push(apng2webp(item, store, locale).then(() => {
           fs.copySync(
 					path.join(item.basic.tmpOutputDir, item.options.outputName + '.webp'),
 					path.join(item.basic.outputPath, item.options.outputName + '.webp')
@@ -99,9 +99,10 @@ function apng2other (item, store,locale) {
   return Promise.all(funcArr).then(() => {
 		// delete tmp dir
     // return fs.remove(item.basic.tmpOutputDir)
+    MtaH5.clickStat('1')
     store.dispatch('editProcess', {
       index: item.index,
-      text: locale.convertSuccess+'！',
+      text: locale.convertSuccess + '！',
       schedule: 1
     })
   })

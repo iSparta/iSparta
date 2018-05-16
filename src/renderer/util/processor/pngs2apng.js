@@ -6,7 +6,7 @@ import apngCompress from './apngCompress'
 export default function (item, store, locale) {
   store.dispatch('editProcess', {
     index: item.index,
-    text: locale.analysing+'...',
+    text: locale.analysing + '...',
     schedule: 0.4
   })
 
@@ -27,7 +27,8 @@ export default function (item, store, locale) {
     path.join(item.basic.tmpOutputDir, item.options.outputName + '.png'),
     path.join(tmpDir, firstPNG),
     '1 ' + item.options.frameRate,
-    '-l' + item.options.loop
+    '-l' + item.options.loop,
+    '-kc '
   ], item, store, locale).then(() => {
 		// reset fileList
     item.basic.fileList = [
