@@ -63,7 +63,7 @@ export default class Action {
       var execCommand = args
       execCommand.unshift(command)
       execCommand = execCommand.join(' ')
-      console.log(execCommand)
+      
       if (callback) {
         Process.exec(execCommand, callback)
       } else {

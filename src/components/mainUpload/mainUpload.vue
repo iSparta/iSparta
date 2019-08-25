@@ -45,7 +45,6 @@ export default {
     upFile (filsList) {
       dialog.showOpenDialog({ properties: [ 'openFile', 'openDirectory', 'multiSelections' ]}, (res) => {
         this.muFileList = res
-        console.log(this.muFileList)
         if(!this.muFileList){return false;}
         fsOperate.readerFiles(this.muFileList).then((ars) => {
           var Obj = {}

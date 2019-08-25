@@ -61,6 +61,9 @@ export default function (store, sameOutputPath, locale) {
   }
 
   return Promise.all(itemPromises).then(() => {
+    for (var i = 0; i < action.items.length; i++) {
+      fs.remove(action.items[i].basic.tmpDir);
+    }
     store.dispatch('setLock', false)
   })
 }

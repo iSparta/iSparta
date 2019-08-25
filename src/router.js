@@ -8,7 +8,10 @@ export default new Router({
     {
       path: '/',
       name: 'landing-page',
-      component: LandingPage
+      component: LandingPage,
+      meta:{
+        title:'iSparta'
+      }
     },
     {
       path: '*',

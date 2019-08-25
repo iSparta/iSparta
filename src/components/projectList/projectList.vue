@@ -7,8 +7,9 @@
       </div>
       <div class="info">
         <div class="input">
-          <el-tag :type="getLabel(project.basic.type)">{{ project.basic.type }}</el-tag>
+          <el-tag :type="getLabel(project.basic.type)" size="mini">{{ project.basic.type }}</el-tag>
           <p class="inputPath" :title="'输入目录：'+project.basic.inputPath">{{ project.basic.inputPath | basePath }}</p>
+          <i class="el-icon-setting" v-if="project.basic.type=='PNGs'" @click="onDelaySetting(project)"></i>
         </div>
         <div class="output">
           <i class="el-icon-edit"></i>
@@ -21,6 +22,10 @@
       </div>
     </div>
   </template>
+  <dialay-dialog v-if="dialogFormVisible" :project="delayProject" @close="dialogFormVisible=false"></dialay-dialog>
+  <div class="open-folder" v-on:click="openFolder">
+    打开目录...
+  </div>
 </section>
 </template>
 <script>
@@ -35,12 +40,19 @@ const imgType = _.values(typeData).join(',')
 // console.log(imgType)
 
 const ipc = require('electron').ipcRenderer
-
+const {dialog} = require('electron').remote
+import DelayDialog from  '../delayDialog/index.vue'
+import { f as fsOperate } from '../drag/file.js'
 export default {
+  components:{
+    'dialay-dialog':DelayDialog
+  },
   data () {
     return {
       // projectList: []
-      sortType: imgType
+      sortType: imgType,
+      dialogFormVisible:false,
+      delayProject:null
     }
   },
 
@@ -56,11 +68,13 @@ export default {
     })
     // 回应修改输出目录的操作
     ipc.on('change-item-fold', (event, path, order) => {
-      // console.log(event,path,order);
-      // console.log(path[0]);
-      this.$store.dispatch('editBasic', {
-        outputPath: path[0]
-      })
+      
+      if(path[0]){
+        this.$store.dispatch('editBasic', {
+          outputPath: path[0]
+        })
+      }
+      
     })
     // 回应CTRL+A全选操作
     ipc.on('selectAll', () => {
@@ -85,6 +99,16 @@ export default {
     },
     projectList () {
       var data = this.$store.getters.getterItems
+      let hasSelected=false;
+      for(let i=0;i<data.length;i++){
+        if(data[i].isSelected){
+          hasSelected=true;
+          break;
+        }
+      }
+      if(!hasSelected&&data[0]){
+        data[0].isSelected=true;
+      }
       return data
     },
     isLocked () {
@@ -169,6 +193,24 @@ export default {
         return false
       }
       ipc.send('change-item-fold', outputPath, index)
+    },
+    openFolder(){
+      dialog.showOpenDialog({ properties: [ 'openFile', 'openDirectory', 'multiSelections' ]}, (res) => {
+        this.muFileList = res
+        if(!this.muFileList){return false;}
+        fsOperate.readerFiles(this.muFileList).then((ars) => {
+          var Obj = {}
+          for (var i in ars) {
+            Obj.basic = ars[i].basic
+            Obj.options = ars[i].options
+            this.$store.dispatch('add', Obj)
+          }
+        })
+      })
+    },
+    onDelaySetting(project){
+      this.delayProject=project;
+      this.dialogFormVisible=true; 
     }
   }
 }

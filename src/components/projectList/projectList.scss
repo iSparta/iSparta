@@ -5,6 +5,7 @@
     color: #FF4949!important;
 }
 .mod-list {
+
     min-height: 100px;
     .item {
         position: relative;
@@ -33,17 +34,26 @@
             flex-direction: column;
             justify-content: center;
             .input {
-                .el-tag {
-                    float: left;
-                    margin-right: 5px;
+              display: flex;
+              align-items: center;
+              .el-tag {
+                  margin-right: 5px;
+              }
+              .inputPath {
+                  height: 24px;
+                  line-height: 22px;
+                  color: #1F2D3D;
+                  margin: 0;
+                  overflow: hidden;
+              }
+              .el-icon-setting{
+                margin-left:10px;
+                color:#666;
+                cursor: pointer;
+                &:hover{
+                  opacity: .8;
                 }
-                .inputPath {
-                    height: 24px;
-                    line-height: 22px;
-                    color: #1F2D3D;
-                    margin: 0;
-                    overflow: hidden;
-                }
+              }
             }
             .output {
                 margin: 5px 0 0;
@@ -106,4 +116,16 @@
             }
         }
     }
+    .open-folder{
+      text-align: center;
+      line-height: 30px;
+      font-size:12px;
+      margin-top:20px;
+      color:#409EFF;
+      cursor: pointer;
+      &:hover{
+        opacity: .5;
+      }
+    }
+    
 }

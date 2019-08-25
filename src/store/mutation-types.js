@@ -8,6 +8,9 @@ export const ITEMS_ADD = 'ITEMS_ADD'
 // 删除一项
 export const ITEMS_REMOVE = 'ITEMS_REMOVE'
 
+// 删除所有
+export const ALL_REMOVE = 'ALL_REMOVE'
+
 // 设置basic属性
 export const ITEMS_EDIT_BASIC = 'ITEMS_EDIT_BASIC'
 

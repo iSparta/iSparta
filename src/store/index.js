@@ -4,14 +4,14 @@ import Vuex from 'vuex'
 import modules from './modules'
 
 import * as types from './mutation-types'
-
+const fs = require("fs-extra");
 Vue.use(Vuex)
 
 // 原始数据
 const defaultState = {
   language:'zh-cn',
   options: {
-    'frameRate': 26,
+    'frameRate': 20,
     'loop': 0,
     'outputSuffix': 'iSpt',
     'outputName': '',
@@ -61,13 +61,24 @@ var localData = window.localStorage.getItem('iSparta-item')
 if (localData) {
   // 取loaclstorage时重置进度
   var localItems = JSON.parse(localData)
+  let items=[];
   _.each(localItems, function (item) {
-    item.process.text = ''
-    item.process.schedule = 0
+    let isError=false;
+    for(let i=0;i<item.basic.fileList.length;i++){
+      
+      if (!fs.existsSync(item.basic.fileList[i])){
+        isError=true;
+        break;
+      }
+    }
+    if(!isError){
+      item.process.text = ''
+      item.process.schedule = 0;
+      items.push(item);
+    }
   })
-  state.items = localItems
+  state.items = items
 }
-
 // 只有这里才能才state的值
 const mutations = {
   [types.ITEMS_ADD] (state, data) {
@@ -94,6 +105,14 @@ const mutations = {
     if (state.items.length > 1) {
       state.items[0].isSelected = true
     }
+    window.localStorage.setItem('iSparta-item', JSON.stringify(state.items))
+  },
+  [types.ALL_REMOVE](state) {
+    if (state.locked) {
+      return false
+    }
+    
+    state.items = []
     window.localStorage.setItem('iSparta-item', JSON.stringify(state.items))
   },
   [types.ITEMS_EDIT_BASIC] (state, keyValue) {
@@ -183,6 +202,9 @@ const actions = {
   },
   remove (context) {
     context.commit('ITEMS_REMOVE')
+  },
+  removeAll(context) {
+    context.commit('ALL_REMOVE')
   },
   editBasic (context, keyValue) {
     context.commit('ITEMS_EDIT_BASIC', keyValue)

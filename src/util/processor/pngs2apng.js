@@ -17,11 +17,14 @@ export default function (item, store, locale) {
   var firstPNG = ''
   item.basic.fileList.forEach((file, index) => {
     fs.copySync(file, path.join(tmpDir, 'apng' + action.pad(index + 1, numLen) + '.png'))
+    if (item.options.delays && item.options.delays[index]){
+      fs.writeFileSync(path.join(tmpDir, 'apng' + action.pad(index + 1, numLen) + '.txt'), "delay=" + item.options.delays[index]*1000+"/1000")
+    }
     if (index == 0) {
       firstPNG = 'apng' + action.pad(index + 1, numLen) + '.png'
     }
   })
-
+  
 	// apngasm
   return action.exec(action.bin('apngasm'), [
     path.join(item.basic.tmpOutputDir, item.options.outputName + '.png'),

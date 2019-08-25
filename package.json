@@ -1,10 +1,12 @@
 {
   "name": "isparta",
+  "title":"iSparta",
   "version": "3.2.0",
   "private": true,
   "scripts": {
     "dev": "vue-cli-service electron:serve",
     "build": "vue-cli-service electron:build",
+    "build:windows": "vue-cli-service electron:build --windows",
     "lint": "vue-cli-service lint",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"

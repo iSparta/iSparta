@@ -34,4 +34,8 @@ module.exports = {
     "analysing":"正在解析圖片",
     "compressing":"正在壓縮圖片",
     "outputing":"正在輸出",
+    // delay dialog
+    "delayTitle": "延时配置",
+    "preview": "预览",
+    "apply": "应用",
 }

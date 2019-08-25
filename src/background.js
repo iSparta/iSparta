@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain,dialog } from 'electron'
 import {
   createProtocol,
   installVueDevtools
@@ -9,10 +9,12 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 const path = require("path");
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
+
 let win
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{scheme: 'app', privileges: { secure: true, standard: true } }])
+
 
 function createWindow () {
   // Create the browser window.
@@ -21,7 +23,8 @@ function createWindow () {
     minHeight: 800,
     width: 820,
     height: 800, 
-    icon:path.join(__dirname,"../static/icons/AppIcon.png"),
+    icon:path.join(__dirname,"../public/icons/icon.png"),
+    title:"iSparta",
     webPreferences: {
       nodeIntegration: true,
       webSecurity: false
@@ -63,6 +66,8 @@ app.on('activate', () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
+
+  
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
     // Devtools extensions are broken in Electron 6.0.0 and greater
@@ -94,3 +99,27 @@ if (isDevelopment) {
     })
   }
 }
+
+ipcMain.on('change-item-fold', function (event, path, order) {
+
+  dialog.showOpenDialog({
+    defaultPath: path,
+    properties: ['openDirectory']
+  }, function (files) {
+    if (files) event.sender.send('change-item-fold', files, order)
+  })
+})
+// 监听输出到目录的操作
+ipcMain.on('change-multiItem-fold', function (event, path) {
+  
+  dialog.showOpenDialog({
+    defaultPath: path,
+    properties: ['openDirectory']
+  }, function (files) {
+    if (files) event.sender.send('change-multiItem-fold', files)
+  })
+})
+// 监听获取应用目录的操作
+ipcMain.on('get-app-path', function (event) {
+  event.sender.send('got-app-path', app.getAppPath())
+})

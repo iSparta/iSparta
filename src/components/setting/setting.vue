@@ -10,7 +10,7 @@
     <div class="ui-border-b" v-if="showFrame">
       <el-form label-width="">
         <el-form-item :label="$t('fps')">
-          <el-input v-model.number="frameRate" type="number" max="100" min="0" size="mini" placeholder="24"></el-input>
+          <el-input v-model.number="frameRate" type="number" max="100" min="0" size="mini"  placeholder="24"></el-input>
         </el-form-item>
         <el-form-item :label="$t('loop')">
           <el-input v-model.number="loop" type="number" size="mini" placeholder="0"></el-input>{{ $t('times') }}
@@ -32,9 +32,9 @@
     <div class="ui-border-b mod-quality">
       <p>{{ $t("compressionQuality") }}</p>
       <el-form :inline="true">
-        <el-form-item>
+        <el-form-item class="mr-5">
           <el-checkbox v-model="qualityCheck">Quality</el-checkbox>
-        </el-form-item>
+        </el-form-item> 
         <el-form-item>
           <el-input v-model.number="quality" type="number" size="mini" placeholder="100" @blur="qualityBlur"></el-input>
           <i>(0-100)</i>
@@ -42,6 +42,9 @@
       </el-form>
     </div>
     <el-button type="primary" v-on:click="start('')" :disabled="isStarted">&emsp;{{ $t("start") }}&emsp;</el-button>
+  </section>
+  <section class="mod-toolbox">
+    <i class="el-icon-delete" v-on:click="onDeleteAll()"></i>
   </section>
 </section>
 </template>
@@ -204,6 +207,9 @@ export default {
         this.$store.dispatch('setLock', true)
         processor(this.$store, sameOutputPath,locale).then()
       }, 20)
+    },
+    onDeleteAll:function(){
+      this.$store.dispatch('removeAll')
     }
   },
   watch: {

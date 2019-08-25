@@ -2,6 +2,7 @@
   <section class="mod-bar">
     <el-tag
       v-for="tag in sortTags"
+      size="small"
       :type="tag.type"
       @click.native="handleSort(tag)"
       :key="tag.id"
@@ -49,6 +50,8 @@
   border:1px solid #E4E4E4;
   background:#F2F2F2;
   padding:0 10px;
+  display: flex;
+  align-items: center;
   .el-tag{
     margin:0 5px;
     cursor:pointer;

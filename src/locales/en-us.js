@@ -34,4 +34,8 @@ module.exports = {
     "analysing":"analysing image",
     "compressing":"compressing image",
     "outputing":"outputing",
+    // delay dialog
+    "delayTitle": "delay setting",
+    "preview": "preview",
+    "apply": "apply",
 }
