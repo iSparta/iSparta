@@ -42,10 +42,12 @@
 export default {
   data() {
     return {
-      setting: JSON.parse(window.localStorage.getItem('globalSetting')),
+      setting: JSON.parse(window.storage.getItem('globalSetting')),
       dialogFormVisible: false,
       formLabelWidth: '120px'
     }
+  },
+  mounted(){
   },
   methods: {
     floydBlur(){
@@ -62,11 +64,12 @@ export default {
       this.dialogFormVisible = true
     },
     resetVarible(){
-      this.setting = JSON.parse(window.localStorage.getItem('globalSetting'))
+      this.setting = JSON.parse(window.storage.getItem('globalSetting'))
     },
     changeVarible() {
       //save to localStorage
-      window.localStorage.setItem('globalSetting', JSON.stringify(this.setting))
+      
+      window.storage.setItem('globalSetting', JSON.stringify(this.setting))
       this.$data.dialogFormVisible = false
       //change language
       switch (this.setting.language) {

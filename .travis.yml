@@ -1,25 +1,52 @@
-language: node_js
+matrix:
+  include:
+    - os: osx
+      osx_image: xcode10.2
+      language: node_js
+      node_js: "10"
+      env:
+        - ELECTRON_CACHE=$HOME/.cache/electron
+        - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
 
-node_js:
-  - "8"
-
-# 缓存依赖
-cache:
-  directories:
-    - $HOME/.npm
-
-before_install:
-  - export TZ='Asia/Shanghai' # 更改时区
-
+    - os: linux
+      services: docker
+      language: generic
+languages: node_js
 # 依赖安装
 install:
   - npm install
+cache:
+  directories:
+    - node_modules
+    - $HOME/.cache/electron
+    - $HOME/.cache/electron-builder
 
-# 构建脚本
 script:
-  - npm run  build 
-
-# 分支白名单
-branches:
-  only:
-    - master # 只对 master 分支进行构建
+  - |
+    if [ "$TRAVIS_OS_NAME" == "linux" ]; then
+      docker run --rm \
+        --env-file <(env | grep -vE '\r|\n' | grep -iE 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS_TAG|TRAVIS|TRAVIS_REPO_|TRAVIS_BUILD_|TRAVIS_BRANCH|TRAVIS_PULL_REQUEST_|APPVEYOR_|CSC_|GH_|GITHUB_|BT_|AWS_|STRIP|BUILD_') \
+        --env ELECTRON_CACHE="/root/.cache/electron" \
+        --env ELECTRON_BUILDER_CACHE="/root/.cache/electron-builder" \
+        -v ${PWD}:/project \
+        -v ~/.cache/electron:/root/.cache/electron \
+        -v ~/.cache/electron-builder:/root/.cache/electron-builder \
+        electronuserland/builder:wine-02.17 \
+        /bin/bash -c "npm run build"
+    else
+      npm run build
+    fi
+before_cache:
+  - rm -rf $HOME/.cache/electron-builder/wine
+deploy:
+  provider: releases
+  api_key: 
+    secure: $ENCRYPTED_GITHUB_TOKEN
+  skip_cleanup: true
+  file_glob: true
+  file: 
+    - dist_electron/*.dmg
+    - dist_electron/*.zip
+    - dist_electron/*.tar.gz
+  on:
+    tags: true

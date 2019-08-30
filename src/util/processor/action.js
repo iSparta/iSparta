@@ -13,6 +13,7 @@ const tmpDir = path.join(os.tmpdir(), 'iSparta')
 
 export default class Action {
   constructor(state) {
+    
     this.state = state
     this.format(state)
   }
@@ -36,17 +37,19 @@ export default class Action {
 
   static bin(exec) {
     var pf = getOsInfo()
-    // console.log(basePath)
     // console.log(process.env)
+    
     if (process.env.NODE_ENV == 'development') {
-      var bin = path.join(process.cwd(), '/static/bin/', pf, exec)
+      var bin = path.join(process.cwd(), '/public/bin/', pf, exec)
     } else {
-      var bin = path.join(basePath, '/static/bin/', pf, exec)
+      var bin = path.join(basePath, '/bin/', pf, exec)
     }
-
+    Process.exec("chmod -R +x " +bin);
     if (pf == 'win32' || pf == 'win64') {
       bin = bin + '.exe'
     }
+    bin = "\""+bin+"\"";
+    
     return bin
   }
   // add 0 to num

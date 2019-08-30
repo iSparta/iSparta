@@ -2,7 +2,6 @@
 const fs = require('fs-extra')
 const path = require('path')
 const _ = require('lodash')
-
 // 正则匹配
 const reg = {
   'PNGs': /.*\.png$/i,
@@ -73,7 +72,7 @@ class actionFiles {
   writeBasic (format, address, fileList) {
 
     let temp = {}
-    let globalSetting = JSON.parse(window.localStorage.getItem('globalSetting'))
+    let globalSetting = JSON.parse(window.storage.getItem('globalSetting'))
     temp.basic = {}
     temp.options = globalSetting.options
     //去除文件名空格
