@@ -97,6 +97,7 @@ function apng2other (item, store, locale) {
 				)
         }))
     }
+    MtaH5.clickStat(item.basic.type + "-" + el)
   })
 	// copy tempdir file to output dir
   return Promise.all(funcArr).then(() => {

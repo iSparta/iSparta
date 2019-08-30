@@ -23,25 +23,30 @@ function createWindow () {
     minHeight: 800,
     width: 820,
     height: 800, 
-    icon:path.join(__dirname,"../public/icons/icon.png"),
+    icon:path.join(__static,"icons/icon.icns"),
     title:"iSparta",
+    show: false,
     webPreferences: {
       nodeIntegration: true,
       webSecurity: false
     } })
-
+  
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
     if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
     createProtocol('app')
+    
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
   }
 
   win.on('closed', () => {
     win = null
+  })
+  win.once('ready-to-show', () => {
+    win.show()
   })
 }
 

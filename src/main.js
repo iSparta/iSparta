@@ -7,6 +7,8 @@ import 'element-ui/lib/theme-chalk/index.css'
 import 'normalize.css/normalize.css'
 import AsyncComputed from 'vue-async-computed'
 import VueI18n from 'vue-i18n'
+// const storage = require('electron-localstorage');
+
 Vue.config.productionTip = false
 Vue.use(VueI18n)
 
@@ -14,7 +16,7 @@ Vue.use(VueI18n)
 Vue.use(AsyncComputed)
 Vue.use(ElementUI)
 
-let globalSetting = window.localStorage.getItem('globalSetting');
+let globalSetting = window.storage.getItem('globalSetting');
 let defaultLanguage = 'zh-cn';
 if (globalSetting) {
   var setting = JSON.parse(globalSetting);
