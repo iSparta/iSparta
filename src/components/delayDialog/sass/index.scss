@@ -1,0 +1,65 @@
+.frame-list{
+  display: flex;
+  flex-wrap: wrap;
+  .frame{
+    width:80px;
+    margin:10px 5px;
+    border:1px solid #eee;
+    img{
+      width:100%;
+    }
+  }
+  .el-input__inner{
+    text-align: center;
+    border:0px;
+    border-top:1px solid #eee;
+    border-radius: 0;
+  }
+  .el-input-number--mini{
+    width:100%;
+    
+  }
+  .el-input-number.is-controls-right .el-input__inner{
+      padding-left:10px;
+      padding-right:30px;
+    }
+  .el-input-number.is-controls-right .el-input-number__decrease{
+    right:0px;
+    bottom:0px;
+    border-radius: 0px;
+
+  }
+  .el-input-number__increase{
+    right:0px;
+    top:1px;
+    border-radius: 0px;
+  }
+  
+}
+.frame-preview{
+  display: flex;
+  justify-content: center;
+  align-items:center;
+  flex-direction: column;
+  padding-bottom:20px;
+  .preview{
+    width:120px;
+    img{width:100%}
+  }
+  
+}
+.fps-setting{
+    display:flex;
+    align-items: center;
+    margin-top:10px;
+    margin-left:10px;
+    .label{
+      width:40px;
+
+    }
+    .el-input--mini{
+      width:50px;
+      margin-right:10px;
+    }
+    
+  }

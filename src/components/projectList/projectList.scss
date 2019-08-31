@@ -1,0 +1,131 @@
+.success {
+    color: #13CE66!important;
+}
+.fail {
+    color: #FF4949!important;
+}
+.mod-list {
+
+    min-height: 100px;
+    .item {
+        position: relative;
+        padding: 16px;
+        display: flex;
+        border-bottom: 1px solid #f2f2f2;
+        &:hover {
+            background: #EFF2F7;
+        }
+        &.active {
+            background: #D3DCE6;
+        }
+        .thumb {
+            width: 60px;
+            height: 60px;
+            border: 1px solid #D8D8D8;
+            background: #fff;
+            margin-right: 10px;
+            img {
+                width: 100%;
+                height: 100%;
+            }
+        }
+        .info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            .input {
+              display: flex;
+              align-items: center;
+              .el-tag {
+                  margin-right: 5px;
+              }
+              .inputPath {
+                  height: 24px;
+                  line-height: 22px;
+                  color: #1F2D3D;
+                  margin: 0;
+                  overflow: hidden;
+              }
+              .el-icon-setting{
+                margin-left:10px;
+                color:#666;
+                cursor: pointer;
+                &:hover{
+                  opacity: .8;
+                }
+              }
+            }
+            .output {
+                margin: 5px 0 0;
+                color: #8492A6;
+                font-size: 14px;
+                cursor:pointer;
+                & > i {
+                    float: left;
+                    margin-right: 5px;
+                }
+                .outputPath {
+
+                    height: 16px;
+                    line-height: 16px;
+                    margin: 0;
+                    overflow: hidden;
+                }
+            }
+        }
+        .status {
+            position: absolute;
+            right: 0;
+            bottom: 5px;
+            padding-right: 10px;
+            color: #8492A6;
+            font-size: 12px;
+            height: 16px;
+            line-height: 16px;
+            i{
+              margin-right:3px;
+            }
+            &.success{
+              color:#13CE66;
+            }
+            &.fail{
+              color:#FF4949;
+            }
+        }
+        .progress {
+            width: 100%;
+            height: 2px;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            .precent {
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 100%;
+                width: 0;
+                background: #13CE66;
+                &.ani{
+                  transition:width 0.6s;
+                }
+            }
+            &.fail {
+                .precent {
+                    background: #FF4949;
+                }
+            }
+        }
+    }
+    .open-folder{
+      text-align: center;
+      line-height: 30px;
+      font-size:12px;
+      margin-top:20px;
+      color:#409EFF;
+      cursor: pointer;
+      &:hover{
+        opacity: .5;
+      }
+    }
+    
+}

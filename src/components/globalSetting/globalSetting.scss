@@ -1,0 +1,64 @@
+.globalsetting{
+    position: absolute;
+    z-index: 99;
+    bottom: 0px;
+    right: 10px;
+    .el-dialog__wrapper{
+          background: rgba(0,0,0,0.6)
+    }
+    .el-form-item__label{
+      width: 100px;
+    }
+    .el-dialog--small{
+      width: 510px;
+    }
+    .el-form-item__content {
+      line-height: 36px;
+      position: relative;
+      font-size: 14px;
+      width: 360px;
+      height: 36px;
+    display: inline-block;
+    i{
+      font-style: normal;
+    }
+      .el-input{
+        height: 36px;
+        width: 200px;
+        margin-right: 15px;
+      }
+      .el-input--mini .el-input__inner{
+        height: 36px;
+
+      }
+    }
+}
+.el-dialog{
+  width:510px;
+  .el-form-item__label{
+      width: 100px;
+    }
+    .el-dialog--small{
+      width: 510px;
+    }
+    .el-form-item__content {
+      line-height: 36px;
+      position: relative;
+      font-size: 14px;
+      width: 360px;
+      height: 36px;
+    display: inline-block;
+    i{
+      font-style: normal;
+    }
+      .el-input{
+        height: 36px;
+        width: 200px;
+        margin-right: 15px;
+      }
+      .el-input--mini .el-input__inner{
+        height: 36px;
+
+      }
+    }
+}

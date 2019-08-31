@@ -9,7 +9,7 @@ iSparta 是一款 APNG 和 Webp 转换工具。
 
 # 截图
 
-<img src="https://raw.githubusercontent.com/iSparta/iSparta/master/static/screenshot/iSparta3.1.png" alt="screenshot" width="600">
+<img src="https://raw.githubusercontent.com/iSparta/iSparta/master/public/screenshot/iSparta3.1.png" alt="screenshot" width="600">
 
 # 下载
 
@@ -27,10 +27,16 @@ iSparta现在支持以下语言：
 
 + PNGs转换APNG  
   将多张PNG合并成一个APNG动图，可以设置帧频率、循环次数等参数。要求PNG在同一目录下，并且保持文件名标准化(1.png, 2.png...)
+  
++ PNGs单独设置帧频  
+  可以给每一帧单独设置帧频，以满足个性化诉求
+  
 + PNG、GIF转换WebP  
   将PNG、GIF转换为WebP格式，可以设置无损，压缩比等参数。
+  
 + APNG转换Animated WebP  
   将APNG动图转换为Animated WebP动图，可以设置循环次数，无损等参数。
+
 + PNG和GIF无损压缩  
   将PNG和GIF进行无损压缩，减少图片大小。
 
@@ -62,29 +68,12 @@ npm run dev
 
 根据不同平台构建，现在支持`osx64`、`win32`、`win64`和`linux`。
 
-构建osx64应用：
 
 ```bash
-npm run build:darwin
-```
-构建win32应用：
-
-```bash
-npm run build:win32
+npm run build
 ```
 
-构建win64应用：
-
-```bash
-npm run build:win64
-```
-构建linux应用：
-
-```bash
-npm run build:linux
-```
-
-然后可以到`build/`目录下找到构建好的应用。
+然后可以到`dist_electron/`目录下找到构建好的应用。
 
 
 

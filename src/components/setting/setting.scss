@@ -1,0 +1,129 @@
+// 去除input的筛选样式
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.ui-border-t{
+    border-top:1px solid #2E3D4F;
+}
+.ui-border-b{
+    border-bottom:1px solid #2E3D4F;
+}
+.mod-setting{
+  height: 100%;
+  background:#273444;
+  overflow:hidden;
+  position: relative;
+  
+  h3{
+    text-align:center;
+    font-size:20px;
+    color:#fff;
+    margin:0px;
+    height:55px;
+    line-height:55px;
+    border-bottom:1px solid #2E3D4F;
+    font-weight:normal;
+  }
+  // 表格模块
+  .mod-form{
+    color:#fff;
+    >div{
+      padding:10px 15px;
+      box-sizing:border-box;
+    }
+    i{
+      font-size:12px;
+      color:#807D7D;
+      font-style: normal;
+    }
+
+    .el-form-item{
+      margin:0px;
+    }
+
+    .el-form-item__label{
+      font-size:16px;
+      color:#fff;
+    }
+    // 输入框
+    .el-input{
+      width:auto;
+      padding-right:10px;
+        .el-input__inner {
+          height: 22px;
+          width: 45px;
+          text-align:center;
+          background-color: transparent;
+          color:#BECCDD;
+          &:focus{
+            color:#fff;
+          }
+        }
+    }
+    .mr-5{
+      margin-right:5px;
+    }
+    .suffix{
+        .el-input .el-input__inner{
+            width:190px;
+            height:24px;
+        }
+    }
+    .el-checkbox{
+      color:#fff;
+      margin-left:15px;
+    }
+    .mod-quality{
+         .el-input .el-input__inner{
+            width:55px;
+          }
+    }
+    .mod-output{
+    // 多选框
+      .el-checkbox{
+        display:block;
+        margin-bottom:3px;
+      }
+    }
+    //单选框
+    .el-radio{
+      margin: 3px 15px;
+      color:#fff;
+    }
+  }
+    //按钮
+   .el-button{
+      display:block;
+      margin:15px auto;
+      
+  }
+  .el-button+.el-button{
+        margin:15px auto;
+  }
+  .mod-toolbox{
+    position: absolute;
+    right:35px;
+    bottom:12px;
+    .el-icon-delete{
+      color: #409EFF;
+      &:hover{
+        opacity: .8;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.mod-multi{
+  color:#CACACA;
+  font-size:14px;
+  text-align:center;
+  padding:0 50px;
+  
+}
