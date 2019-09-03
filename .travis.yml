@@ -1,36 +1,52 @@
-osx_image: xcode8.3
-sudo: required
-dist: trusty
-language: c
 matrix:
   include:
-  - os: osx
-  - os: linux
-    env: CC=clang CXX=clang++ npm_config_clang=1
-    compiler: clang
+    - os: osx
+      osx_image: xcode10.2
+      language: node_js
+      node_js: "10"
+      env:
+        - ELECTRON_CACHE=$HOME/.cache/electron
+        - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
+
+    - os: linux
+      services: docker
+      language: generic
+languages: node_js
+# 依赖安装
+install:
+  - npm install
 cache:
   directories:
-  - node_modules
-  - "$HOME/.electron"
-  - "$HOME/.cache"
-addons:
-  apt:
-    packages:
-    - libgnome-keyring-dev
-    - icnsutils
-before_install:
-- mkdir -p /tmp/git-lfs && curl -L https://github.com/github/git-lfs/releases/download/v1.2.1/git-lfs-$([
-  "$TRAVIS_OS_NAME" == "linux" ] && echo "linux" || echo "darwin")-amd64-1.2.1.tar.gz
-  | tar -xz -C /tmp/git-lfs --strip-components 1 && /tmp/git-lfs/git-lfs pull
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils; fi
-install:
-- nvm install 7
-- curl -o- -L https://yarnpkg.com/install.sh | bash
-- source ~/.bashrc
-- npm install -g xvfb-maybe
-- yarn
+    - node_modules
+    - $HOME/.cache/electron
+    - $HOME/.cache/electron-builder
+
 script:
-- yarn run build
-branches:
-  only:
-  - master
+  - |
+    if [ "$TRAVIS_OS_NAME" == "linux" ]; then
+      docker run --rm \
+        --env-file <(env | grep -vE '\r|\n' | grep -iE 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS_TAG|TRAVIS|TRAVIS_REPO_|TRAVIS_BUILD_|TRAVIS_BRANCH|TRAVIS_PULL_REQUEST_|APPVEYOR_|CSC_|GH_|GITHUB_|BT_|AWS_|STRIP|BUILD_') \
+        --env ELECTRON_CACHE="/root/.cache/electron" \
+        --env ELECTRON_BUILDER_CACHE="/root/.cache/electron-builder" \
+        -v ${PWD}:/project \
+        -v ~/.cache/electron:/root/.cache/electron \
+        -v ~/.cache/electron-builder:/root/.cache/electron-builder \
+        electronuserland/builder:wine-02.17 \
+        /bin/bash -c "npm run build"
+    else
+      npm run build
+    fi
+before_cache:
+  - rm -rf $HOME/.cache/electron-builder/wine
+deploy:
+  provider: releases
+  api_key: 
+    secure: $ENCRYPTED_GITHUB_TOKEN
+  skip_cleanup: true
+  file_glob: true
+  file: 
+    - dist_electron/*.dmg
+    - dist_electron/*.zip
+    - dist_electron/*.tar.gz
+  on:
+    tags: true

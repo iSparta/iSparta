@@ -1,0 +1,24 @@
+appId: io.github.isparta
+asar: false
+publish:
+  - provider: github
+win:
+  target:
+    - target: zip
+      arch:
+        - x64
+        - ia32
+  icon: ./public/icons/icon.ico
+mac:
+  target:
+    - target: dmg
+      arch:
+        - x64
+  icon: ./public/icons/icon.icns
+linux:
+  target:
+    - target: tar.gz
+      arch:
+        - x64
+        - ia32
+  icon: ./public/icons
