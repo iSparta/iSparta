@@ -12,6 +12,7 @@ import VueI18n from 'vue-i18n'
 Vue.config.productionTip = false
 Vue.use(VueI18n)
 
+
 /* Initialize the plugin */
 Vue.use(AsyncComputed)
 Vue.use(ElementUI)
