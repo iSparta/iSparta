@@ -201,6 +201,35 @@ export default {
         fsOperate.readerFiles(this.muFileList).then((ars) => {
           var Obj = {}
           for (var i in ars) {
+            ars[i].basic.fileList.sort((a, b) => {
+              const _a = a.replace(/(\d+)/g, (e) => {
+                  let _e = e;
+                  if (e.length < 8) {
+                      let len = e.length;
+                      let add = 8 - len;
+                      let z = '';
+                      for (let i = 0; i < add; i++) {
+                          z+='0'
+                      }
+                      _e=z+_e
+                  }
+                  return _e
+              })
+              const _b = b.replace(/(\d+)/g, (e) => {
+                  let _e = e;
+                  if (e.length < 8) {
+                      let len = e.length;
+                      let add = 8 - len;
+                      let z = '';
+                      for (let i = 0; i < add; i++) {
+                          z+='0'
+                      }
+                      _e=z+_e
+                  }
+                  return _e
+              })
+              return _a > _b ? 1 : -1;
+            });
             Obj.basic = ars[i].basic
             Obj.options = ars[i].options
             this.$store.dispatch('add', Obj)
