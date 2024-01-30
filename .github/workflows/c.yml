@@ -28,6 +28,11 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
 
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '2.7.18'
+
     - name: Cache electron
       uses: actions/cache@v2
       with:
