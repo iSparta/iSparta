@@ -8,7 +8,7 @@ jobs:
       matrix:
         include:
           - os: macos-latest
-            node-version: '10'
+            node-version: '14'
           - os: ubuntu-latest
             node-version: '10'
             use-docker: true
