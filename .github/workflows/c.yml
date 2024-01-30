@@ -9,9 +9,9 @@ jobs:
         include:
           - os: macos-latest
             node-version: '14'
-          - os: ubuntu-latest
-            node-version: '14'
-            use-docker: true
+          # - os: ubuntu-latest
+          #   node-version: '14'
+          #   use-docker: true
 
     runs-on: ${{ matrix.os }}
 
@@ -41,18 +41,18 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Build on Linux (Docker)
-      if: matrix.use-docker
-      run: |
-        docker run --rm \
-          --env-file <(env | grep -vE '\r|\n' | grep -iE 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS_TAG|TRAVIS|TRAVIS_REPO_|TRAVIS_BUILD_|TRAVIS_BRANCH|TRAVIS_PULL_REQUEST_|APPVEYOR_|CSC_|GH_|GITHUB_|BT_|AWS_|STRIP|BUILD_') \
-          --env ELECTRON_CACHE="/root/.cache/electron" \
-          --env ELECTRON_BUILDER_CACHE="/root/.cache/electron-builder" \
-          -v ${PWD}:/project \
-          -v ${{ github.workspace }}/.cache/electron:/root/.cache/electron \
-          -v ${{ github.workspace }}/.cache/electron-builder:/root/.cache/electron-builder \
-          electronuserland/builder:wine-02.17 \
-          /bin/bash -c "npm run build"
+    # - name: Build on Linux (Docker)
+    #   if: matrix.use-docker
+    #   run: |
+    #     docker run --rm \
+    #       --env-file <(env | grep -vE '\r|\n' | grep -iE 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS_TAG|TRAVIS|TRAVIS_REPO_|TRAVIS_BUILD_|TRAVIS_BRANCH|TRAVIS_PULL_REQUEST_|APPVEYOR_|CSC_|GH_|GITHUB_|BT_|AWS_|STRIP|BUILD_') \
+    #       --env ELECTRON_CACHE="/root/.cache/electron" \
+    #       --env ELECTRON_BUILDER_CACHE="/root/.cache/electron-builder" \
+    #       -v ${PWD}:/project \
+    #       -v ${{ github.workspace }}/.cache/electron:/root/.cache/electron \
+    #       -v ${{ github.workspace }}/.cache/electron-builder:/root/.cache/electron-builder \
+    #       electronuserland/builder:wine-02.17 \
+    #       /bin/bash -c "npm run build"
 
     - name: Build on macOS
       if: runner.os == 'macOS'
@@ -65,6 +65,6 @@ jobs:
         files: |
           dist_electron/*.dmg
           dist_electron/*.zip
-          dist_electron/*.tar.gz
+          # dist_electron/*.tar.gz
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
