@@ -1,0 +1,75 @@
+name: Build and Deploy
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            node-version: '14'
+          # - os: ubuntu-latest
+          #   node-version: '14'
+          #   use-docker: true
+
+    runs-on: ${{ matrix.os }}
+
+    env:
+      ELECTRON_CACHE: ${{ github.workspace }}/.cache/electron
+      ELECTRON_BUILDER_CACHE: ${{ github.workspace }}/.cache/electron-builder
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '2.7.18'
+
+    - name: Cache electron
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cache/electron
+          ~/.cache/electron-builder
+        key: ${{ runner.os }}-electron-cache-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-electron-cache-
+
+    - name: Install dependencies
+      run: npm install
+
+    # - name: Build on Linux (Docker)
+    #   if: matrix.use-docker
+    #   run: |
+    #     docker run --rm \
+    #       --env-file <(env | grep -vE '\r|\n' | grep -iE 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS_TAG|TRAVIS|TRAVIS_REPO_|TRAVIS_BUILD_|TRAVIS_BRANCH|TRAVIS_PULL_REQUEST_|APPVEYOR_|CSC_|GH_|GITHUB_|BT_|AWS_|STRIP|BUILD_') \
+    #       --env ELECTRON_CACHE="/root/.cache/electron" \
+    #       --env ELECTRON_BUILDER_CACHE="/root/.cache/electron-builder" \
+    #       -v ${PWD}:/project \
+    #       -v ${{ github.workspace }}/.cache/electron:/root/.cache/electron \
+    #       -v ${{ github.workspace }}/.cache/electron-builder:/root/.cache/electron-builder \
+    #       electronuserland/builder:wine-02.17 \
+    #       /bin/bash -c "npm run build"
+
+    - name: Build on macOS
+      if: runner.os == 'macOS'
+      run: npm run build
+
+    - name: Deploy to GitHub Releases
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          dist_electron/*.dmg
+          dist_electron/*.zip
+          # dist_electron/*.tar.gz
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

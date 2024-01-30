@@ -15,10 +15,10 @@ mac:
       arch:
         - x64
   icon: ./public/icons/icon.icns
-linux:
-  target:
-    - target: tar.gz
-      arch:
-        - x64
-        - ia32
-  icon: ./public/icons
+# linux:
+#   target:
+#     - target: tar.gz
+#       arch:
+#         - x64
+#         - ia32
+#   icon: ./public/icons

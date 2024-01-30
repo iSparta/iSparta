@@ -49,7 +49,39 @@ export default {
         fsOperate.readerFiles(this.muFileList).then((ars) => {
           var Obj = {}
           for (var i in ars) {
-            Obj.basic = ars[i].basic
+            // Note: 此处读取文件后排序有问题，如 xx_2 会排到 xx_10 之前导致导出帧不正确，因此手动排序一次
+            // 图省事儿，复制粘贴瞎命名了，不代表真实水平
+            ars[i].basic.fileList.sort((a, b) => {
+              const _a = a.replace(/(\d+)/g, (e) => {
+                  let _e = e;
+                  if (e.length < 8) {
+                      let len = e.length;
+                      let add = 8 - len;
+                      let z = '';
+                      for (let i = 0; i < add; i++) {
+                          z+='0'
+                      }
+                      _e=z+_e
+                  }
+                  return _e
+              })
+              const _b = b.replace(/(\d+)/g, (e) => {
+                  let _e = e;
+                  if (e.length < 8) {
+                      let len = e.length;
+                      let add = 8 - len;
+                      let z = '';
+                      for (let i = 0; i < add; i++) {
+                          z+='0'
+                      }
+                      _e=z+_e
+                  }
+                  return _e
+              })
+              return _a > _b ? 1 : -1;
+            });
+            // Obj.basic = Object.assign({}, ...ars[i].basic, {filsList})
+            Obj.basic = ars[i].basic;
             Obj.options = ars[i].options
             this.$store.dispatch('add', Obj)
           }
