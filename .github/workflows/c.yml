@@ -10,7 +10,7 @@ jobs:
           - os: macos-latest
             node-version: '14'
           - os: ubuntu-latest
-            node-version: '10'
+            node-version: '14'
             use-docker: true
 
     runs-on: ${{ matrix.os }}
